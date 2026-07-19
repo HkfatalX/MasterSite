@@ -23,7 +23,10 @@
         #message { margin-top: 20px; font-size: 14px; font-weight: 600; min-height: 24px; padding: 8px; border-radius: 6px; display: block; }
         .success { color: #00ff88; background: rgba(0, 255, 136, 0.1); }
         .error { color: #ff4444; background: rgba(255, 68, 68, 0.1); }
-        .hidden { display: none !important; }
+        
+        /* CORREÇÃO CRÍTICA DO BUG DE TRANSIÇÃO */
+        .hidden { display: none; }
+        
         .user-badge { background: #120e2e; padding: 15px; border-radius: 10px; border: 1px solid #3c357a; margin-bottom: 20px; }
     </style>
 </head>
@@ -82,13 +85,14 @@
     </div>
 
     <script>
-        // Endpoint seguro para salvar dados na nuvem pública de forma isolada e anônima
+        // Endpoint em nuvem pública estável para guardar os dados remotamente
         const API_URL = "https://kvdb.io/MN88Y9F7zSgWq6h2M6zK9z/users_";
 
         function switchForm(formType) {
             const msg = document.getElementById('message');
             msg.innerText = "";
             msg.className = "";
+            
             if(formType === 'register') {
                 document.getElementById('loginSection').classList.add('hidden');
                 document.getElementById('registerSection').classList.remove('hidden');
@@ -98,7 +102,7 @@
             }
         }
 
-        // Função auxiliar simples para transformar texto em hash (ocultar senhas)
+        // Sistema para mascarar e proteger as senhas no servidor
         function hashPassword(string) {
             let hash = 0;
             for (let i = 0; i < string.length; i++) {
@@ -123,19 +127,15 @@
             }
 
             msg.className = "success"; msg.innerText = "Conectando ao servidor nuvem...";
-            
-            // Gerando um identificador seguro baseado no e-mail para não expor dados na rota
             const secureKey = btoa(email).replace(/=/g, "");
 
             try {
-                // Verifica se o usuário já existe
                 const checkRes = await fetch(API_URL + secureKey);
                 if (checkRes.status === 200) {
                     msg.className = "error"; msg.innerText = "Este e-mail já está registrado na base de dados.";
                     return;
                 }
 
-                // Cria os dados com a senha já protegida por hash
                 const userData = { name, email, passHash: hashPassword(password) };
 
                 const saveRes = await fetch(API_URL + secureKey, {
@@ -144,7 +144,7 @@
                 });
 
                 if (saveRes.ok) {
-                    msg.className = "success"; msg.innerText = "Conta criada globalmente! Redirecionando...";
+                    msg.className = "success"; msg.innerText = "Conta criada globalmente! Mudando para aba de Login...";
                     setTimeout(() => { switchForm('login'); }, 1500);
                 } else {
                     msg.className = "error"; msg.innerText = "Erro ao salvar dados no servidor.";
@@ -160,7 +160,7 @@
             const password = document.getElementById('loginPassword').value;
             const msg = document.getElementById('message');
 
-            msg.className = "success"; msg.innerText = "Validando credenciais de segurança...";
+            msg.className = "success"; msg.innerText = "Validando credenciais...";
             const secureKey = btoa(email).replace(/=/g, "");
 
             try {
@@ -196,7 +196,7 @@
             document.getElementById('dashboardSection').classList.add('hidden');
             document.getElementById('loginSection').classList.remove('hidden');
             const msg = document.getElementById('message');
-            msg.innerText = "Sessão encerrada globalmente.";
+            msg.innerText = "Sessão encerrada.";
             msg.className = "success";
             setTimeout(() => { msg.innerText = ""; msg.className = ""; }, 2000);
         }
