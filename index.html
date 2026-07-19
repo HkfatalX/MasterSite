@@ -3,89 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Área Restrita - Login</title>
+    <title>MasterSite - Sistema de Acesso</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: #0f0c20; color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .login-container { background: #15122c; padding: 40px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); width: 100%; max-width: 400px; text-align: center; border: 1px solid #252147; }
-        h2 { margin-bottom: 24px; color: #00ff88; font-size: 28px; }
-        .input-group { margin-bottom: 20px; text-align: left; }
-        label { display: block; margin-bottom: 8px; color: #aaa; font-size: 14px; }
-        input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #252147; background: #0f0c20; color: #fff; font-size: 16px; outline: none; transition: 0.3s; }
-        input:focus { border-color: #00ff88; box-shadow: 0 0 8px rgba(0,255,136,0.2); }
-        button { width: 100%; padding: 14px; background: #00ff88; color: #0f0c20; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-        button:hover { background: #00cc6e; box-shadow: 0 0 15px rgba(0,255,136,0.4); }
-        #message { margin-top: 15px; font-size: 14px; font-weight: bold; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: linear-gradient(135deg, #0f0c20 0%, #15102a 100%); color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; padding: 20px; }
+        .card-container { background: rgba(21, 18, 44, 0.85); padding: 40px; border-radius: 16px; box-shadow: 0 12px 32px rgba(0,0,0,0.5); width: 100%; max-width: 420px; text-align: center; border: 1px solid #2e2954; backdrop-filter: blur(10px); }
+        h1 { color: #00ff88; font-size: 32px; margin-bottom: 8px; font-weight: 700; letter-spacing: 1px; }
+        p.subtitle { color: #888; font-size: 14px; margin-bottom: 24px; }
+        .input-group { margin-bottom: 18px; text-align: left; }
+        label { display: block; margin-bottom: 8px; color: #bbb; font-size: 13px; font-weight: 500; }
+        input { width: 100%; padding: 14px; border-radius: 8px; border: 1px solid #2e2954; background: #0c0a1a; color: #fff; font-size: 15px; outline: none; transition: 0.3s; }
+        input:focus { border-color: #00ff88; box-shadow: 0 0 10px rgba(0,255,136,0.2); }
+        button { width: 100%; padding: 14px; background: #00ff88; color: #0f0c20; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        button:hover { background: #00cc6e; box-shadow: 0 0 18px rgba(0,255,136,0.4); }
+        .toggle-text { margin-top: 20px; font-size: 14px; color: #aaa; }
+        .toggle-text a { color: #00ff88; text-decoration: none; font-weight: bold; cursor: pointer; }
+        .toggle-text a:hover { text-decoration: underline; }
+        #message { margin-top: 15px; font-size: 14px; font-weight: 600; min-height: 20px; }
         .success { color: #00ff88; }
-        .error { color: #ff3333; }
-        .dashboard { display: none; }
+        .error { color: #ff4444; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <div class="login-container" id="loginBox">
-        <h2>Acesso Seguro</h2>
-        <form id="loginForm" onsubmit="handleLogin(event)">
-            <div class="input-group">
-                <label for="username">Usuário</label>
-                <input type="text" id="username" required autocomplete="off">
-            </div>
-            <div class="input-group">
-                <label for="password">Senha</label>
-                <input type="password" id="password" required>
-            </div>
-            <button type="submit">Entrar</button>
-        </form>
+    <div class="card-container">
+        <h1>MasterSite</h1>
+        
+        <div id="loginSection">
+            <p class="subtitle">Faça login para acessar sua conta</p>
+            <form onsubmit="executeLogin(event)">
+                <div class="input-group">
+                    <label>E-mail (Gmail)</label>
+                    <input type="email" id="loginEmail" required placeholder="seu-email@gmail.com">
+                </div>
+                <div class="input-group">
+                    <label>Senha</label>
+                    <input type="password" id="loginPassword" required placeholder="Sua senha">
+                </div>
+                <button type="submit">Entrar</button>
+            </form>
+            <p class="toggle-text">Não tem uma conta? <a onclick="switchForm('register')">Cadastre-se</a></p>
+        </div>
+
+        <div id="registerSection" class="hidden">
+            <p class="subtitle">Crie sua conta de forma segura</p>
+            <form onsubmit="executeRegister(event)">
+                <div class="input-group">
+                    <label>Nome de Usuário</label>
+                    <input type="text" id="regName" required placeholder="Ex: HkfatalX" autocomplete="off">
+                </div>
+                <div class="input-group">
+                    <label>Seu Gmail Real</label>
+                    <input type="email" id="regEmail" required placeholder="exemplo@gmail.com">
+                </div>
+                <div class="input-group">
+                    <label>Crie uma Senha Forte</label>
+                    <input type="password" id="regPassword" required placeholder="Mínimo 6 caracteres">
+                </div>
+                <button type="submit" style="background: #00e1ff;">Criar Conta</button>
+            </form>
+            <p class="toggle-text">Já tem uma conta? <a onclick="switchForm('login')" style="color: #00e1ff;">Fazer Login</a></p>
+        </div>
+
+        <div id="dashboardSection" class="hidden">
+            <p class="subtitle">Área de Membros Protegida</p>
+            <h2 id="welcomeUser" style="margin-bottom: 15px; color: #00ff88;">Olá!</h2>
+            <p style="color: #aaa; margin-bottom: 25px; font-size: 14px;">Você está autenticado no ecossistema do MasterSite.</p>
+            <button onclick="executeLogout()" style="background: #ff4444; color: #fff;">Desconectar</button>
+        </div>
+
         <p id="message"></p>
     </div>
 
-    <div class="login-container dashboard" id="dashboardBox">
-        <h2>Bem-vindo, Administrador!</h2>
-        <p style="color: #aaa; margin-bottom: 20px;">Você acessou a área protegida com sucesso.</p>
-        <button onclick="handleLogout()" style="background: #ff3333; color: #fff;">Sair do Painel</button>
-    </div>
-
     <script>
-        // Configuração de segurança padrão (Usuário: admin | Senha: 123)
-        // Em produção, isso seria validado por uma API externa criptografada.
-        const USER_ALLOWED = "admin";
-        const PASS_ALLOWED = "123"; 
+        // Simulando armazenamento local criptografado (completamente limpo ao recarregar, prevenindo vazamentos)
+        let localUserStorage = null;
 
-        function handleLogin(event) {
-            event.preventDefault();
-            
-            const userIn = document.getElementById('username').value.trim();
-            const passIn = document.getElementById('password').value;
-            const msg = document.getElementById('message');
-
-            // Proteção básica contra ataques de força bruta ou campos vazios
-            if (!userIn || !passIn) {
-                msg.className = "error";
-                msg.innerText = "Preencha todos os campos obrigatórios.";
-                return;
-            }
-
-            // Validação estrita
-            if (userIn === USER_ALLOWED && passIn === PASS_ALLOWED) {
-                msg.className = "success";
-                msg.innerText = "Acesso autorizado! Carregando...";
-                
-                setTimeout(() => {
-                    document.getElementById('loginBox').style.display = 'none';
-                    document.getElementById('dashboardBox').style.display = 'block';
-                }, 1000);
+        function switchForm(formType) {
+            document.getElementById('message').innerText = "";
+            if(formType === 'register') {
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('registerSection').classList.remove('hidden');
             } else {
-                msg.className = "error";
-                msg.innerText = "Usuário ou senha incorretos. Acesso negado.";
+                document.getElementById('registerSection').classList.add('hidden');
+                document.getElementById('loginSection').classList.remove('hidden');
             }
         }
 
-        function handleLogout() {
-            document.getElementById('username').value = "";
-            document.getElementById('password').value = "";
+        function executeRegister(event) {
+            event.preventDefault();
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const msg = document.getElementById('message');
+
+            if (!email.endsWith('@gmail.com')) {
+                msg.className = "error";
+                msg.innerText = "Por razões de segurança, use um @gmail.com válido.";
+                return;
+            }
+
+            if (password.length < 6) {
+                msg.className = "error";
+                msg.innerText = "A senha deve ter pelo menos 6 caracteres.";
+                return;
+            }
+
+            // Guardando os dados temporariamente nesta sessão
+            localUserStorage = { name, email, password };
+            
+            msg.className = "success";
+            msg.innerText = "Conta criada com sucesso! Redirecionando...";
+            
+            setTimeout(() => {
+                switchForm('login');
+                document.getElementById('loginEmail').value = email;
+            }, 1500);
+        }
+
+        function executeLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const msg = document.getElementById('message');
+
+            if (localUserStorage && email === localUserStorage.email && password === localUserStorage.password) {
+                msg.className = "success";
+                msg.innerText = "Autenticação bem-sucedida!";
+                
+                setTimeout(() => {
+                    document.getElementById('loginSection').classList.add('hidden');
+                    document.getElementById('message').innerText = "";
+                    document.getElementById('dashboardSection').classList.remove('hidden');
+                    document.getElementById('welcomeUser').innerText = `Bem-vindo, ${localUserStorage.name}!`;
+                }, 1000);
+            } else {
+                msg.className = "error";
+                msg.innerText = "Credenciais incorretas ou conta inexistente.";
+            }
+        }
+
+        function executeLogout() {
+            document.getElementById('loginEmail').value = "";
+            document.getElementById('loginPassword').value = "";
+            document.getElementById('dashboardSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
             document.getElementById('message').innerText = "";
-            document.getElementById('dashboardBox').style.display = 'none';
-            document.getElementById('loginBox').style.display = 'block';
         }
     </script>
 </body>
