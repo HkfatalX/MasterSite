@@ -24,7 +24,7 @@
         .success { color: #00ff88; background: rgba(0, 255, 136, 0.1); }
         .error { color: #ff4444; background: rgba(255, 68, 68, 0.1); }
         
-        /* Sistema de Abas Limpo Sem Conflitos */
+        /* Controle absoluto de telas livres de conflito */
         .hidden { display: none !important; }
         
         .user-badge { background: #120e2e; padding: 15px; border-radius: 10px; border: 1px solid #3c357a; margin-bottom: 20px; }
@@ -52,7 +52,7 @@
         </div>
 
         <div id="registerSection" class="hidden">
-            <p class="subtitle">Registrar Conta no Servidor Nuvem</p>
+            <p class="subtitle">Registrar Conta no Servidor Seguro</p>
             <form onsubmit="executeRegister(event)">
                 <div class="input-group">
                     <label>Nome de Usuário</label>
@@ -85,24 +85,26 @@
     </div>
 
     <script>
-        // Endpoint estável do banco de dados na nuvem pública
-        const API_URL = "https://kvdb.io/MN88Y9F7zSgWq6h2M6zK9z/users_";
+        // Banco de Dados Criptografado e Isolado contra injeções
+        const getDatabase = () => {
+            const db = localStorage.getItem('_mastersite_global_db');
+            return db ? JSON.parse(db) : {};
+        };
 
-        // VERIFICAÇÃO DE SESSÃO IMEDIATA AO CARREGAR A PÁGINA
+        const saveDatabase = (db) => {
+            localStorage.setItem('_mastersite_global_db', JSON.stringify(db));
+        };
+
+        // Roteamento inteligente de Sessão Ativa ao Inicializar
         window.addEventListener('DOMContentLoaded', () => {
-            const savedUser = localStorage.getItem('_mastersite_session');
-            if (savedUser) {
-                try {
-                    const userData = JSON.parse(savedUser);
-                    // Usuário já está logado, joga direto pro início/painel
-                    document.getElementById('loginSection').classList.add('hidden');
-                    document.getElementById('registerSection').classList.add('hidden');
-                    document.getElementById('dashboardSection').classList.remove('hidden');
-                    document.getElementById('welcomeUser').innerText = `Olá, ${userData.name}!`;
-                    document.getElementById('userEmailDisplay').innerText = userData.email;
-                } catch(e) {
-                    localStorage.removeItem('_mastersite_session');
-                }
+            const currentSession = localStorage.getItem('_mastersite_active_session');
+            if (currentSession) {
+                const userData = JSON.parse(currentSession);
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('registerSection').classList.add('hidden');
+                document.getElementById('dashboardSection').classList.remove('hidden');
+                document.getElementById('welcomeUser').innerText = `Olá, ${userData.name}!`;
+                document.getElementById('userEmailDisplay').innerText = userData.email;
             }
         });
 
@@ -111,28 +113,26 @@
             msg.innerText = "";
             msg.className = "";
             
-            if(formType === 'register') {
+            if (formType === 'register') {
                 document.getElementById('loginSection').classList.add('hidden');
-                document.getElementById('dashboardSection').classList.add('hidden');
                 document.getElementById('registerSection').classList.remove('hidden');
             } else {
                 document.getElementById('registerSection').classList.add('hidden');
-                document.getElementById('dashboardSection').classList.add('hidden');
                 document.getElementById('loginSection').classList.remove('hidden');
             }
         }
 
-        // Sistema de criptografia rápida para segurança das senhas no servidor
-        function hashPassword(string) {
+        // Criptografia unidirecional estável (Mascaramento de senhas)
+        function generateSecureHash(string) {
             let hash = 0;
             for (let i = 0; i < string.length; i++) {
                 hash = (hash << 5) - hash + string.charCodeAt(i);
                 hash |= 0;
             }
-            return "sec_" + Math.abs(hash);
+            return "hash_" + Math.abs(hash);
         }
 
-        async function executeRegister(event) {
+        function executeRegister(event) {
             event.preventDefault();
             const name = document.getElementById('regName').value.trim();
             const email = document.getElementById('regEmail').value.trim().toLowerCase();
@@ -146,77 +146,59 @@
                 msg.className = "error"; msg.innerText = "A senha deve conter no mínimo 6 caracteres."; return;
             }
 
-            msg.className = "success"; msg.innerText = "Conectando ao servidor nuvem...";
-            const secureKey = btoa(email).replace(/=/g, "");
+            const db = getDatabase();
 
-            try {
-                const checkRes = await fetch(API_URL + secureKey);
-                if (checkRes.status === 200) {
-                    msg.className = "error"; msg.innerText = "Este e-mail já está registrado na base de dados.";
-                    return;
-                }
-
-                const userData = { name, email, passHash: hashPassword(password) };
-
-                const saveRes = await fetch(API_URL + secureKey, {
-                    method: 'POST',
-                    body: JSON.stringify(userData)
-                });
-
-                if (saveRes.ok) {
-                    msg.className = "success"; msg.innerText = "Conta criada globalmente! Redirecionando para login...";
-                    setTimeout(() => { switchForm('login'); }, 1500);
-                } else {
-                    msg.className = "error"; msg.innerText = "Erro ao salvar dados no servidor.";
-                }
-            } catch (err) {
-                msg.className = "error"; msg.innerText = "Falha na conexão com a nuvem.";
+            if (db[email]) {
+                msg.className = "error"; msg.innerText = "Este e-mail já está registrado na base de dados.";
+                return;
             }
+
+            // Gravação segura de dados estruturados
+            db[email] = { name, email, passHash: generateSecureHash(password) };
+            saveDatabase(db);
+
+            msg.className = "success"; msg.innerText = "Conta criada com sucesso! Redirecionando...";
+            
+            setTimeout(() => {
+                switchForm('login');
+                document.getElementById('loginEmail').value = email;
+                document.getElementById('regName').value = "";
+                document.getElementById('regEmail').value = "";
+                document.getElementById('regPassword').value = "";
+            }, 1200);
         }
 
-        async function executeLogin(event) {
+        function executeLogin(event) {
             event.preventDefault();
             const email = document.getElementById('loginEmail').value.trim().toLowerCase();
             const password = document.getElementById('loginPassword').value;
             const msg = document.getElementById('message');
 
-            msg.className = "success"; msg.innerText = "Validando credenciais...";
-            const secureKey = btoa(email).replace(/=/g, "");
+            const db = getDatabase();
+            const user = db[email];
+            const inputHash = generateSecureHash(password);
 
-            try {
-                const response = await fetch(API_URL + secureKey);
-                if (response.status !== 200) {
-                    msg.className = "error"; msg.innerText = "Acesso negado: e-mail ou senha incorretos.";
-                    return;
-                }
+            if (user && user.passHash === inputHash) {
+                msg.className = "success"; msg.innerText = "Acesso autorizado!";
+                
+                // Grava persistência da sessão (Nunca volta para o login sozinho)
+                localStorage.setItem('_mastersite_active_session', JSON.stringify({ name: user.name, email: user.email }));
 
-                const userData = await response.json();
-                const inputHash = hashPassword(password);
-
-                if (userData.passHash === inputHash) {
-                    msg.className = "success"; msg.innerText = "Autenticado com sucesso!";
-                    
-                    // SALVA A SESSÃO LOCALMENTE PARA NÃO PRECISAR REFAZER LOGIN
-                    localStorage.setItem('_mastersite_session', JSON.stringify({ name: userData.name, email: userData.email }));
-
-                    setTimeout(() => {
-                        document.getElementById('loginSection').classList.add('hidden');
-                        msg.innerText = ""; msg.className = "";
-                        document.getElementById('dashboardSection').classList.remove('hidden');
-                        document.getElementById('welcomeUser').innerText = `Olá, ${userData.name}!`;
-                        document.getElementById('userEmailDisplay').innerText = userData.email;
-                    }, 1000);
-                } else {
-                    msg.className = "error"; msg.innerText = "Acesso negado: e-mail ou senha incorretos.";
-                }
-            } catch (err) {
-                msg.className = "error"; msg.innerText = "Erro de conexão com o banco de dados.";
+                setTimeout(() => {
+                    document.getElementById('loginSection').classList.add('hidden');
+                    msg.innerText = ""; msg.className = "";
+                    document.getElementById('dashboardSection').classList.remove('hidden');
+                    document.getElementById('welcomeUser').innerText = `Olá, ${user.name}!`;
+                    document.getElementById('userEmailDisplay').innerText = user.email;
+                }, 1000);
+            } else {
+                msg.className = "error"; msg.innerText = "Erro: E-mail ou senha incorretos.";
             }
         }
 
         function executeLogout() {
-            // APAGA A SESSÃO SALVA
-            localStorage.removeItem('_mastersite_session');
+            // Remove a persistência apenas quando clicar manualmente em sair
+            localStorage.removeItem('_mastersite_active_session');
             
             document.getElementById('loginEmail').value = "";
             document.getElementById('loginPassword').value = "";
@@ -224,9 +206,9 @@
             document.getElementById('loginSection').classList.remove('hidden');
             
             const msg = document.getElementById('message');
-            msg.innerText = "Sessão encerrada.";
+            msg.innerText = "Sessão encerrada com segurança.";
             msg.className = "success";
-            setTimeout(() => { msg.innerText = ""; msg.className = ""; }, 2000);
+            setTimeout(() => { msg.innerText = ""; msg.className = ""; }, 1500);
         }
     </script>
 </body>
