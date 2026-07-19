@@ -24,8 +24,8 @@
         .success { color: #00ff88; background: rgba(0, 255, 136, 0.1); }
         .error { color: #ff4444; background: rgba(255, 68, 68, 0.1); }
         
-        /* CORREÇÃO CRÍTICA DO BUG DE TRANSIÇÃO */
-        .hidden { display: none; }
+        /* Sistema de Abas Limpo Sem Conflitos */
+        .hidden { display: none !important; }
         
         .user-badge { background: #120e2e; padding: 15px; border-radius: 10px; border: 1px solid #3c357a; margin-bottom: 20px; }
     </style>
@@ -72,12 +72,12 @@
         </div>
 
         <div id="dashboardSection" class="hidden">
-            <p class="subtitle">Painel do Usuário Conectado</p>
+            <p class="subtitle">Painel Inicial do Usuário</p>
             <div class="user-badge">
-                <h2 id="welcomeUser">Bem-vindo!</h2>
+                <h2 id="welcomeUser">Bem-vindo de volta!</h2>
                 <p id="userEmailDisplay" style="color: #00e1ff; font-size: 13px; margin-top: 4px;"></p>
             </div>
-            <p style="color: #a5a2b8; margin-bottom: 25px; font-size: 14px;">Você está autenticado globalmente na nuvem protetora do MasterSite.</p>
+            <p style="color: #a5a2b8; margin-bottom: 25px; font-size: 14px;">Você está autenticado de forma segura e persistente no ecossistema do MasterSite.</p>
             <button onclick="executeLogout()" style="background: #ff4444; color: #fff; box-shadow: none;">Encerrar Sessão</button>
         </div>
 
@@ -85,8 +85,26 @@
     </div>
 
     <script>
-        // Endpoint em nuvem pública estável para guardar os dados remotamente
+        // Endpoint estável do banco de dados na nuvem pública
         const API_URL = "https://kvdb.io/MN88Y9F7zSgWq6h2M6zK9z/users_";
+
+        // VERIFICAÇÃO DE SESSÃO IMEDIATA AO CARREGAR A PÁGINA
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('_mastersite_session');
+            if (savedUser) {
+                try {
+                    const userData = JSON.parse(savedUser);
+                    // Usuário já está logado, joga direto pro início/painel
+                    document.getElementById('loginSection').classList.add('hidden');
+                    document.getElementById('registerSection').classList.add('hidden');
+                    document.getElementById('dashboardSection').classList.remove('hidden');
+                    document.getElementById('welcomeUser').innerText = `Olá, ${userData.name}!`;
+                    document.getElementById('userEmailDisplay').innerText = userData.email;
+                } catch(e) {
+                    localStorage.removeItem('_mastersite_session');
+                }
+            }
+        });
 
         function switchForm(formType) {
             const msg = document.getElementById('message');
@@ -95,14 +113,16 @@
             
             if(formType === 'register') {
                 document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('dashboardSection').classList.add('hidden');
                 document.getElementById('registerSection').classList.remove('hidden');
             } else {
                 document.getElementById('registerSection').classList.add('hidden');
+                document.getElementById('dashboardSection').classList.add('hidden');
                 document.getElementById('loginSection').classList.remove('hidden');
             }
         }
 
-        // Sistema para mascarar e proteger as senhas no servidor
+        // Sistema de criptografia rápida para segurança das senhas no servidor
         function hashPassword(string) {
             let hash = 0;
             for (let i = 0; i < string.length; i++) {
@@ -144,7 +164,7 @@
                 });
 
                 if (saveRes.ok) {
-                    msg.className = "success"; msg.innerText = "Conta criada globalmente! Mudando para aba de Login...";
+                    msg.className = "success"; msg.innerText = "Conta criada globalmente! Redirecionando para login...";
                     setTimeout(() => { switchForm('login'); }, 1500);
                 } else {
                     msg.className = "error"; msg.innerText = "Erro ao salvar dados no servidor.";
@@ -175,6 +195,10 @@
 
                 if (userData.passHash === inputHash) {
                     msg.className = "success"; msg.innerText = "Autenticado com sucesso!";
+                    
+                    // SALVA A SESSÃO LOCALMENTE PARA NÃO PRECISAR REFAZER LOGIN
+                    localStorage.setItem('_mastersite_session', JSON.stringify({ name: userData.name, email: userData.email }));
+
                     setTimeout(() => {
                         document.getElementById('loginSection').classList.add('hidden');
                         msg.innerText = ""; msg.className = "";
@@ -191,10 +215,14 @@
         }
 
         function executeLogout() {
+            // APAGA A SESSÃO SALVA
+            localStorage.removeItem('_mastersite_session');
+            
             document.getElementById('loginEmail').value = "";
             document.getElementById('loginPassword').value = "";
             document.getElementById('dashboardSection').classList.add('hidden');
             document.getElementById('loginSection').classList.remove('hidden');
+            
             const msg = document.getElementById('message');
             msg.innerText = "Sessão encerrada.";
             msg.className = "success";
