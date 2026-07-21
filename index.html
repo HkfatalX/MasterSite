@@ -26,14 +26,6 @@
         .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
         .divider span { padding: 0 10px; }
 
-        .strength-meter { height: 6px; width: 100%; background: rgba(255, 255, 255, 0.1); border-radius: 4px; margin-top: 8px; overflow: hidden; }
-        .strength-bar { height: 100%; width: 0%; transition: all 0.3s ease; border-radius: 4px; }
-        .strength-text { font-size: 11px; margin-top: 6px; font-weight: 600; text-align: right; }
-        
-        .strength-weak { width: 33%; background: #ef4444; color: #ef4444; }
-        .strength-medium { width: 66%; background: #f59e0b; color: #f59e0b; }
-        .strength-strong { width: 100%; background: #00ff88; color: #00ff88; }
-
         .btn-danger { width: 100%; padding: 14px; border: none; border-radius: 12px; background: #ef4444; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 20px; }
         .toggle-text { margin-top: 16px; font-size: 13px; color: #94a3b8; }
         .toggle-btn { background: none; border: none; color: #00b4d8; font-weight: 600; cursor: pointer; font-size: 13px; text-decoration: underline; }
@@ -93,11 +85,6 @@
                 <div class="input-group">
                     <label>Senha Segura</label>
                     <input type="password" id="regPassword" required placeholder="Mínimo 6 caracteres" autocomplete="new-password">
-                    
-                    <div class="strength-meter">
-                        <div id="strengthBar" class="strength-bar"></div>
-                    </div>
-                    <div id="strengthText" class="strength-text"></div>
                 </div>
                 <button type="submit" class="btn-primary">Criar Minha Conta</button>
             </form>
@@ -105,17 +92,17 @@
         </div>
 
         <div id="googleSetupSection" class="hidden">
-            <p class="subtitle">Conclua a criação da sua conta</p>
+            <p class="subtitle">Autorização concluída! Defina seus dados de acesso direto.</p>
             <form id="googleSetupForm" autocomplete="off">
                 <div class="input-group">
-                    <label>Escolha seu Nome de Usuário</label>
-                    <input type="text" id="googleName" required placeholder="Seu nome ou nick no site" autocomplete="off">
+                    <label>Nome de Usuário</label>
+                    <input type="text" id="googleName" required placeholder="Seu nome no site" autocomplete="off">
                 </div>
                 <div class="input-group">
-                    <label>Crie uma Senha (para entrar com e-mail depois)</label>
+                    <label>Crie uma Senha para acesso com E-mail</label>
                     <input type="password" id="googlePassword" required placeholder="Mínimo 6 caracteres" autocomplete="new-password">
                 </div>
-                <button type="submit" class="btn-primary">Finalizar e Entrar</button>
+                <button type="submit" class="btn-primary">Concluir e Ir para o Painel</button>
             </form>
         </div>
 
@@ -167,6 +154,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const googleProvider = new GoogleAuthProvider();
+        googleProvider.setCustomParameters({ prompt: 'select_account' });
 
         function showMsg(text, type) {
             const msg = document.getElementById('msg');
@@ -181,110 +169,67 @@
         }
 
         function clearInputs() {
-            const inputs = document.querySelectorAll('input');
-            inputs.forEach(input => input.value = '');
-            const bar = document.getElementById('strengthBar');
-            if (bar) bar.style.width = '0%';
-            const txt = document.getElementById('strengthText');
-            if (txt) txt.innerText = '';
+            document.querySelectorAll('input').forEach(i => i.value = '');
         }
 
-        function checkPasswordStrength(password, barEl, textEl) {
-            let score = 0;
-            if (password.length >= 6) score++;
-            if (password.length >= 8) score++;
-            if (/[0-9]/.test(password)) score++;
-            if (/[^A-Za-z0-9]/.test(password)) score++;
-
-            barEl.className = 'strength-bar';
-
-            if (password.length === 0) {
-                barEl.style.width = '0%';
-                textEl.innerText = '';
-            } else if (password.length < 6) {
-                barEl.classList.add('strength-weak');
-                textEl.innerText = 'Muito curta (Mín. 6 letras)';
-                textEl.style.color = '#ef4444';
-            } else if (score <= 2) {
-                barEl.classList.add('strength-medium');
-                textEl.innerText = 'Senha Média (Aceita)';
-                textEl.style.color = '#f59e0b';
-            } else {
-                barEl.classList.add('strength-strong');
-                textEl.innerText = 'Senha Forte!';
-                textEl.style.color = '#00ff88';
-            }
-        }
-
-        document.getElementById('regPassword').addEventListener('input', (e) => {
-            checkPasswordStrength(e.target.value, document.getElementById('strengthBar'), document.getElementById('strengthText'));
-        });
-
-        // AUTORIZAR GOOGLE
+        // ENTRAR COM GOOGLE
         document.getElementById('btnGoogleLogin').onclick = async () => {
             clearMsg();
-            showMsg('Conectando ao Google...', 'success');
+            showMsg('Aguardando autorização do Google...', 'success');
             try {
                 const result = await signInWithPopup(auth, googleProvider);
                 const user = result.user;
 
-                // Se o usuário já tiver Nome de Usuário configurado, entra direto no Painel!
+                // Se a conta já possui nome, redireciona ao painel imediatamente
                 if (user.displayName) {
-                    showMsg('Login com Google realizado com sucesso!', 'success');
+                    showMsg('Autorizado com sucesso!', 'success');
                 } else {
-                    // Primeiro acesso: exige criar Nome e Senha para a conta
+                    // Se é o primeiro acesso, abre o setup de perfil e senha
                     document.getElementById('loginSection').classList.add('hidden');
                     document.getElementById('regSection').classList.add('hidden');
                     document.getElementById('googleSetupSection').classList.remove('hidden');
-                    showMsg('Google Autorizado! Agora crie seu nome de usuário e senha.', 'success');
+                    showMsg('Autorizado! Defina seu nome e senha para acesso via e-mail.', 'success');
                 }
             } catch (err) {
+                await signOut(auth); // Garante que não crie sessão se falhar/cancelar
                 if (err.code === 'auth/popup-closed-by-user') {
-                    showMsg('Janela do Google fechada antes de autorizar.', 'error');
+                    showMsg('A autorização do Google foi cancelada.', 'error');
                 } else {
-                    showMsg('Erro: ' + err.message, 'error');
+                    showMsg('Erro na autorização: ' + err.message, 'error');
                 }
             }
         };
 
-        // SALVAR NOME E SENHA APÓS AUTORIZAR GOOGLE
+        // SETUP DE NOME E SENHA (PARA CONTAS GOOGLE)
         document.getElementById('googleSetupForm').onsubmit = async (e) => {
             e.preventDefault();
             const name = document.getElementById('googleName').value.trim();
             const password = document.getElementById('googlePassword').value;
 
             if (password.length < 6) {
-                showMsg('A senha precisa ter pelo menos 6 caracteres.', 'error');
+                showMsg('A senha deve ter no mínimo 6 caracteres.', 'error');
                 return;
             }
 
             try {
                 const user = auth.currentUser;
-                
-                // Atualiza o nome de exibição
                 await updateProfile(user, { displayName: name });
-                
-                // Cadastra a senha na conta (permite entrar por email/senha no futuro)
-                await updatePassword(user, password);
 
-                showMsg('Conta configurada com sucesso!', 'success');
-                clearInputs();
-            } catch (err) {
-                // Se falhar updatePassword por conta do provedor Google, vincula o método
                 try {
-                    const user = auth.currentUser;
+                    await updatePassword(user, password);
+                } catch (passErr) {
                     const credential = EmailAuthProvider.credential(user.email, password);
                     await linkWithCredential(user, credential);
-                    await updateProfile(user, { displayName: name });
-                    showMsg('Conta configurada com sucesso!', 'success');
-                    clearInputs();
-                } catch (linkErr) {
-                    showMsg('Erro ao salvar senha: ' + linkErr.message, 'error');
                 }
+
+                showMsg('Perfil ativado!', 'success');
+                clearInputs();
+            } catch (err) {
+                showMsg('Erro ao salvar dados: ' + err.message, 'error');
             }
         };
 
-        // CADASTRAR VIA E-MAIL
+        // CADASTRO DE E-MAIL/SENHA TRADICIONAL
         document.getElementById('regForm').onsubmit = async (e) => {
             e.preventDefault();
             const name = document.getElementById('regName').value.trim();
@@ -292,57 +237,53 @@
             const password = document.getElementById('regPassword').value;
 
             if (password.length < 6) {
-                showMsg('A senha precisa ter no mínimo 6 caracteres.', 'error');
+                showMsg('A senha precisa ter pelo menos 6 caracteres.', 'error');
                 return;
             }
 
-            showMsg('Criando conta...', 'success');
+            showMsg('Registrando conta...', 'success');
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 await updateProfile(userCredential.user, { displayName: name });
                 showMsg('Conta criada com sucesso!', 'success');
                 clearInputs();
             } catch (err) {
-                if (err.code === 'auth/email-already-in-use') {
-                    showMsg('Este e-mail já existe. Tente fazer login.', 'error');
-                } else {
-                    showMsg('Erro: ' + err.message, 'error');
-                }
+                showMsg('Erro no cadastro: ' + err.message, 'error');
             }
         };
 
-        // LOGIN TRADICIONAL
+        // LOGIN TRADICIONAL POR E-MAIL/SENHA
         document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim().toLowerCase();
             const password = document.getElementById('loginPassword').value;
 
-            showMsg('Entrando...', 'success');
+            showMsg('Validando dados...', 'success');
             try {
                 await signInWithEmailAndPassword(auth, email, password);
-                showMsg('Login efetuado!', 'success');
+                showMsg('Acesso permitido!', 'success');
                 clearInputs();
             } catch (err) {
-                showMsg('E-mail ou senha incorretos. Se não possui conta, cadastre-se.', 'error');
+                showMsg('E-mail ou senha inválidos. Cadastre-se se ainda não tem uma conta.', 'error');
             }
         };
 
-        // ESQUECI A SENHA
+        // RECUPERAÇÃO DE SENHA
         document.getElementById('btnForgot').onclick = async () => {
             const email = document.getElementById('loginEmail').value.trim().toLowerCase();
             if (!email) {
-                showMsg('Digite seu e-mail no campo antes de clicar aqui.', 'error');
+                showMsg('Preencha o e-mail no campo acima primeiro.', 'error');
                 return;
             }
             try {
                 await sendPasswordResetEmail(auth, email);
-                showMsg('E-mail de redefinição enviado! Verifique sua caixa de entrada.', 'success');
+                showMsg('Link de redefinição enviado para o e-mail informado.', 'success');
             } catch (err) {
-                showMsg('Erro ao enviar e-mail: ' + err.message, 'error');
+                showMsg('Erro: ' + err.message, 'error');
             }
         };
 
-        // NAVEGAÇÃO
+        // NAV ENTRE TELAS
         document.getElementById('btnGoToReg').onclick = () => {
             clearMsg();
             clearInputs();
@@ -357,33 +298,32 @@
             document.getElementById('loginSection').classList.remove('hidden');
         };
 
-        // SAIR
+        // LOGOUT
         document.getElementById('btnLogout').onclick = async () => {
             await signOut(auth);
             clearMsg();
             clearInputs();
         };
 
-        // MONITOR DE SESSÃO DO FIREBASE
+        // MONITORAMENTO DE ESTADO DE AUTENTICAÇÃO
         onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // Se já tem o nome cadastrado no perfil, manda direto pro Painel
-                if (user.displayName) {
-                    document.getElementById('loginSection').classList.add('hidden');
-                    document.getElementById('regSection').classList.add('hidden');
-                    document.getElementById('googleSetupSection').classList.add('hidden');
-                    document.getElementById('dashSection').classList.remove('hidden');
+            if (user && user.displayName) {
+                // Usuário totalmente autorizado e com perfil definido
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('regSection').classList.add('hidden');
+                document.getElementById('googleSetupSection').classList.add('hidden');
+                document.getElementById('dashSection').classList.remove('hidden');
 
-                    document.getElementById('welcomeUser').innerText = user.displayName;
-                    document.getElementById('userEmailDisplay').innerText = user.email;
-                    clearInputs();
-                } else {
-                    // Se conectou pelo Google mas ainda não tem Nome
-                    document.getElementById('loginSection').classList.add('hidden');
-                    document.getElementById('regSection').classList.add('hidden');
-                    document.getElementById('googleSetupSection').classList.remove('hidden');
-                }
+                document.getElementById('welcomeUser').innerText = user.displayName;
+                document.getElementById('userEmailDisplay').innerText = user.email;
+                clearInputs();
+            } else if (user && !user.displayName) {
+                // Usuário autenticado pelo Google, aguardando nome/senha
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('regSection').classList.add('hidden');
+                document.getElementById('googleSetupSection').classList.remove('hidden');
             } else {
+                // Deslogado
                 document.getElementById('dashSection').classList.add('hidden');
                 document.getElementById('googleSetupSection').classList.add('hidden');
                 document.getElementById('regSection').classList.add('hidden');
