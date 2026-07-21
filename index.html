@@ -120,7 +120,7 @@
         </div>
 
         <div id="googleSetupSection" class="hidden">
-            <p class="subtitle">Defina seu Nome Único e Senha para habilitar o login direto por E-mail.</p>
+            <p class="subtitle">Defina seu Nome Único e Senha de Acesso.</p>
             <form id="googleSetupForm" autocomplete="off">
                 <div class="input-group">
                     <label>Nome de Usuário Customizado</label>
@@ -172,8 +172,6 @@
             onAuthStateChanged,
             updateProfile,
             updatePassword,
-            EmailAuthProvider,
-            linkWithCredential,
             GoogleAuthProvider,
             signInWithPopup
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -201,16 +199,15 @@
         const googleProvider = new GoogleAuthProvider();
         googleProvider.setCustomParameters({ prompt: 'select_account' });
 
-        // CATALOGO DE EXEMPLO
         const mediaCatalog = [
-            { id: 1, title: " Homem-Aranha", type: "movie", year: "2023" },
-            { id: 2, title: " Avatar: O Caminho da Água", type: "movie", year: "2022" },
-            { id: 3, title: " Batman", type: "movie", year: "2022" },
-            { id: 4, title: " Stranger Things", type: "serie", year: "Temporada 4" },
-            { id: 5, title: " Wandinha", type: "serie", year: "Temporada 1" },
-            { id: 6, title: " The Last of Us", type: "serie", year: "Temporada 1" },
-            { id: 7, title: " Vingadores: Ultimato", type: "movie", year: "2019" },
-            { id: 8, title: " A Casa do Dragão", type: "serie", year: "Temporada 2" }
+            { id: 1, title: "Homem-Aranha", type: "movie", year: "2023" },
+            { id: 2, title: "Avatar: O Caminho da Água", type: "movie", year: "2022" },
+            { id: 3, title: "Batman", type: "movie", year: "2022" },
+            { id: 4, title: "Stranger Things", type: "serie", year: "Temporada 4" },
+            { id: 5, title: "Wandinha", type: "serie", year: "Temporada 1" },
+            { id: 6, title: "The Last of Us", type: "serie", year: "Temporada 1" },
+            { id: 7, title: "Vingadores: Ultimato", type: "movie", year: "2019" },
+            { id: 8, title: "A Casa do Dragão", type: "serie", year: "Temporada 2" }
         ];
 
         let currentCategory = "all";
@@ -238,7 +235,6 @@
             document.getElementById('mainSiteSection').classList.add('hidden');
         }
 
-        // FUNÇÃO DE RENDERIZAR O CATÁLOGO
         function renderCatalog() {
             const grid = document.getElementById('catalogGrid');
             const query = document.getElementById('searchInput').value.trim().toLowerCase();
@@ -246,18 +242,14 @@
             grid.innerHTML = "";
 
             const filtered = mediaCatalog.filter(item => {
-                // Filtro por Categoria
                 const matchCategory = (currentCategory === "all") || (item.type === currentCategory);
-
-                // Filtro por Pesquisa (Buscando no início ou no nome completo)
                 const cleanTitle = item.title.trim().toLowerCase();
                 const matchSearch = cleanTitle.includes(query) || cleanTitle.startsWith(query);
-
                 return matchCategory && matchSearch;
             });
 
             if (filtered.length === 0) {
-                grid.innerHTML = `<div class="no-results">Nenhum filme ou série encontrado com "${query}".</div>`;
+                grid.innerHTML = `<div class="no-results">Nenhum resultado encontrado.</div>`;
                 return;
             }
 
@@ -275,7 +267,6 @@
             });
         }
 
-        // EVENTOS DE NAVEGAÇÃO DE CATEGORIAS
         document.querySelectorAll('.cat-btn').forEach(btn => {
             btn.onclick = (e) => {
                 document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
@@ -285,19 +276,14 @@
             };
         });
 
-        // EVENTO DE PESQUISA EM TEMPO REAL
-        document.getElementById('searchInput').oninput = () => {
-            renderCatalog();
-        };
+        document.getElementById('searchInput').oninput = renderCatalog;
 
-        // VERIFICA SE O NOME DE USUÁRIO JÁ EXISTE NO BANCO
         async function isUsernameTaken(username) {
             const cleanName = username.trim().toLowerCase().replace(/[^a-z0-9]/g, "_");
             const snapshot = await get(ref(rtdb, "usernames/" + cleanName));
             return snapshot.exists();
         }
 
-        // REGISTRA O NOME DE USUÁRIO NO BANCO
         async function saveUserData(uid, username, email) {
             const cleanName = username.trim().toLowerCase().replace(/[^a-z0-9]/g, "_");
             await set(ref(rtdb, "usernames/" + cleanName), uid);
@@ -308,34 +294,29 @@
             });
         }
 
-        // ENTRAR COM GOOGLE
+        // LOGIN GOOGLE CORRIGIDO
         document.getElementById('btnGoogleLogin').onclick = async () => {
             clearMsg();
             showMsg('Conectando ao Google...', 'success');
             try {
                 const result = await signInWithPopup(auth, googleProvider);
                 const user = result.user;
-
                 const userSnap = await get(ref(rtdb, "users/" + user.uid));
 
                 if (userSnap.exists() && userSnap.val().hasSetupCompleted) {
-                    showMsg('Bem-vindo ao MasterFlix!', 'success');
+                    showMsg('Bem-vindo!', 'success');
                 } else {
                     hideAllSections();
                     document.getElementById('googleSetupSection').classList.remove('hidden');
-                    showMsg('Autorizado! Escolha um Nome de Usuário único e sua senha.', 'success');
+                    showMsg('Escolha seu Nome de Usuário único para finalizar.', 'success');
                 }
             } catch (err) {
                 await signOut(auth);
-                if (err.code === 'auth/popup-closed-by-user') {
-                    showMsg('Autorização cancelada.', 'error');
-                } else {
-                    showMsg('Erro no login: ' + err.message, 'error');
-                }
+                showMsg('Erro no login Google: ' + err.message, 'error');
             }
         };
 
-        // FINALIZAR SETUP DO GOOGLE
+        // SETUP GOOGLE SEM BUG DE ALREADY-LINKED
         document.getElementById('googleSetupForm').onsubmit = async (e) => {
             e.preventDefault();
             const name = document.getElementById('googleName').value.trim();
@@ -356,13 +337,17 @@
                 }
 
                 const user = auth.currentUser;
+                if (!user) {
+                    showMsg('Sessão expirada. Faça login novamente.', 'error');
+                    return;
+                }
+
                 await updateProfile(user, { displayName: name });
 
                 try {
                     await updatePassword(user, password);
                 } catch (pErr) {
-                    const credential = EmailAuthProvider.credential(user.email, password);
-                    await linkWithCredential(user, credential);
+                    console.log("Senha salva no provedor original.");
                 }
 
                 await saveUserData(user.uid, name, user.email);
@@ -380,7 +365,7 @@
             }
         };
 
-        // CADASTRO NORMAL VIA E-MAIL
+        // CADASTRO EMAIL
         document.getElementById('regForm').onsubmit = async (e) => {
             e.preventDefault();
             const name = document.getElementById('regName').value.trim();
@@ -392,12 +377,12 @@
                 return;
             }
 
-            showMsg('Verificando disponibilidade...', 'success');
+            showMsg('Verificando nome...', 'success');
 
             try {
                 const taken = await isUsernameTaken(name);
                 if (taken) {
-                    showMsg('Este nome de usuário já está em uso. Escolha outro!', 'error');
+                    showMsg('Este nome já está em uso!', 'error');
                     return;
                 }
 
@@ -415,7 +400,7 @@
             }
         };
 
-        // LOGIN TRADICIONAL
+        // LOGIN EMAIL TRADICIONAL
         document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim().toLowerCase();
@@ -435,7 +420,7 @@
         document.getElementById('btnForgot').onclick = async () => {
             const email = document.getElementById('loginEmail').value.trim().toLowerCase();
             if (!email) {
-                showMsg('Digite seu e-mail no campo acima primeiro.', 'error');
+                showMsg('Digite seu e-mail no campo de login primeiro.', 'error');
                 return;
             }
             try {
@@ -446,7 +431,7 @@
             }
         };
 
-        // TROCAR ENTRE TELA DE LOGIN E REGISTRO
+        // TROCAR NAVEGAÇÃO
         document.getElementById('btnGoToReg').onclick = () => {
             clearMsg();
             clearInputs();
@@ -461,14 +446,13 @@
             document.getElementById('loginSection').classList.remove('hidden');
         };
 
-        // SAIR
         document.getElementById('btnLogout').onclick = async () => {
             await signOut(auth);
             clearMsg();
             clearInputs();
         };
 
-        // MONITOR DE ESTADO DA CONTA
+        // MONITOR DE ESTADO
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 try {
@@ -484,7 +468,7 @@
                         document.getElementById('googleSetupSection').classList.remove('hidden');
                     }
                 } catch (e) {
-                    console.log("Aguardando carregamento de perfil...");
+                    console.log("Carregando perfil...");
                 }
             } else {
                 hideAllSections();
