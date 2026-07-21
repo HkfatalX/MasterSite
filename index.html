@@ -207,3 +207,133 @@
 </body>
 </html>
 
+cat << 'EOF' >> index.html
+
+<div id="auth-container-mastersite" style="background: rgba(13, 11, 26, 0.95); padding: 30px; border-radius: 15px; max-width: 400px; margin: 40px auto; color: #fff; font-family: sans-serif; text-align: center; border: 1px solid #3c357a;">
+    <h2 style="color: #00ff88; margin-bottom: 10px;">Área do Usuário</h2>
+    
+    <div id="sec-login">
+        <p style="color: #aaa; font-size: 14px; margin-bottom: 15px;">Acesse sua conta</p>
+        <form onsubmit="executeLogin(event)">
+            <input type="email" id="loginEmail" placeholder="Seu Gmail" required style="width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #3c357a; background: #07050f; color: #fff;">
+            <input type="password" id="loginPassword" placeholder="Sua Senha" required style="width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #3c357a; background: #07050f; color: #fff;">
+            <button type="submit" style="width: 100%; padding: 12px; background: #00ff88; color: #000; font-weight: bold; border: none; border-radius: 8px; cursor: pointer;">Entrar</button>
+        </form>
+        <p style="margin-top: 15px; font-size: 13px;">Não tem conta? <a href="#" onclick="toggleAuth('reg')" style="color: #00e1ff;">Cadastrar</a></p>
+    </div>
+
+    <div id="sec-reg" style="display: none;">
+        <p style="color: #aaa; font-size: 14px; margin-bottom: 15px;">Criar nova conta</p>
+        <form onsubmit="executeRegister(event)">
+            <input type="text" id="regName" placeholder="Seu Nome" required style="width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #3c357a; background: #07050f; color: #fff;">
+            <input type="email" id="regEmail" placeholder="Seu Gmail" required style="width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #3c357a; background: #07050f; color: #fff;">
+            <input type="password" id="regPassword" placeholder="Senha (min 6 chars)" required style="width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #3c357a; background: #07050f; color: #fff;">
+            <button type="submit" style="width: 100%; padding: 12px; background: #00e1ff; color: #000; font-weight: bold; border: none; border-radius: 8px; cursor: pointer;">Criar Conta</button>
+        </form>
+        <p style="margin-top: 15px; font-size: 13px;">Já tem conta? <a href="#" onclick="toggleAuth('login')" style="color: #00e1ff;">Fazer Login</a></p>
+    </div>
+
+    <div id="sec-dash" style="display: none;">
+        <h3 id="userWelcome" style="color: #00ff88;"></h3>
+        <p id="userMail" style="color: #aaa; font-size: 13px; margin: 10px 0 20px 0;"></p>
+        <button onclick="executeLogout()" style="padding: 10px 20px; background: #ff4444; color: #fff; border: none; border-radius: 8px; cursor: pointer;">Sair</button>
+    </div>
+
+    <p id="authMsg" style="margin-top: 15px; font-size: 13px; font-weight: bold;"></p>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+        databaseURL: "https://site-ec6fd-default-rtdb.firebaseio.com/"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    window.toggleAuth = function(type) {
+        document.getElementById('authMsg').innerText = "";
+        if(type === 'reg') {
+            document.getElementById('sec-login').style.display = 'none';
+            document.getElementById('sec-reg').style.display = 'block';
+        } else {
+            document.getElementById('sec-reg').style.display = 'none';
+            document.getElementById('sec-login').style.display = 'block';
+        }
+    }
+
+    window.executeRegister = async function(e) {
+        e.preventDefault();
+        const name = document.getElementById('regName').value.trim();
+        const email = document.getElementById('regEmail').value.trim().toLowerCase();
+        const pass = document.getElementById('regPassword').value;
+        const msg = document.getElementById('authMsg');
+
+        if (!email.endsWith('@gmail.com')) { msg.style.color = "#ff4444"; msg.innerText = "Use um e-mail @gmail.com"; return; }
+        if (pass.length < 6) { msg.style.color = "#ff4444"; msg.innerText = "Senha deve ter 6+ caracteres"; return; }
+
+        msg.style.color = "#00e1ff"; msg.innerText = "Salvando no Firebase...";
+        const key = btoa(email).replace(/[^a-zA-Z0-9]/g, "");
+
+        try {
+            const snap = await get(ref(db, 'users/' + key));
+            if (snap.exists()) { msg.style.color = "#ff4444"; msg.innerText = "E-mail já cadastrado!"; return; }
+
+            await set(ref(db, 'users/' + key), { name, email, passHash: btoa(pass) });
+            msg.style.color = "#00ff88"; msg.innerText = "Cadastrado com sucesso!";
+            setTimeout(() => toggleAuth('login'), 1200);
+        } catch (err) {
+            msg.style.color = "#ff4444"; msg.innerText = "Erro ao salvar no banco. Verifique as regras de teste.";
+        }
+    };
+
+    window.executeLogin = async function(e) {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+        const pass = document.getElementById('loginPassword').value;
+        const msg = document.getElementById('authMsg');
+
+        msg.style.color = "#00e1ff"; msg.innerText = "Entrando...";
+        const key = btoa(email).replace(/[^a-zA-Z0-9]/g, "");
+
+        try {
+            const snap = await get(ref(db, 'users/' + key));
+            if (!snap.exists()) { msg.style.color = "#ff4444"; msg.innerText = "Conta não encontrada."; return; }
+
+            const user = snap.val();
+            if (user.passHash === btoa(pass)) {
+                localStorage.setItem('_user_session', JSON.stringify(user));
+                showDash(user);
+            } else {
+                msg.style.color = "#ff4444"; msg.innerText = "Senha incorreta.";
+            }
+        } catch (err) {
+            msg.style.color = "#ff4444"; msg.innerText = "Erro ao conectar com servidor.";
+        }
+    };
+
+    window.executeLogout = function() {
+        localStorage.removeItem('_user_session');
+        document.getElementById('sec-dash').style.display = 'none';
+        document.getElementById('sec-login').style.display = 'block';
+        document.getElementById('authMsg').innerText = "";
+    };
+
+    function showDash(user) {
+        document.getElementById('sec-login').style.display = 'none';
+        document.getElementById('sec-reg').style.display = 'none';
+        document.getElementById('sec-dash').style.display = 'block';
+        document.getElementById('userWelcome').innerText = "Bem-vindo, " + user.name + "!";
+        document.getElementById('userMail').innerText = user.email;
+        document.getElementById('authMsg').innerText = "";
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const sess = localStorage.getItem('_user_session');
+        if (sess) showDash(JSON.parse(sess));
+    });
+</script>
+EOF
+
