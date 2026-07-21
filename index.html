@@ -2,108 +2,103 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MasterFlix - Streaming Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MasterFlix Multiplatform</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: #141414; color: #fff; min-height: 100vh; overflow-x: hidden; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #141414; color: #fff; min-height: 100vh; overflow-x: hidden; width: 100vw; }
 
-        /* HEADER FIXO E ESTILOSO */
-        header { position: fixed; top: 0; width: 100%; height: 70px; background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%); display: flex; align-items: center; justify-content: space-between; padding: 0 4%; z-index: 100; transition: background 0.3s; }
-        header.scrolled { background: #141414; border-bottom: 1px solid #222; }
+        /* HEADER RESPONSIVO PARA MOBILE, PC E TV */
+        header { position: fixed; top: 0; left: 0; width: 100%; height: 65px; background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: space-between; padding: 0 4%; z-index: 100; border-bottom: 1px solid #222; }
+        .brand { font-size: 24px; font-weight: 900; color: #e50914; letter-spacing: -1px; text-decoration: none; display: flex; align-items: center; gap: 8px; }
         
-        .brand { font-size: 28px; font-weight: 900; background: linear-gradient(135deg, #e50914 0%, #ff5252 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
-        .nav-links { display: flex; gap: 20px; align-items: center; }
-        .nav-link { color: #e5e5e5; font-size: 14px; font-weight: 500; cursor: pointer; transition: color 0.2s; text-decoration: none; }
-        .nav-link:hover, .nav-link.active { color: #fff; font-weight: 700; }
+        .user-actions { display: flex; align-items: center; gap: 10px; }
+        .admin-badge { background: #e50914; color: #fff; font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; }
 
-        .user-actions { display: flex; align-items: center; gap: 15px; }
-        .admin-badge { background: #e50914; color: #fff; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; }
+        /* NAVEGAÇÃO E BOTOES COMPATÍVEIS COM TV / CONTROLE */
+        button, input, select, textarea, a { outline: none; }
+        button:focus, input:focus, select:focus, textarea:focus { border-color: #e50914 !important; box-shadow: 0 0 10px rgba(229, 9, 20, 0.6); }
 
-        /* CONTAINERS PRINCIPAIS TELA CHEIA */
-        .app-container { padding-top: 90px; padding-bottom: 50px; width: 100%; max-width: 100vw; }
-        .hero-banner { width: 92%; margin: 0 auto 30px auto; height: 350px; border-radius: 16px; background: linear-gradient(90deg, rgba(20,20,20,0.95) 0%, rgba(20,20,20,0.4) 60%, transparent 100%), url('https://picsum.photos/1200/500?movie') center/cover; display: flex; flex-direction: column; justify-content: center; padding: 40px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-        .hero-title { font-size: 42px; font-weight: 900; margin-bottom: 10px; text-shadow: 0 4px 10px rgba(0,0,0,0.8); }
-        .hero-desc { max-width: 500px; color: #ccc; font-size: 14px; line-height: 1.5; margin-bottom: 20px; }
+        /* LAYOUT PRINCIPAL */
+        .app-container { padding-top: 80px; padding-bottom: 40px; width: 100%; max-width: 100vw; }
 
-        /* SEÇÃO E SCROLL HORIZONTAL ESTILO NETFLIX */
-        .section-row { margin-bottom: 40px; padding-left: 4%; }
-        .section-title { font-size: 20px; font-weight: 800; margin-bottom: 15px; color: #fff; display: flex; align-items: center; gap: 10px; }
-        
-        .carousel-container { display: flex; gap: 16px; overflow-x: auto; scroll-behavior: smooth; padding-bottom: 15px; padding-right: 4%; scrollbar-width: none; }
+        /* HERO BANNER RESPONSIVO */
+        .hero-banner { width: 92%; margin: 0 auto 25px auto; min-height: 280px; border-radius: 16px; background: linear-gradient(180deg, rgba(20,20,20,0.4) 0%, rgba(20,20,20,0.95) 100%), #222 center/cover no-repeat; display: flex; flex-direction: column; justify-content: flex-end; padding: 25px; border: 1px solid rgba(255,255,255,0.08); }
+        .hero-title { font-size: clamp(22px, 5vw, 40px); font-weight: 900; margin-bottom: 8px; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
+        .hero-desc { max-width: 600px; color: #ccc; font-size: clamp(12px, 2vw, 14px); line-height: 1.4; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* CARROSSEL ADAPTÁVEL (TOUCH + MOUSE + TV SCROLL) */
+        .section-row { margin-bottom: 30px; padding-left: 4%; }
+        .section-title { font-size: clamp(16px, 3vw, 20px); font-weight: 800; margin-bottom: 12px; color: #fff; display: flex; align-items: center; justify-content: space-between; padding-right: 4%; }
+
+        .carousel-container { display: flex; gap: 12px; overflow-x: auto; scroll-behavior: smooth; padding-bottom: 10px; padding-right: 4%; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .carousel-container::-webkit-scrollbar { display: none; }
 
-        /* CARDS DO CATÁLOGO */
-        .media-card { flex: 0 0 180px; height: 270px; border-radius: 12px; position: relative; overflow: hidden; background: #222; cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; border: 1px solid rgba(255,255,255,0.08); }
-        .media-card:hover { transform: scale(1.06); z-index: 10; box-shadow: 0 10px 25px rgba(229, 9, 20, 0.4); border-color: #e50914; }
-        .media-card img { width: 100%; height: 100%; object-fit: cover; }
-        .media-card-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.95) 100%); padding: 12px; display: flex; flex-direction: column; justify-content: flex-end; }
-        .media-card-title { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .media-card-tag { font-size: 10px; font-weight: 800; color: #e50914; text-transform: uppercase; margin-bottom: 2px; }
+        /* CARDS */
+        .media-card { flex: 0 0 clamp(130px, 22vw, 180px); height: clamp(195px, 33vw, 270px); border-radius: 10px; position: relative; overflow: hidden; background: #1a1a1a; cursor: pointer; transition: transform 0.2s; border: 1px solid rgba(255,255,255,0.08); }
+        .media-card:hover, .media-card:focus { transform: scale(1.04); z-index: 5; border-color: #e50914; }
+        .media-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .media-card-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.9) 100%); padding: 10px; display: flex; flex-direction: column; justify-content: flex-end; }
+        .media-card-title { font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .media-card-tag { font-size: 9px; font-weight: 800; color: #e50914; text-transform: uppercase; }
 
-        .btn-edit-card { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.7); color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 4px 8px; border-radius: 6px; font-size: 11px; cursor: pointer; font-weight: 600; z-index: 12; }
-        .btn-edit-card:hover { background: #e50914; border-color: #e50914; }
+        .btn-card-edit { position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,0.8); color: #fff; border: 1px solid #444; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; cursor: pointer; z-index: 10; }
+        .btn-card-edit:hover { background: #e50914; border-color: #e50914; }
 
-        /* BOTÕES & INPUTS */
-        .btn-primary { padding: 12px 24px; border: none; border-radius: 8px; background: #e50914; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; transition: background 0.2s, transform 0.1s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-primary:hover { background: #b80710; transform: translateY(-1px); }
-        .btn-secondary { padding: 10px 18px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-        .btn-secondary:hover { background: rgba(255,255,255,0.25); }
+        /* BOTÕES & INPUTS UNIFICADOS */
+        .btn-primary { padding: 10px 18px; border: none; border-radius: 8px; background: #e50914; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+        .btn-primary:hover { background: #b80710; }
+        .btn-secondary { padding: 8px 14px; border-radius: 8px; border: 1px solid #444; background: #222; color: #fff; font-size: 12px; font-weight: 600; cursor: pointer; }
+        .btn-secondary:hover { background: #333; }
 
-        .input-group { margin-bottom: 14px; text-align: left; }
-        .input-group label { display: block; font-size: 11px; font-weight: 700; color: #aaa; margin-bottom: 5px; text-transform: uppercase; }
-        .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #1f1f1f; color: #fff; font-size: 13px; outline: none; }
-        .input-group input:focus, .input-group select:focus, .input-group textarea:focus { border-color: #e50914; background: #262626; }
-        
-        /* FILE INPUTS CUSTOMIZADOS */
-        input[type="file"] { padding: 8px; background: #181818; border: 1px dashed #444; cursor: pointer; }
+        .input-group { margin-bottom: 12px; text-align: left; }
+        .input-group label { display: block; font-size: 11px; font-weight: 700; color: #aaa; margin-bottom: 4px; text-transform: uppercase; }
+        .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: #fff; font-size: 13px; outline: none; }
 
-        /* MODAIS */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
-        .modal-body-custom { background: #181818; border: 1px solid #2a2a2a; border-radius: 16px; width: 100%; max-width: 650px; max-height: 90vh; overflow-y: auto; padding: 25px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.9); }
-        .modal-close { position: absolute; top: 15px; right: 15px; background: #2a2a2a; color: #fff; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 16px; font-weight: bold; }
+        /* MODAL RESPONSIVO */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.88); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
+        .modal-body { background: #181818; border: 1px solid #2a2a2a; border-radius: 14px; width: 100%; max-width: 600px; max-height: 88vh; overflow-y: auto; padding: 20px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .modal-close { position: absolute; top: 12px; right: 12px; background: #2a2a2a; color: #fff; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 16px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 10; }
 
-        /* ADMIN EDITOR BUILDER */
-        .season-box { background: #222; border: 1px solid #333; border-radius: 10px; padding: 14px; margin-top: 12px; }
-        .episode-box { background: #181818; border: 1px solid #2a2a2a; border-radius: 8px; padding: 10px; margin-top: 8px; }
+        /* ESTRUTURA DE TEMPORADAS / EPISÓDIOS */
+        .season-box { background: #222; border: 1px solid #333; border-radius: 8px; padding: 12px; margin-top: 10px; }
+        .ep-box { background: #161616; border: 1px solid #282828; border-radius: 6px; padding: 10px; margin-top: 8px; }
 
-        /* PLAYER DE VÍDEO FULLSCREEN */
-        .video-player-container { width: 100%; max-width: 950px; background: #000; border-radius: 16px; overflow: hidden; position: relative; }
-        video { width: 100%; max-height: 75vh; outline: none; display: block; background: #000; }
+        /* VIDEO PLAYER COMPLETO */
+        .player-wrapper { width: 100%; max-width: 900px; background: #000; border-radius: 12px; overflow: hidden; position: relative; }
+        video { width: 100%; max-height: 70vh; background: #000; display: block; outline: none; }
 
         .hidden { display: none !important; }
-        #msg { position: fixed; bottom: 20px; right: 20px; padding: 12px 20px; border-radius: 8px; font-size: 13px; font-weight: 700; z-index: 2000; }
+        #msg { position: fixed; bottom: 15px; right: 15px; padding: 10px 16px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 2000; }
         .msg-success { background: #2e7d32; color: #fff; }
         .msg-error { background: #c62828; color: #fff; }
+
+        @media (max-width: 600px) {
+            header { padding: 0 3%; }
+            .user-actions { gap: 6px; }
+            .btn-primary { padding: 8px 12px; font-size: 11px; }
+            .btn-secondary { padding: 6px 10px; font-size: 11px; }
+        }
     </style>
 </head>
 <body>
 
-    <header id="mainHeader">
-        <div style="display:flex; align-items:center; gap:30px;">
-            <div class="brand">MASTERFLIX</div>
-            <nav class="nav-links" id="navLinks">
-                <a class="nav-link active" data-filter="all">Início</a>
-                <a class="nav-link" data-filter="movie">Filmes</a>
-                <a class="nav-link" data-filter="serie">Séries</a>
-            </nav>
-        </div>
-
+    <header>
+        <div class="brand">🎬 MASTERFLIX</div>
         <div class="user-actions">
-            <input type="text" id="searchInput" placeholder="Pesquisar..." style="padding: 8px 14px; border-radius: 20px; border: 1px solid #333; background: #000; color: #fff; font-size: 12px; outline: none;">
+            <input type="text" id="searchInput" placeholder="Pesquisar..." style="padding: 6px 10px; border-radius: 16px; border: 1px solid #333; background: #000; color: #fff; font-size: 11px; width: 110px;">
             <span id="adminBadge" class="admin-badge hidden">ADMIN</span>
-            <button class="btn-primary" id="btnOpenCreator" style="padding: 8px 14px; font-size: 12px;">+ Criar Conteúdo</button>
-            <button class="btn-secondary" id="btnLogout" style="padding: 8px 12px; font-size: 12px;">Sair</button>
+            <button class="btn-primary" id="btnOpenCreator">+ Criar / Publicar</button>
+            <button class="btn-secondary" id="btnLogout">Sair</button>
         </div>
     </header>
 
     <div id="authOverlay" class="modal-overlay">
-        <div class="modal-body-custom" style="max-width: 400px; text-align: center;">
-            <div class="brand" style="font-size: 36px; margin-bottom: 10px;">MASTERFLIX</div>
-            <p style="color: #888; font-size: 13px; margin-bottom: 20px;">Entre para gerenciar seus filmes e séries locais</p>
-            
+        <div class="modal-body" style="max-width: 360px; text-align: center;">
+            <div class="brand" style="font-size: 32px; justify-content: center; margin-bottom: 10px;">🎬 MASTERFLIX</div>
+            <p style="color: #888; font-size: 12px; margin-bottom: 18px;">Acesse para gerenciar e assistir seus conteúdos</p>
             <form id="loginForm">
                 <div class="input-group">
                     <label>E-mail Administrador</label>
@@ -113,38 +108,38 @@
                     <label>Senha</label>
                     <input type="password" id="loginPassword" placeholder="••••••••" required>
                 </div>
-                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">Acessar Plataforma</button>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 8px;">Entrar na Plataforma</button>
             </form>
         </div>
     </div>
 
-    <main class="app-container" id="appMain">
+    <main class="app-container">
         
         <div class="hero-banner" id="heroBanner">
-            <span style="font-size: 12px; font-weight: 800; color: #e50914; text-transform: uppercase;">Em Destaque</span>
-            <h1 class="hero-title" id="heroTitle">Bem-vindo ao MasterFlix</h1>
-            <p class="hero-desc" id="heroDesc">Adicione seus arquivos de filmes ou séries direto do seu dispositivo para começar a assistir em alta qualidade e sem limitações de tamanho de tela.</p>
+            <span style="font-size: 10px; font-weight: 800; color: #e50914; text-transform: uppercase;">Destaque do Catálogo</span>
+            <h1 class="hero-title" id="heroTitle">Carregando catálogo...</h1>
+            <p class="hero-desc" id="heroDesc">Adicione seus filmes ou séries direto do seu dispositivo para começar a assistir em alta qualidade em qualquer tela.</p>
             <div>
                 <button class="btn-primary" id="heroPlayBtn">▶ Assistir Agora</button>
             </div>
         </div>
 
-        <div class="section-row" id="moviesSection">
-            <div class="section-title">🎬 Filmes</div>
+        <div class="section-row">
+            <div class="section-title"><span>🎬 Filmes</span></div>
             <div class="carousel-container" id="moviesCarousel"></div>
         </div>
 
-        <div class="section-row" id="seriesSection">
-            <div class="section-title">📺 Séries e Temporadas</div>
+        <div class="section-row">
+            <div class="section-title"><span>📺 Séries e Temporadas</span></div>
             <div class="carousel-container" id="seriesCarousel"></div>
         </div>
 
     </main>
 
     <div id="creatorModal" class="modal-overlay hidden">
-        <div class="modal-body-custom">
+        <div class="modal-body">
             <button class="modal-close" id="btnCloseCreator">&times;</button>
-            <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 15px;" id="creatorTitle">Criar Novo Conteúdo</h2>
+            <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 12px;" id="creatorTitle">Criar Conteúdo</h2>
 
             <form id="mediaForm">
                 <input type="hidden" id="editMediaId">
@@ -153,8 +148,8 @@
                     <div class="input-group" style="flex:1;">
                         <label>Tipo</label>
                         <select id="mediaType">
-                            <option value="movie">Filme (Arquivo de Vídeo Único)</option>
-                            <option value="serie">Série (Com Temporadas e Episódios)</option>
+                            <option value="movie">Filme (Vídeo Único)</option>
+                            <option value="serie">Série (Temporadas & Episódios)</option>
                         </select>
                     </div>
                     <div class="input-group" style="flex:1;">
@@ -165,13 +160,13 @@
 
                 <div class="input-group">
                     <label>Título</label>
-                    <input type="text" id="mediaTitle" placeholder="Nome do filme ou série" required>
+                    <input type="text" id="mediaTitle" placeholder="Nome do título" required>
                 </div>
 
                 <div class="input-group">
-                    <label>Foto de Capa (Arquivo de Imagem Local ou URL)</label>
+                    <label>Foto da Capa (Arquivo do Dispositivo ou URL)</label>
                     <input type="file" id="mediaCoverFile" accept="image/*">
-                    <input type="url" id="mediaCoverUrl" placeholder="Ou cole a URL da Imagem" style="margin-top: 6px;">
+                    <input type="url" id="mediaCoverUrl" placeholder="Ou cole o link da imagem" style="margin-top: 6px;">
                 </div>
 
                 <div class="input-group">
@@ -180,33 +175,34 @@
                 </div>
 
                 <div id="movieFileArea" class="input-group">
-                    <label>Arquivo de Vídeo do Filme (Do Dispositivo)</label>
+                    <label>Arquivo de Vídeo do Filme (Do Dispositivo ou URL)</label>
                     <input type="file" id="movieVideoFile" accept="video/*">
+                    <input type="url" id="movieVideoUrl" placeholder="Ou cole o link do vídeo (.mp4)" style="margin-top: 6px;">
                 </div>
 
                 <div id="seriesBuilderArea" class="hidden">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-                        <span style="font-size: 13px; font-weight: 700; color: #e50914;">Temporadas & Episódios</span>
-                        <button type="button" class="btn-secondary" id="btnAddSeasonBtn">+ Nova Temporada</button>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                        <span style="font-size: 12px; font-weight: 700; color: #e50914;">Gerenciador de Temporadas</span>
+                        <button type="button" class="btn-secondary" id="btnAddSeasonBtn">+ Temporada</button>
                     </div>
                     <div id="seasonsList"></div>
                 </div>
 
-                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 20px;">Salvar Conteúdo</button>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 15px;">Salvar / Publicar</button>
             </form>
         </div>
     </div>
 
     <div id="detailsModal" class="modal-overlay hidden">
-        <div class="modal-body-custom" style="max-width: 550px;">
+        <div class="modal-body" style="max-width: 500px;">
             <button class="modal-close" id="btnCloseDetails">&times;</button>
-            <img id="detailCover" src="" style="width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
-            <h2 id="detailTitle" style="font-size: 24px; font-weight: 800;"></h2>
-            <div style="font-size: 12px; color: #e50914; font-weight: 700; margin: 5px 0 12px 0;" id="detailMeta"></div>
-            <p id="detailDesc" style="font-size: 13px; color: #aaa; line-height: 1.5; margin-bottom: 20px;"></p>
+            <img id="detailCover" src="" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 12px;">
+            <h2 id="detailTitle" style="font-size: 20px; font-weight: 800;"></h2>
+            <div style="font-size: 11px; color: #e50914; font-weight: 700; margin: 4px 0 10px 0;" id="detailMeta"></div>
+            <p id="detailDesc" style="font-size: 12px; color: #aaa; line-height: 1.4; margin-bottom: 16px;"></p>
 
             <div id="detailMovieArea" class="hidden">
-                <button class="btn-primary" id="btnPlayMovieFile" style="width: 100%;">▶ Iniciar Filme</button>
+                <button class="btn-primary" id="btnPlayMovieFile" style="width: 100%;">▶ Assistir Filme</button>
             </div>
 
             <div id="detailSerieArea" class="hidden">
@@ -214,18 +210,18 @@
                     <label>Selecione a Temporada</label>
                     <select id="detailSeasonSelect"></select>
                 </div>
-                <div id="episodesListContainer" style="display:flex; flex-direction:column; gap:10px; margin-top:10px;"></div>
+                <div id="episodesListContainer" style="display:flex; flex-direction:column; gap:8px; margin-top:8px;"></div>
             </div>
         </div>
     </div>
 
     <div id="playerModal" class="modal-overlay hidden">
-        <div class="video-player-container">
-            <button class="modal-close" id="btnClosePlayer" style="z-index: 20;">&times;</button>
+        <div class="player-wrapper">
+            <button class="modal-close" id="btnClosePlayer" style="z-index: 30;">&times;</button>
             <video id="mainVideoPlayer" controls controlsList="nodownload" playsinline></video>
-            <div style="padding: 15px; display: flex; justify-content: space-between; align-items: center; background: #111;">
-                <span id="playerVideoTitle" style="font-size: 14px; font-weight: 700;"></span>
-                <button class="btn-secondary" id="btnToggleFull">🖥️ Ajustar Tela Cheia</button>
+            <div style="padding: 12px; display: flex; justify-content: space-between; align-items: center; background: #111;">
+                <span id="playerVideoTitle" style="font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%;"></span>
+                <button class="btn-secondary" id="btnToggleFull">🖥️ Tela Cheia</button>
             </div>
         </div>
     </div>
@@ -235,7 +231,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getDatabase, ref, get, set, push, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, get, set, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const ADMIN_EMAIL = "raiyuri.freefire@gmail.com";
 
@@ -256,7 +252,7 @@
         let mediaCatalog = [];
         let activeItem = null;
         let seasonsBuilder = [];
-        let localFileStore = {}; // Armazena URLs de arquivos locais do dispositivo (Blobs)
+        let localFileStore = {};
 
         function showMsg(text, type) {
             const msg = document.getElementById('msg');
@@ -266,7 +262,17 @@
             setTimeout(() => msg.classList.add('hidden'), 3500);
         }
 
-        // TIPO SWITCHER
+        // CONVERTER IMAGEM LOCAL PARA BASE64 PARA SALVAR DE VERDADE
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        // CONTROLADOR DE TIPO (FILME OU SÉRIE)
         document.getElementById('mediaType').onchange = (e) => {
             if (e.target.value === 'movie') {
                 document.getElementById('movieFileArea').classList.remove('hidden');
@@ -278,7 +284,7 @@
             }
         };
 
-        // RENDERIZAR TEMPORADAS NO MODELO DE EDIÇÃO
+        // RENDERIZAR SÉRIES NO PAINEL
         function renderSeasonsBuilder() {
             const container = document.getElementById('seasonsList');
             container.innerHTML = "";
@@ -287,27 +293,24 @@
                 const sDiv = document.createElement('div');
                 sDiv.className = 'season-box';
                 sDiv.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <div style="display:flex; justify-between; align-items:center; margin-bottom:6px;">
                         <strong style="color:#e50914; font-size:12px;">Temporada ${sIdx + 1}</strong>
-                        <button type="button" class="btn-secondary" style="font-size:10px; padding:3px 8px;" onclick="addEpisode(${sIdx})">+ Add Episódio</button>
+                        <button type="button" class="btn-secondary" style="font-size:10px; padding:2px 6px;" onclick="addEpisode(${sIdx})">+ Add Episódio</button>
                     </div>
                 `;
 
-                season.episodes.forEach((ep, eIdx) => {
+                (season.episodes || []).forEach((ep, eIdx) => {
                     const epDiv = document.createElement('div');
-                    epDiv.className = 'episode-box';
+                    epDiv.className = 'ep-box';
                     epDiv.innerHTML = `
                         <div class="input-group">
                             <label>Episódio ${eIdx + 1} - Título</label>
-                            <input type="text" value="${ep.title || ''}" onchange="updateEp(${sIdx}, ${eIdx}, 'title', this.value)" placeholder="Título do Episódio" required>
+                            <input type="text" value="${ep.title || ''}" onchange="updateEp(${sIdx}, ${eIdx}, 'title', this.value)" placeholder="Ex: O Início" required>
                         </div>
                         <div class="input-group">
-                            <label>Arquivo do Episódio (Dispositivo)</label>
+                            <label>Vídeo do Episódio (Arquivo do Dispositivo ou URL)</label>
                             <input type="file" accept="video/*" onchange="storeEpFile(event, ${sIdx}, ${eIdx})">
-                        </div>
-                        <div class="input-group">
-                            <label>Foto do Episódio (Opcional)</label>
-                            <input type="file" accept="image/*" onchange="storeEpCoverFile(event, ${sIdx}, ${eIdx})">
+                            <input type="url" value="${ep.videoUrl || ''}" placeholder="Ou cole a URL do vídeo" onchange="updateEp(${sIdx}, ${eIdx}, 'videoUrl', this.value)" style="margin-top:4px;">
                         </div>
                     `;
                     sDiv.appendChild(epDiv);
@@ -318,12 +321,12 @@
         }
 
         function addSeason() {
-            seasonsBuilder.push({ seasonNumber: seasonsBuilder.length + 1, episodes: [{ title: '', videoKey: '', coverKey: '' }] });
+            seasonsBuilder.push({ seasonNumber: seasonsBuilder.length + 1, episodes: [{ title: '', videoUrl: '', videoKey: '' }] });
             renderSeasonsBuilder();
         }
 
         window.addEpisode = (sIdx) => {
-            seasonsBuilder[sIdx].episodes.push({ title: '', videoKey: '', coverKey: '' });
+            seasonsBuilder[sIdx].episodes.push({ title: '', videoUrl: '', videoKey: '' });
             renderSeasonsBuilder();
         };
 
@@ -340,26 +343,21 @@
             }
         };
 
-        window.storeEpCoverFile = (e, sIdx, eIdx) => {
-            const file = e.target.files[0];
-            if (file) {
-                const key = `ep_cover_${Date.now()}_${sIdx}_${eIdx}`;
-                localFileStore[key] = URL.createObjectURL(file);
-                seasonsBuilder[sIdx].episodes[eIdx].coverKey = key;
-            }
-        };
-
         document.getElementById('btnAddSeasonBtn').onclick = addSeason;
 
-        // CARREGAR CATÁLOGO DO FIREBASE
+        // CARREGAR E RENDERIZAR CATÁLOGO
         async function loadCatalog() {
-            const snap = await get(ref(rtdb, "catalog"));
-            mediaCatalog = [];
-            if (snap.exists()) {
-                const data = snap.val();
-                for (let k in data) mediaCatalog.push({ id: k, ...data[k] });
+            try {
+                const snap = await get(ref(rtdb, "catalog"));
+                mediaCatalog = [];
+                if (snap.exists()) {
+                    const data = snap.val();
+                    for (let k in data) mediaCatalog.push({ id: k, ...data[k] });
+                }
+                renderApp();
+            } catch (e) {
+                showMsg('Erro ao carregar catálogo: ' + e.message, 'error');
             }
-            renderApp();
         }
 
         function renderApp() {
@@ -373,17 +371,21 @@
             const user = auth.currentUser;
             const isAdmin = user && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
+            let hasItems = false;
+
             mediaCatalog.forEach(item => {
                 if (query && !item.title.toLowerCase().includes(query)) return;
+                hasItems = true;
 
                 const card = document.createElement('div');
                 card.className = 'media-card';
-                
-                const coverSrc = item.coverKey && localFileStore[item.coverKey] ? localFileStore[item.coverKey] : (item.coverUrl || 'https://via.placeholder.com/200x300?text=Sem+Capa');
+                card.tabIndex = 0; // Suporte a navegação por controle remoto de Smart TV
+
+                const coverSrc = item.coverBase64 || item.coverUrl || 'https://via.placeholder.com/200x300?text=Sem+Capa';
 
                 card.innerHTML = `
-                    <img src="${coverSrc}" alt="${item.title}">
-                    ${isAdmin ? `<button class="btn-edit-card" onclick="event.stopPropagation(); editMedia('${item.id}')">✏️ Editar</button>` : ''}
+                    <img src="${coverSrc}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/200x300?text=Erro+Capa'">
+                    ${isAdmin ? `<button class="btn-card-edit" onclick="event.stopPropagation(); editMedia('${item.id}')">✏️ Editar</button>` : ''}
                     <div class="media-card-overlay">
                         <span class="media-card-tag">${item.type === 'movie' ? 'Filme' : 'Série'}</span>
                         <div class="media-card-title">${item.title}</div>
@@ -391,6 +393,7 @@
                 `;
 
                 card.onclick = () => openDetails(item);
+                card.onkeydown = (e) => { if(e.key === 'Enter') openDetails(item); };
 
                 if (item.type === 'movie') moviesCarousel.appendChild(card);
                 else seriesCarousel.appendChild(card);
@@ -405,17 +408,17 @@
             activeItem = item;
             document.getElementById('heroTitle').innerText = item.title;
             document.getElementById('heroDesc').innerText = item.description;
-            const coverSrc = item.coverKey && localFileStore[item.coverKey] ? localFileStore[item.coverKey] : (item.coverUrl || '');
+            const coverSrc = item.coverBase64 || item.coverUrl || '';
             if (coverSrc) {
-                document.getElementById('heroBanner').style.backgroundImage = `linear-gradient(90deg, rgba(20,20,20,0.95) 0%, rgba(20,20,20,0.4) 60%, transparent 100%), url('${coverSrc}')`;
+                document.getElementById('heroBanner').style.backgroundImage = `linear-gradient(180deg, rgba(20,20,20,0.4) 0%, rgba(20,20,20,0.95) 100%), url('${coverSrc}')`;
             }
             document.getElementById('heroPlayBtn').onclick = () => openDetails(item);
         }
 
-        // ABRIR DETALHES
+        // DETALHES
         function openDetails(item) {
             activeItem = item;
-            const coverSrc = item.coverKey && localFileStore[item.coverKey] ? localFileStore[item.coverKey] : (item.coverUrl || '');
+            const coverSrc = item.coverBase64 || item.coverUrl || '';
             document.getElementById('detailCover').src = coverSrc;
             document.getElementById('detailTitle').innerText = item.title;
             document.getElementById('detailMeta').innerText = `${item.type === 'movie' ? 'FILME' : 'SÉRLE'} • ${item.year}`;
@@ -455,7 +458,7 @@
 
             episodes.forEach((ep, idx) => {
                 const epDiv = document.createElement('div');
-                epDiv.style.cssText = "display:flex; align-items:center; gap:12px; background:#222; padding:10px; border-radius:8px; cursor:pointer;";
+                epDiv.style.cssText = "display:flex; align-items:center; gap:10px; background:#222; padding:8px 12px; border-radius:6px; cursor:pointer;";
                 
                 const epVideoSrc = ep.videoKey ? localFileStore[ep.videoKey] : ep.videoUrl;
 
@@ -465,10 +468,9 @@
                 };
 
                 epDiv.innerHTML = `
-                    <div style="font-size:16px; font-weight:800; color:#e50914;">${idx + 1}</div>
+                    <div style="font-size:14px; font-weight:800; color:#e50914;">${idx + 1}</div>
                     <div>
-                        <div style="font-size:13px; font-weight:700;">${ep.title || 'Episódio sem nome'}</div>
-                        <div style="font-size:11px; color:#aaa;">Clique para assistir o arquivo do dispositivo</div>
+                        <div style="font-size:12px; font-weight:700;">${ep.title || 'Episódio sem título'}</div>
                     </div>
                 `;
                 container.appendChild(epDiv);
@@ -477,7 +479,7 @@
 
         function playVideo(src, title) {
             if (!src) {
-                showMsg('Nenhum arquivo de vídeo associado a este item!', 'error');
+                showMsg('Nenhum arquivo de vídeo encontrado! Adicione um arquivo ou link.', 'error');
                 return;
             }
             const player = document.getElementById('mainVideoPlayer');
@@ -487,7 +489,7 @@
             player.play();
         }
 
-        // SALVAR OU EDITAR CONTEÚDO
+        // SALVAR E PUBLICAR
         document.getElementById('mediaForm').onsubmit = async (e) => {
             e.preventDefault();
 
@@ -497,19 +499,19 @@
             const year = document.getElementById('mediaYear').value.trim();
             const description = document.getElementById('mediaDesc').value.trim();
             const coverUrl = document.getElementById('mediaCoverUrl').value.trim();
+            const videoUrl = document.getElementById('movieVideoUrl').value.trim();
 
             let payload = { type, title, year, description, coverUrl };
 
-            // CAPA LOCAL
+            // PROCESSAR FOTO EM BASE64 SE FOR ARQUIVO LOCAL
             const coverFile = document.getElementById('mediaCoverFile').files[0];
             if (coverFile) {
-                const cKey = `cover_${Date.now()}`;
-                localFileStore[cKey] = URL.createObjectURL(coverFile);
-                payload.coverKey = cKey;
+                payload.coverBase64 = await fileToBase64(coverFile);
             }
 
-            // ARQUIVO DE FILME LOCAL
+            // PROCESSAR VÍDEO SE FOR FILME DO DISPOSITIVO
             if (type === 'movie') {
+                payload.videoUrl = videoUrl;
                 const videoFile = document.getElementById('movieVideoFile').files[0];
                 if (videoFile) {
                     const vKey = `movie_vid_${Date.now()}`;
@@ -523,11 +525,11 @@
             try {
                 if (editId) {
                     await set(ref(rtdb, "catalog/" + editId), payload);
-                    showMsg('Conteúdo atualizado com sucesso!', 'success');
+                    showMsg('Conteúdo atualizado!', 'success');
                 } else {
                     const newRef = push(ref(rtdb, "catalog"));
                     await set(newRef, payload);
-                    showMsg('Novo conteúdo criado!', 'success');
+                    showMsg('Publicado com sucesso!', 'success');
                 }
 
                 document.getElementById('creatorModal').classList.add('hidden');
@@ -539,7 +541,7 @@
             }
         };
 
-        // MODO EDITAR
+        // EDITAR
         window.editMedia = (id) => {
             const item = mediaCatalog.find(m => m.id === id);
             if (!item) return;
@@ -550,6 +552,7 @@
             document.getElementById('mediaYear').value = item.year;
             document.getElementById('mediaDesc').value = item.description;
             document.getElementById('mediaCoverUrl').value = item.coverUrl || '';
+            document.getElementById('movieVideoUrl').value = item.videoUrl || '';
 
             document.getElementById('creatorTitle').innerText = "Editar Conteúdo";
 
@@ -566,7 +569,7 @@
             document.getElementById('creatorModal').classList.remove('hidden');
         };
 
-        // AUTH & BOTÕES
+        // EVENTOS GERAIS DE INTERFACE
         document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim();
@@ -575,16 +578,16 @@
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
                 document.getElementById('authOverlay').classList.add('hidden');
-                showMsg('Acesso Liberado!', 'success');
+                showMsg('Autenticado com sucesso!', 'success');
             } catch (err) {
-                showMsg('Erro no login: ' + err.message, 'error');
+                showMsg('Falha ao autenticar: ' + err.message, 'error');
             }
         };
 
         document.getElementById('btnOpenCreator').onclick = () => {
             document.getElementById('editMediaId').value = "";
             document.getElementById('mediaForm').reset();
-            document.getElementById('creatorTitle').innerText = "Criar Novo Conteúdo";
+            document.getElementById('creatorTitle').innerText = "Criar Conteúdo";
             seasonsBuilder = [];
             document.getElementById('seasonsList').innerHTML = "";
             document.getElementById('creatorModal').classList.remove('hidden');
@@ -600,8 +603,12 @@
 
         document.getElementById('btnToggleFull').onclick = () => {
             const p = document.getElementById('mainVideoPlayer');
-            if (!document.fullscreenElement) p.requestFullscreen();
-            else document.exitFullscreen();
+            if (!document.fullscreenElement) {
+                if (p.requestFullscreen) p.requestFullscreen();
+                else if (p.webkitRequestFullscreen) p.webkitRequestFullscreen();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
         };
 
         document.getElementById('btnLogout').onclick = () => signOut(auth);
