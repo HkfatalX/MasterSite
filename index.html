@@ -10,31 +10,35 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: #090a10; background-image: radial-gradient(at 0% 0%, rgba(0, 255, 136, 0.1) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(0, 180, 216, 0.1) 0px, transparent 50%); color: #f1f5f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
         
-        .card { background: rgba(18, 20, 29, 0.95); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; padding: 32px 24px; width: 100%; max-width: 600px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); backdrop-filter: blur(16px); text-align: center; }
+        .card { background: rgba(18, 20, 29, 0.95); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; padding: 28px 20px; width: 100%; max-width: 750px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); backdrop-filter: blur(16px); text-align: center; position: relative; }
         .logo { font-size: 32px; font-weight: 800; background: linear-gradient(135deg, #00ff88 0%, #00b4d8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; letter-spacing: -0.5px; }
         .subtitle { color: #94a3b8; font-size: 14px; margin-bottom: 20px; }
         
-        .input-group { margin-bottom: 18px; text-align: left; }
-        .input-group label { display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .input-group input { width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(10, 11, 18, 0.8); color: #fff; font-size: 14px; outline: none; transition: all 0.25s ease; }
-        .input-group input:focus { border-color: #00ff88; box-shadow: 0 0 12px rgba(0, 255, 136, 0.2); background: rgba(15, 17, 26, 0.95); }
+        .input-group { margin-bottom: 12px; text-align: left; }
+        .input-group label { display: block; font-size: 11px; font-weight: 600; color: #cbd5e1; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 11px 14px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(10, 11, 18, 0.8); color: #fff; font-size: 13px; outline: none; transition: all 0.25s ease; }
+        .input-group textarea { resize: vertical; min-height: 60px; }
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus { border-color: #00ff88; box-shadow: 0 0 12px rgba(0, 255, 136, 0.2); background: rgba(15, 17, 26, 0.95); }
         
-        .btn-primary { width: 100%; padding: 15px; border: none; border-radius: 12px; background: linear-gradient(135deg, #00ff88 0%, #00b4d8 100%); color: #08090e; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 10px; }
-        .btn-google { width: 100%; padding: 13px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; transition: background 0.2s; }
+        .btn-primary { width: 100%; padding: 13px; border: none; border-radius: 12px; background: linear-gradient(135deg, #00ff88 0%, #00b4d8 100%); color: #08090e; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 10px; }
+        .btn-secondary { padding: 8px 14px; border-radius: 10px; border: 1px solid rgba(0, 255, 136, 0.4); background: rgba(0, 255, 136, 0.1); color: #00ff88; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        .btn-secondary:hover { background: rgba(0, 255, 136, 0.25); }
+        
+        .btn-google { width: 100%; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; transition: background 0.2s; }
         .btn-google:hover { background: rgba(255, 255, 255, 0.12); }
         .btn-google svg { width: 18px; height: 18px; }
 
-        .divider { display: flex; align-items: center; text-align: center; color: #64748b; font-size: 12px; margin: 20px 0; }
+        .divider { display: flex; align-items: center; text-align: center; color: #64748b; font-size: 12px; margin: 18px 0; }
         .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
         .divider span { padding: 0 10px; }
 
-        .btn-danger { width: 100%; padding: 12px; border: none; border-radius: 12px; background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 25px; transition: all 0.2s; }
+        .btn-danger { width: 100%; padding: 12px; border: none; border-radius: 12px; background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 20px; transition: all 0.2s; }
         .btn-danger:hover { background: #ef4444; color: #fff; }
 
         .toggle-text { margin-top: 16px; font-size: 13px; color: #94a3b8; }
         .toggle-btn { background: none; border: none; color: #00b4d8; font-weight: 600; cursor: pointer; font-size: 13px; text-decoration: underline; }
         
-        #msg { margin-top: 20px; font-size: 13px; font-weight: 600; padding: 10px 14px; border-radius: 10px; word-break: break-word; }
+        #msg { margin-top: 16px; font-size: 13px; font-weight: 600; padding: 10px 14px; border-radius: 10px; word-break: break-word; }
         .msg-success { display: block !important; color: #00ff88; background: rgba(0, 255, 136, 0.1); border: 1px solid rgba(0, 255, 136, 0.2); }
         .msg-error { display: block !important; color: #f87171; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); }
         
@@ -42,31 +46,62 @@
         .hidden { display: none !important; }
 
         /* HEADER DO SITE DE FILMES */
-        .app-header { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 16px; }
+        .app-header { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 16px; }
         .user-nav-bar { display: flex; justify-content: space-between; align-items: center; }
         .user-welcome { font-size: 13px; color: #94a3b8; text-align: left; }
         .user-welcome span { color: #00ff88; font-weight: 700; }
-        
+        .admin-badge { background: rgba(0, 255, 136, 0.2); color: #00ff88; border: 1px solid #00ff88; padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; margin-left: 6px; }
+
         /* CATEGORIAS */
         .categories-nav { display: flex; justify-content: center; gap: 8px; }
         .cat-btn { padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.04); color: #94a3b8; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.25s; }
         .cat-btn.active, .cat-btn:hover { background: linear-gradient(135deg, #00ff88 0%, #00b4d8 100%); color: #08090e; border-color: transparent; }
 
         /* PESQUISA */
-        .search-box { position: relative; width: 100%; margin-top: 4px; }
+        .search-box { position: relative; width: 100%; }
         .search-box input { width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(10, 11, 18, 0.9); color: #fff; font-size: 14px; outline: none; }
-        .search-box input:focus { border-color: #00b4d8; box-shadow: 0 0 10px rgba(0, 180, 216, 0.25); }
+
+        /* PAINEL ADMIN */
+        .admin-panel { background: rgba(0, 255, 136, 0.04); border: 1px dashed rgba(0, 255, 136, 0.3); border-radius: 16px; padding: 16px; margin-bottom: 20px; text-align: left; max-height: 480px; overflow-y: auto; }
+        .admin-panel h4 { color: #00ff88; font-size: 14px; margin-bottom: 12px; }
+        .season-block { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px; margin-top: 10px; }
+        .episode-card-input { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); padding: 10px; border-radius: 8px; margin-top: 8px; }
 
         /* GRID DE CATALOGO */
-        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 14px; margin-top: 16px; max-height: 380px; overflow-y: auto; padding-right: 4px; }
-        .catalog-card { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 12px; text-align: left; transition: transform 0.2s; position: relative; }
-        .catalog-card:hover { transform: translateY(-3px); border-color: rgba(0, 255, 136, 0.4); }
+        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 14px; max-height: 420px; overflow-y: auto; padding-right: 4px; }
+        .catalog-card { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; overflow: hidden; text-align: left; transition: transform 0.2s, border-color 0.2s; cursor: pointer; position: relative; }
+        .catalog-card:hover { transform: translateY(-4px); border-color: rgba(0, 255, 136, 0.5); }
+        .card-cover { width: 100%; height: 165px; object-fit: cover; background: #181b26; display: block; }
+        .card-details { padding: 10px; }
         .tag-type { position: absolute; top: 8px; right: 8px; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 6px; text-transform: uppercase; }
-        .tag-movie { background: rgba(0, 255, 136, 0.2); color: #00ff88; }
-        .tag-serie { background: rgba(0, 180, 216, 0.2); color: #00b4d8; }
-        .media-title { font-size: 13px; font-weight: 700; color: #fff; margin-top: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .media-info { font-size: 11px; color: #64748b; margin-top: 2px; }
-        .no-results { grid-column: 1 / -1; color: #64748b; font-size: 13px; padding: 20px 0; }
+        .tag-movie { background: rgba(0, 255, 136, 0.85); color: #08090e; }
+        .tag-serie { background: rgba(0, 180, 216, 0.85); color: #08090e; }
+        .media-title { font-size: 12px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .media-info { font-size: 10px; color: #64748b; margin-top: 2px; }
+        .no-results { grid-column: 1 / -1; color: #64748b; font-size: 13px; padding: 30px 0; }
+
+        /* MODAIS */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.88); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 999; padding: 16px; }
+        .modal-content { background: rgba(18, 20, 29, 0.98); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; text-align: left; position: relative; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8); }
+        .modal-cover { width: 100%; height: 210px; object-fit: cover; background: #12141d; }
+        .modal-body { padding: 20px; }
+        .modal-title { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+        .modal-meta { font-size: 12px; color: #00ff88; font-weight: 600; margin-bottom: 12px; display: flex; gap: 10px; align-items: center; }
+        .modal-desc { font-size: 13px; color: #94a3b8; line-height: 1.5; margin-bottom: 20px; }
+        .modal-close-btn { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.6); color: #fff; border: none; width: 34px; height: 34px; border-radius: 50%; font-size: 18px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 10; }
+        
+        /* EPISODIOS LIST */
+        .episodes-container { margin-top: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .ep-card { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 8px; cursor: pointer; transition: background 0.2s; }
+        .ep-card:hover { background: rgba(0,255,136,0.1); border-color: rgba(0,255,136,0.3); }
+        .ep-thumb { width: 75px; height: 50px; border-radius: 8px; object-fit: cover; background: #000; flex-shrink: 0; }
+        .ep-title { font-size: 13px; font-weight: 700; color: #fff; }
+        
+        /* PLAYER MODAL */
+        .player-modal { width: 100%; max-width: 800px; background: #050608; border-radius: 16px; overflow: hidden; }
+        .video-wrapper { position: relative; width: 100%; background: #000; display: flex; justify-content: center; align-items: center; }
+        video { width: 100%; max-height: 70vh; background: #000; }
+        .player-controls-bar { padding: 14px; display: flex; justify-content: space-between; align-items: center; background: #0e1017; border-top: 1px solid rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
@@ -87,14 +122,14 @@
             <form id="loginForm" autocomplete="off">
                 <div class="input-group">
                     <label>E-mail</label>
-                    <input type="email" id="loginEmail" required placeholder="seu-email@gmail.com" autocomplete="off">
+                    <input type="email" id="loginEmail" required placeholder="seu-email@gmail.com">
                 </div>
                 <div class="input-group">
                     <label>Senha</label>
-                    <input type="password" id="loginPassword" required placeholder="••••••••" autocomplete="new-password">
+                    <input type="password" id="loginPassword" required placeholder="••••••••">
                     <button type="button" class="forgot-btn" id="btnForgot">Esqueci a senha</button>
                 </div>
-                <button type="submit" class="btn-primary" style="margin-top: 25px;">Entrar no Catálogo</button>
+                <button type="submit" class="btn-primary" style="margin-top: 20px;">Entrar no Catálogo</button>
             </form>
             <p class="toggle-text">Não possui conta? <button type="button" class="toggle-btn" id="btnGoToReg">Cadastrar-se</button></p>
         </div>
@@ -104,15 +139,15 @@
             <form id="regForm" autocomplete="off">
                 <div class="input-group">
                     <label>Nome de Usuário Único</label>
-                    <input type="text" id="regName" required placeholder="Ex: PlayerPro" autocomplete="off">
+                    <input type="text" id="regName" required placeholder="Ex: PlayerPro">
                 </div>
                 <div class="input-group">
                     <label>E-mail</label>
-                    <input type="email" id="regEmail" required placeholder="seu-email@gmail.com" autocomplete="off">
+                    <input type="email" id="regEmail" required placeholder="seu-email@gmail.com">
                 </div>
                 <div class="input-group">
                     <label>Senha Segura</label>
-                    <input type="password" id="regPassword" required placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+                    <input type="password" id="regPassword" required placeholder="Mínimo 6 caracteres">
                 </div>
                 <button type="submit" class="btn-primary">Criar Conta</button>
             </form>
@@ -120,17 +155,13 @@
         </div>
 
         <div id="googleSetupSection" class="hidden">
-            <p class="subtitle">Defina seu Nome Único e Senha de Acesso.</p>
+            <p class="subtitle">Defina seu Nome Único para continuar.</p>
             <form id="googleSetupForm" autocomplete="off">
                 <div class="input-group">
                     <label>Nome de Usuário Customizado</label>
-                    <input type="text" id="googleName" required placeholder="Ex: Mestre123" autocomplete="off">
+                    <input type="text" id="googleName" required placeholder="Ex: Mestre123">
                 </div>
-                <div class="input-group">
-                    <label>Crie uma Senha de Acesso</label>
-                    <input type="password" id="googlePassword" required placeholder="Mínimo 6 caracteres" autocomplete="new-password">
-                </div>
-                <button type="submit" class="btn-primary">Finalizar e Assistir</button>
+                <button type="submit" class="btn-primary">Finalizar e Entrar</button>
             </form>
         </div>
 
@@ -138,7 +169,10 @@
             
             <div class="app-header">
                 <div class="user-nav-bar">
-                    <div class="user-welcome">Olá, <span id="appUserName">-</span></div>
+                    <div class="user-welcome">
+                        Olá, <span id="appUserName">-</span>
+                        <span id="adminBadge" class="admin-badge hidden">ADMIN</span>
+                    </div>
                 </div>
 
                 <div class="categories-nav">
@@ -152,13 +186,100 @@
                 </div>
             </div>
 
-            <div class="catalog-grid" id="catalogGrid">
-                </div>
+            <div id="adminPanel" class="admin-panel hidden">
+                <h4>+ Publicar Conteúdo no Catálogo</h4>
+                <form id="addMediaForm">
+                    <div style="display: flex; gap: 10px;">
+                        <div class="input-group" style="flex:1;">
+                            <label>Tipo de Conteúdo</label>
+                            <select id="mediaType">
+                                <option value="movie">Filme (Arquivo Único)</option>
+                                <option value="serie">Série (Temporadas / Episódios)</option>
+                            </select>
+                        </div>
+                        <div class="input-group" style="flex:1;">
+                            <label>Ano de Lançamento</label>
+                            <input type="text" id="mediaYear" placeholder="Ex: 2024" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Título Principal</label>
+                        <input type="text" id="mediaTitle" placeholder="Ex: Batman ou Stranger Things" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Foto da Capa (URL do Pôster)</label>
+                        <input type="url" id="mediaCover" placeholder="https://link-da-imagem.png" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Descrição / Sinopse</label>
+                        <textarea id="mediaDescription" placeholder="Escreva sobre o filme ou série..." required></textarea>
+                    </div>
+
+                    <div id="movieLinkField" class="input-group">
+                        <label>Link / Arquivo do Vídeo do Filme</label>
+                        <input type="url" id="movieLink" placeholder="https://link-do-video.mp4">
+                    </div>
+
+                    <div id="seriesContainer" class="hidden">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                            <span style="font-size: 12px; font-weight: 700; color: #00b4d8;">Estrutura de Temporadas & Episódios</span>
+                            <button type="button" class="btn-secondary" id="btnAddSeason">+ Add Temporada</button>
+                        </div>
+                        <div id="seasonsList"></div>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="margin-top:15px;">Salvar e Publicar</button>
+                </form>
+            </div>
+
+            <div class="catalog-grid" id="catalogGrid"></div>
 
             <button type="button" id="btnLogout" class="btn-danger">Sair da Conta</button>
         </div>
 
         <p id="msg"></p>
+    </div>
+
+    <div id="mediaModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="modal-close-btn" id="btnCloseModal">&times;</button>
+            <img id="modalCover" class="modal-cover" src="" alt="Capa">
+            <div class="modal-body">
+                <div id="modalTitle" class="modal-title">Título</div>
+                <div class="modal-meta">
+                    <span id="modalType">FILME</span> • <span id="modalYear">2024</span>
+                </div>
+                <p id="modalDesc" class="modal-desc"></p>
+
+                <div id="modalMovieArea" class="hidden">
+                    <button id="btnPlayMovie" class="btn-primary" style="font-size:15px;">▶ Assistir Filme Agora</button>
+                </div>
+
+                <div id="modalSerieArea" class="hidden">
+                    <div class="input-group">
+                        <label>Selecione a Temporada</label>
+                        <select id="seasonSelect"></select>
+                    </div>
+                    <div id="episodesList" class="episodes-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="playerModal" class="modal-overlay hidden">
+        <div class="player-modal">
+            <div class="video-wrapper">
+                <button class="modal-close-btn" id="btnClosePlayer">&times;</button>
+                <video id="videoPlayer" controls controlsList="nodownload" playsinline></video>
+            </div>
+            <div class="player-controls-bar">
+                <span id="playerTitle" style="font-weight: 700; font-size: 14px; color: #fff;"></span>
+                <button type="button" class="btn-secondary" id="btnToggleFullscreen">🖥️ Preencher Tela Inteira</button>
+            </div>
+        </div>
     </div>
 
     <script type="module">
@@ -171,7 +292,6 @@
             signOut, 
             onAuthStateChanged,
             updateProfile,
-            updatePassword,
             GoogleAuthProvider,
             signInWithPopup
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -180,8 +300,12 @@
             getDatabase, 
             ref, 
             get, 
-            set 
+            set,
+            push,
+            onValue
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const ADMIN_EMAIL = "raiyuri.freefire@gmail.com";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCGD9DZDFp0w9baW8jiqgGGfkasAvqreY0",
@@ -199,18 +323,10 @@
         const googleProvider = new GoogleAuthProvider();
         googleProvider.setCustomParameters({ prompt: 'select_account' });
 
-        const mediaCatalog = [
-            { id: 1, title: "Homem-Aranha", type: "movie", year: "2023" },
-            { id: 2, title: "Avatar: O Caminho da Água", type: "movie", year: "2022" },
-            { id: 3, title: "Batman", type: "movie", year: "2022" },
-            { id: 4, title: "Stranger Things", type: "serie", year: "Temporada 4" },
-            { id: 5, title: "Wandinha", type: "serie", year: "Temporada 1" },
-            { id: 6, title: "The Last of Us", type: "serie", year: "Temporada 1" },
-            { id: 7, title: "Vingadores: Ultimato", type: "movie", year: "2019" },
-            { id: 8, title: "A Casa do Dragão", type: "serie", year: "Temporada 2" }
-        ];
-
         let currentCategory = "all";
+        let liveMediaList = [];
+        let currentOpenItem = null;
+        let adminSeasonsData = [];
 
         function showMsg(text, type) {
             const msg = document.getElementById('msg');
@@ -226,6 +342,7 @@
 
         function clearInputs() {
             document.querySelectorAll('input').forEach(i => i.value = '');
+            document.querySelectorAll('textarea').forEach(t => t.value = '');
         }
 
         function hideAllSections() {
@@ -235,21 +352,100 @@
             document.getElementById('mainSiteSection').classList.add('hidden');
         }
 
+        // TIPO DE MÍDIA ALTERNADO
+        document.getElementById('mediaType').onchange = (e) => {
+            if (e.target.value === 'movie') {
+                document.getElementById('movieLinkField').classList.remove('hidden');
+                document.getElementById('seriesContainer').classList.add('hidden');
+            } else {
+                document.getElementById('movieLinkField').classList.add('hidden');
+                document.getElementById('seriesContainer').classList.remove('hidden');
+                if (adminSeasonsData.length === 0) addSeasonUI();
+            }
+        };
+
+        // RENDERIZAR TEMPORADAS NO FORMULARIO ADMIN
+        function renderAdminSeasonsUI() {
+            const container = document.getElementById('seasonsList');
+            container.innerHTML = "";
+
+            adminSeasonsData.forEach((season, sIndex) => {
+                const sBlock = document.createElement('div');
+                sBlock.className = 'season-block';
+                sBlock.innerHTML = `
+                    <div style="display:flex; justify-between; align-items:center; margin-bottom: 8px;">
+                        <strong style="color:#00ff88; font-size:12px;">Temporada ${sIndex + 1}</strong>
+                        <button type="button" class="btn-secondary" style="padding: 2px 8px;" onclick="addEpisodeUI(${sIndex})">+ Add Episódio</button>
+                    </div>
+                `;
+
+                season.episodes.forEach((ep, eIndex) => {
+                    const epDiv = document.createElement('div');
+                    epDiv.className = 'episode-card-input';
+                    epDiv.innerHTML = `
+                        <div class="input-group">
+                            <label>Episódio ${eIndex + 1} - Título</label>
+                            <input type="text" placeholder="Ex: O Início" value="${ep.title || ''}" onchange="updateEpData(${sIndex}, ${eIndex}, 'title', this.value)" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Link/Arquivo do Vídeo</label>
+                            <input type="url" placeholder="https://video.mp4" value="${ep.videoUrl || ''}" onchange="updateEpData(${sIndex}, ${eIndex}, 'videoUrl', this.value)" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Foto do Episódio (Opcional - usa a foto da série se vazio)</label>
+                            <input type="url" placeholder="https://imagem.png" value="${ep.cover || ''}" onchange="updateEpData(${sIndex}, ${eIndex}, 'cover', this.value)">
+                        </div>
+                    `;
+                    sBlock.appendChild(epDiv);
+                });
+
+                container.appendChild(sBlock);
+            });
+        }
+
+        function addSeasonUI() {
+            adminSeasonsData.push({ seasonNumber: adminSeasonsData.length + 1, episodes: [{ title: '', videoUrl: '', cover: '' }] });
+            renderAdminSeasonsUI();
+        }
+
+        window.addEpisodeUI = (sIndex) => {
+            adminSeasonsData[sIndex].episodes.push({ title: '', videoUrl: '', cover: '' });
+            renderAdminSeasonsUI();
+        };
+
+        window.updateEpData = (sIndex, eIndex, key, val) => {
+            adminSeasonsData[sIndex].episodes[eIndex][key] = val;
+        };
+
+        document.getElementById('btnAddSeason').onclick = addSeasonUI;
+
+        // OUVIR BASE DE DADOS
+        function listenToMediaUpdates() {
+            onValue(ref(rtdb, "media_catalog"), (snapshot) => {
+                liveMediaList = [];
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    for (let key in data) {
+                        liveMediaList.push({ id: key, ...data[key] });
+                    }
+                }
+                renderCatalog();
+            });
+        }
+
         function renderCatalog() {
             const grid = document.getElementById('catalogGrid');
             const query = document.getElementById('searchInput').value.trim().toLowerCase();
-            
             grid.innerHTML = "";
 
-            const filtered = mediaCatalog.filter(item => {
+            const filtered = liveMediaList.filter(item => {
                 const matchCategory = (currentCategory === "all") || (item.type === currentCategory);
-                const cleanTitle = item.title.trim().toLowerCase();
-                const matchSearch = cleanTitle.includes(query) || cleanTitle.startsWith(query);
-                return matchCategory && matchSearch;
+                const cleanTitle = (item.title || "").trim().toLowerCase();
+                return matchCategory && (cleanTitle.includes(query) || cleanTitle.startsWith(query));
             });
 
             if (filtered.length === 0) {
-                grid.innerHTML = `<div class="no-results">Nenhum resultado encontrado.</div>`;
+                grid.innerHTML = `<div class="no-results">Nenhum filme ou série encontrado.</div>`;
                 return;
             }
 
@@ -257,15 +453,114 @@
                 const isMovie = item.type === "movie";
                 const card = document.createElement('div');
                 card.className = 'catalog-card';
+                card.onclick = () => openMediaModal(item);
+
                 card.innerHTML = `
                     <span class="tag-type ${isMovie ? 'tag-movie' : 'tag-serie'}">${isMovie ? 'Filme' : 'Série'}</span>
-                    <div style="font-size: 24px; margin-top: 6px;">${isMovie ? '🎬' : '📺'}</div>
-                    <div class="media-title">${item.title}</div>
-                    <div class="media-info">${item.year}</div>
+                    <img class="card-cover" src="${item.cover}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/150x220?text=Sem+Capa'">
+                    <div class="card-details">
+                        <div class="media-title">${item.title}</div>
+                        <div class="media-info">${item.year}</div>
+                    </div>
                 `;
                 grid.appendChild(card);
             });
         }
+
+        // ABRIR DETALHES
+        function openMediaModal(item) {
+            currentOpenItem = item;
+            document.getElementById('modalCover').src = item.cover;
+            document.getElementById('modalTitle').innerText = item.title;
+            document.getElementById('modalType').innerText = item.type === 'movie' ? 'FILME' : 'SÉRLE';
+            document.getElementById('modalYear').innerText = item.year;
+            document.getElementById('modalDesc').innerText = item.description || "Sem sinopse informada.";
+
+            if (item.type === 'movie') {
+                document.getElementById('modalMovieArea').classList.remove('hidden');
+                document.getElementById('modalSerieArea').classList.add('hidden');
+            } else {
+                document.getElementById('modalMovieArea').classList.add('hidden');
+                document.getElementById('modalSerieArea').classList.remove('hidden');
+
+                const select = document.getElementById('seasonSelect');
+                select.innerHTML = "";
+                
+                const seasons = item.seasons || [];
+                seasons.forEach((s, idx) => {
+                    const opt = document.createElement('option');
+                    opt.value = idx;
+                    opt.innerText = `Temporada ${idx + 1}`;
+                    select.appendChild(opt);
+                });
+
+                select.onchange = () => renderEpisodesList(seasons[select.value]?.episodes || []);
+                if (seasons.length > 0) renderEpisodesList(seasons[0].episodes || []);
+            }
+
+            document.getElementById('mediaModal').classList.remove('hidden');
+        }
+
+        function renderEpisodesList(episodes) {
+            const container = document.getElementById('episodesList');
+            container.innerHTML = "";
+
+            episodes.forEach((ep, idx) => {
+                const epDiv = document.createElement('div');
+                epDiv.className = 'ep-card';
+                const epThumb = ep.cover && ep.cover.trim() !== '' ? ep.cover : currentOpenItem.cover;
+
+                epDiv.onclick = () => {
+                    document.getElementById('mediaModal').classList.add('hidden');
+                    launchPlayer(ep.videoUrl, `${currentOpenItem.title} - Ep ${idx + 1}: ${ep.title}`);
+                };
+
+                epDiv.innerHTML = `
+                    <img class="ep-thumb" src="${epThumb}" onerror="this.src='${currentOpenItem.cover}'">
+                    <div>
+                        <div style="font-size: 10px; color: #00ff88;">EPISÓDIO ${idx + 1}</div>
+                        <div class="ep-title">${ep.title || 'Episódio sem título'}</div>
+                    </div>
+                `;
+                container.appendChild(epDiv);
+            });
+        }
+
+        document.getElementById('btnPlayMovie').onclick = () => {
+            document.getElementById('mediaModal').classList.add('hidden');
+            launchPlayer(currentOpenItem.link, currentOpenItem.title);
+        };
+
+        // LAUNCH PLAYER
+        function launchPlayer(url, title) {
+            const playerModal = document.getElementById('playerModal');
+            const video = document.getElementById('videoPlayer');
+            document.getElementById('playerTitle').innerText = title;
+            video.src = url;
+            playerModal.classList.remove('hidden');
+            video.play();
+        }
+
+        document.getElementById('btnClosePlayer').onclick = () => {
+            const video = document.getElementById('videoPlayer');
+            video.pause();
+            video.src = "";
+            document.getElementById('playerModal').classList.add('hidden');
+        };
+
+        document.getElementById('btnToggleFullscreen').onclick = () => {
+            const video = document.getElementById('videoPlayer');
+            if (!document.fullscreenElement) {
+                if (video.requestFullscreen) video.requestFullscreen();
+                else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        };
+
+        document.getElementById('btnCloseModal').onclick = () => {
+            document.getElementById('mediaModal').classList.add('hidden');
+        };
 
         document.querySelectorAll('.cat-btn').forEach(btn => {
             btn.onclick = (e) => {
@@ -294,7 +589,45 @@
             });
         }
 
-        // LOGIN GOOGLE CORRIGIDO
+        // SALVAR PUBLICACAO ADMIN
+        document.getElementById('addMediaForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const user = auth.currentUser;
+
+            if (!user || user.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+                showMsg('Apenas o administrador pode publicar.', 'error');
+                return;
+            }
+
+            const type = document.getElementById('mediaType').value;
+            const title = document.getElementById('mediaTitle').value.trim();
+            const year = document.getElementById('mediaYear').value.trim();
+            const cover = document.getElementById('mediaCover').value.trim();
+            const description = document.getElementById('mediaDescription').value.trim();
+
+            let payload = { type, title, year, cover, description };
+
+            if (type === 'movie') {
+                payload.link = document.getElementById('movieLink').value.trim();
+            } else {
+                payload.seasons = adminSeasonsData;
+            }
+
+            showMsg('Publicando no catálogo...', 'success');
+
+            try {
+                const newMediaRef = push(ref(rtdb, "media_catalog"));
+                await set(newMediaRef, payload);
+                showMsg('Conteúdo publicado com sucesso!', 'success');
+                document.getElementById('addMediaForm').reset();
+                adminSeasonsData = [];
+                document.getElementById('seasonsList').innerHTML = "";
+            } catch (err) {
+                showMsg('Erro ao publicar: ' + err.message, 'error');
+            }
+        };
+
+        // LOGIN GOOGLE
         document.getElementById('btnGoogleLogin').onclick = async () => {
             clearMsg();
             showMsg('Conectando ao Google...', 'success');
@@ -308,7 +641,6 @@
                 } else {
                     hideAllSections();
                     document.getElementById('googleSetupSection').classList.remove('hidden');
-                    showMsg('Escolha seu Nome de Usuário único para finalizar.', 'success');
                 }
             } catch (err) {
                 await signOut(auth);
@@ -316,52 +648,26 @@
             }
         };
 
-        // SETUP GOOGLE SEM BUG DE ALREADY-LINKED
+        // SETUP GOOGLE
         document.getElementById('googleSetupForm').onsubmit = async (e) => {
             e.preventDefault();
             const name = document.getElementById('googleName').value.trim();
-            const password = document.getElementById('googlePassword').value;
-
-            if (password.length < 6) {
-                showMsg('A senha deve ter no mínimo 6 caracteres.', 'error');
-                return;
-            }
-
-            showMsg('Verificando nome...', 'success');
 
             try {
                 const taken = await isUsernameTaken(name);
                 if (taken) {
-                    showMsg('Este nome de usuário já existe! Escolha outro.', 'error');
+                    showMsg('Este nome de usuário já existe!', 'error');
                     return;
                 }
 
                 const user = auth.currentUser;
-                if (!user) {
-                    showMsg('Sessão expirada. Faça login novamente.', 'error');
-                    return;
-                }
-
                 await updateProfile(user, { displayName: name });
-
-                try {
-                    await updatePassword(user, password);
-                } catch (pErr) {
-                    console.log("Senha salva no provedor original.");
-                }
-
                 await saveUserData(user.uid, name, user.email);
 
                 showMsg('Cadastro concluído!', 'success');
                 clearInputs();
-
-                hideAllSections();
-                document.getElementById('mainSiteSection').classList.remove('hidden');
-                document.getElementById('appUserName').innerText = name;
-                renderCatalog();
-
             } catch (err) {
-                showMsg('Erro ao salvar: ' + err.message, 'error');
+                showMsg('Erro: ' + err.message, 'error');
             }
         };
 
@@ -371,13 +677,6 @@
             const name = document.getElementById('regName').value.trim();
             const email = document.getElementById('regEmail').value.trim().toLowerCase();
             const password = document.getElementById('regPassword').value;
-
-            if (password.length < 6) {
-                showMsg('A senha precisa ter pelo menos 6 caracteres.', 'error');
-                return;
-            }
-
-            showMsg('Verificando nome...', 'success');
 
             try {
                 const taken = await isUsernameTaken(name);
@@ -400,7 +699,7 @@
             }
         };
 
-        // LOGIN EMAIL TRADICIONAL
+        // LOGIN EMAIL
         document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim().toLowerCase();
@@ -416,11 +715,10 @@
             }
         };
 
-        // ESQUECI A SENHA
         document.getElementById('btnForgot').onclick = async () => {
             const email = document.getElementById('loginEmail').value.trim().toLowerCase();
             if (!email) {
-                showMsg('Digite seu e-mail no campo de login primeiro.', 'error');
+                showMsg('Digite seu e-mail no campo acima.', 'error');
                 return;
             }
             try {
@@ -431,7 +729,6 @@
             }
         };
 
-        // TROCAR NAVEGAÇÃO
         document.getElementById('btnGoToReg').onclick = () => {
             clearMsg();
             clearInputs();
@@ -452,7 +749,7 @@
             clearInputs();
         };
 
-        // MONITOR DE ESTADO
+        // MONITOR DE SESSAO
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 try {
@@ -461,14 +758,23 @@
                         hideAllSections();
                         document.getElementById('mainSiteSection').classList.remove('hidden');
                         document.getElementById('appUserName').innerText = userSnap.val().displayName || user.displayName || "Usuário";
-                        renderCatalog();
+
+                        if (user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+                            document.getElementById('adminBadge').classList.remove('hidden');
+                            document.getElementById('adminPanel').classList.remove('hidden');
+                        } else {
+                            document.getElementById('adminBadge').classList.add('hidden');
+                            document.getElementById('adminPanel').classList.add('hidden');
+                        }
+
+                        listenToMediaUpdates();
                         clearInputs();
                     } else {
                         hideAllSections();
                         document.getElementById('googleSetupSection').classList.remove('hidden');
                     }
                 } catch (e) {
-                    console.log("Carregando perfil...");
+                    console.log("Carregando...");
                 }
             } else {
                 hideAllSections();
