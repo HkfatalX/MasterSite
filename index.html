@@ -106,6 +106,26 @@
             <p class="toggle-text">Já tem uma conta? <button type="button" class="toggle-btn" id="btnGoToLogin">Fazer Login</button></p>
         </div>
 
+        <div id="googleSetupSection" class="hidden">
+            <p class="subtitle">Conclua o seu cadastro</p>
+            <form id="googleSetupForm">
+                <div class="input-group">
+                    <label>Escolha seu Nome de Usuário</label>
+                    <input type="text" id="googleName" required placeholder="Seu nome ou nick no site">
+                </div>
+                <div class="input-group">
+                    <label>Defina uma Senha Segura</label>
+                    <input type="password" id="googlePassword" required placeholder="Mínimo 8 caract., números e símbolos">
+                    
+                    <div class="strength-meter">
+                        <div id="googleStrengthBar" class="strength-bar"></div>
+                    </div>
+                    <div id="googleStrengthText" class="strength-text"></div>
+                </div>
+                <button type="submit" class="btn-primary">Finalizar Cadastro</button>
+            </form>
+        </div>
+
         <div id="dashSection" class="hidden">
             <span class="badge-online">● Conta Ativa</span>
             <div class="user-box">
@@ -134,8 +154,10 @@
             signOut, 
             onAuthStateChanged,
             updateProfile,
+            updatePassword,
             GoogleAuthProvider,
-            signInWithPopup
+            signInWithPopup,
+            getAdditionalUserInfo
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -164,55 +186,96 @@
             msg.className = '';
         }
 
-        // AVALIADOR DE SEGURANÇA DA SENHA
-        let currentPasswordScore = 0;
+        // AVALIADOR DE SENHA (REUTILIZÁVEL)
+        function checkPasswordStrength(password, barEl, textEl) {
+            let score = 0;
+            if (password.length >= 8) score++;
+            if (/[A-Z]/.test(password)) score++;
+            if (/[a-z]/.test(password)) score++;
+            if (/[0-9]/.test(password)) score++;
+            if (/[^A-Za-z0-9]/.test(password)) score++;
+
+            barEl.className = 'strength-bar';
+
+            if (password.length === 0) {
+                barEl.style.width = '0%';
+                textEl.innerText = '';
+            } else if (score <= 2) {
+                barEl.classList.add('strength-weak');
+                textEl.innerText = 'Senha Fraca (Insegura)';
+                textEl.style.color = '#ef4444';
+            } else if (score <= 4) {
+                barEl.classList.add('strength-medium');
+                textEl.innerText = 'Senha Média (Adicione símbolos/números)';
+                textEl.style.color = '#f59e0b';
+            } else {
+                barEl.classList.add('strength-strong');
+                textEl.innerText = 'Senha Forte e Segura!';
+                textEl.style.color = '#00ff88';
+            }
+            return score;
+        }
+
+        let regScore = 0;
+        let googleScore = 0;
 
         document.getElementById('regPassword').addEventListener('input', (e) => {
-            const pass = e.target.value;
-            const bar = document.getElementById('strengthBar');
-            const text = document.getElementById('strengthText');
-            
-            let score = 0;
-            if (pass.length >= 8) score++;
-            if (/[A-Z]/.test(pass)) score++;
-            if (/[a-z]/.test(pass)) score++;
-            if (/[0-9]/.test(pass)) score++;
-            if (/[^A-Za-z0-9]/.test(pass)) score++;
-
-            currentPasswordScore = score;
-
-            bar.className = 'strength-bar';
-
-            if (pass.length === 0) {
-                bar.style.width = '0%';
-                text.innerText = '';
-            } else if (score <= 2) {
-                bar.classList.add('strength-weak');
-                text.innerText = 'Senha Fraca (Insegura)';
-                text.style.color = '#ef4444';
-            } else if (score <= 4) {
-                bar.classList.add('strength-medium');
-                text.innerText = 'Senha Média (Adicione símbolos/números)';
-                text.style.color = '#f59e0b';
-            } else {
-                bar.classList.add('strength-strong');
-                text.innerText = 'Senha Forte e Segura!';
-                text.style.color = '#00ff88';
-            }
+            regScore = checkPasswordStrength(e.target.value, document.getElementById('strengthBar'), document.getElementById('strengthText'));
         });
 
-        // LOGIN COM GOOGLE
+        document.getElementById('googlePassword').addEventListener('input', (e) => {
+            googleScore = checkPasswordStrength(e.target.value, document.getElementById('googleStrengthBar'), document.getElementById('googleStrengthText'));
+        });
+
+        // LOGIN COM GOOGLE (FLUXO INTELIGENTE)
         document.getElementById('btnGoogleLogin').onclick = async () => {
             showMsg('Conectando com Google...', 'success');
             try {
-                await signInWithPopup(auth, googleProvider);
-                showMsg('Login com Google realizado!', 'success');
+                const result = await signInWithPopup(auth, googleProvider);
+                const details = getAdditionalUserInfo(result);
+
+                // Se for Novo Usuário via Google
+                if (details.isNewUser) {
+                    document.getElementById('loginSection').classList.add('hidden');
+                    document.getElementById('regSection').classList.add('hidden');
+                    document.getElementById('googleSetupSection').classList.remove('hidden');
+                    showMsg('Bem-vindo! Escolha um Nome de Usuário e crie sua senha.', 'success');
+                } else {
+                    showMsg('Login efetuado com sucesso!', 'success');
+                }
             } catch (err) {
                 showMsg('Erro (' + err.code + '): ' + err.message, 'error');
             }
         };
 
-        // NAV
+        // FORMULÁRIO DE SETUP GOOGLE (NOVO USUÁRIO)
+        document.getElementById('googleSetupForm').onsubmit = async (e) => {
+            e.preventDefault();
+
+            if (googleScore <= 2) {
+                showMsg('A senha escolhida é muito fraca! Use pelo menos 8 caracteres, números e símbolos.', 'error');
+                return;
+            }
+
+            const name = document.getElementById('googleName').value.trim();
+            const password = document.getElementById('googlePassword').value;
+
+            try {
+                const user = auth.currentUser;
+                await updateProfile(user, { displayName: name });
+                await updatePassword(user, password);
+                
+                showMsg('Perfil e senha salvos!', 'success');
+                document.getElementById('googleSetupSection').classList.add('hidden');
+                document.getElementById('dashSection').classList.remove('hidden');
+                document.getElementById('welcomeUser').innerText = name;
+                document.getElementById('userEmailDisplay').innerText = user.email;
+            } catch (err) {
+                showMsg('Erro ao salvar dados: ' + err.message, 'error');
+            }
+        };
+
+        // NAVEGAÇÃO ENTRE TELAS
         document.getElementById('btnGoToReg').onclick = () => {
             clearMsg();
             document.getElementById('loginSection').classList.add('hidden');
@@ -225,11 +288,11 @@
             document.getElementById('loginSection').classList.remove('hidden');
         };
 
-        // CADASTRO COM TRAVA DE SEGURANÇA
+        // CADASTRO NORMAL POR E-MAIL
         document.getElementById('regForm').onsubmit = async (e) => {
             e.preventDefault();
             
-            if (currentPasswordScore <= 2) {
+            if (regScore <= 2) {
                 showMsg('A senha é muito fraca! Ela deve conter pelo menos 8 caracteres, números, maiúsculas e símbolos.', 'error');
                 return;
             }
@@ -249,7 +312,7 @@
             }
         };
 
-        // LOGIN
+        // LOGIN NORMAL
         document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim().toLowerCase();
@@ -293,13 +356,19 @@
         // MONITOR DE SESSÃO
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                document.getElementById('loginSection').classList.add('hidden');
-                document.getElementById('regSection').classList.add('hidden');
-                document.getElementById('dashSection').classList.remove('hidden');
-                document.getElementById('welcomeUser').innerText = user.displayName || 'Usuário';
-                document.getElementById('userEmailDisplay').innerText = user.email;
+                // Se já tem nome definido, entra direto no painel
+                if (user.displayName) {
+                    document.getElementById('loginSection').classList.add('hidden');
+                    document.getElementById('regSection').classList.add('hidden');
+                    document.getElementById('googleSetupSection').classList.add('hidden');
+                    document.getElementById('dashSection').classList.remove('hidden');
+                    document.getElementById('welcomeUser').innerText = user.displayName;
+                    document.getElementById('userEmailDisplay').innerText = user.email;
+                }
             } else {
                 document.getElementById('dashSection').classList.add('hidden');
+                document.getElementById('googleSetupSection').classList.add('hidden');
+                document.getElementById('regSection').classList.add('hidden');
                 document.getElementById('loginSection').classList.remove('hidden');
             }
         });
