@@ -18,7 +18,6 @@
         .input-group input:focus { border-color: #00ff88; box-shadow: 0 0 12px rgba(0, 255, 136, 0.2); background: rgba(15, 17, 26, 0.95); }
         .btn-primary { width: 100%; padding: 15px; border: none; border-radius: 12px; background: linear-gradient(135deg, #00ff88 0%, #00b4d8 100%); color: #08090e; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 10px; }
         
-        /* BOTÃO GOOGLE */
         .btn-google { width: 100%; padding: 13px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; transition: background 0.2s; }
         .btn-google:hover { background: rgba(255, 255, 255, 0.12); }
         .btn-google svg { width: 18px; height: 18px; }
@@ -27,7 +26,6 @@
         .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
         .divider span { padding: 0 10px; }
 
-        /* MEDIDOR DE FORÇA DA SENHA */
         .strength-meter { height: 6px; width: 100%; background: rgba(255, 255, 255, 0.1); border-radius: 4px; margin-top: 8px; overflow: hidden; }
         .strength-bar { height: 100%; width: 0%; transition: all 0.3s ease; border-radius: 4px; }
         .strength-text { font-size: 11px; margin-top: 6px; font-weight: 600; text-align: right; }
@@ -66,14 +64,14 @@
 
             <div class="divider"><span>OU COM E-MAIL</span></div>
 
-            <form id="loginForm">
+            <form id="loginForm" autocomplete="off">
                 <div class="input-group">
                     <label>E-mail</label>
-                    <input type="email" id="loginEmail" required placeholder="seu-email@gmail.com">
+                    <input type="email" id="loginEmail" required placeholder="seu-email@gmail.com" autocomplete="off">
                 </div>
                 <div class="input-group">
                     <label>Senha</label>
-                    <input type="password" id="loginPassword" required placeholder="••••••••">
+                    <input type="password" id="loginPassword" required placeholder="••••••••" autocomplete="new-password">
                     <button type="button" class="forgot-btn" id="btnForgot">Esqueci a senha</button>
                 </div>
                 <button type="submit" class="btn-primary" style="margin-top: 25px;">Entrar no Sistema</button>
@@ -83,18 +81,18 @@
 
         <div id="regSection" class="hidden">
             <p class="subtitle">Crie seu perfil seguro</p>
-            <form id="regForm">
+            <form id="regForm" autocomplete="off">
                 <div class="input-group">
                     <label>Nome de Usuário</label>
-                    <input type="text" id="regName" required placeholder="Seu nome ou nick">
+                    <input type="text" id="regName" required placeholder="Seu nome ou nick" autocomplete="off">
                 </div>
                 <div class="input-group">
                     <label>E-mail</label>
-                    <input type="email" id="regEmail" required placeholder="seu-email@gmail.com">
+                    <input type="email" id="regEmail" required placeholder="seu-email@gmail.com" autocomplete="off">
                 </div>
                 <div class="input-group">
                     <label>Senha Segura</label>
-                    <input type="password" id="regPassword" required placeholder="Mínimo 8 caract., maiúsculas, números e símbolos">
+                    <input type="password" id="regPassword" required placeholder="Mínimo 8 caract., números e símbolos" autocomplete="new-password">
                     
                     <div class="strength-meter">
                         <div id="strengthBar" class="strength-bar"></div>
@@ -108,14 +106,14 @@
 
         <div id="googleSetupSection" class="hidden">
             <p class="subtitle">Conclua o seu cadastro</p>
-            <form id="googleSetupForm">
+            <form id="googleSetupForm" autocomplete="off">
                 <div class="input-group">
                     <label>Escolha seu Nome de Usuário</label>
-                    <input type="text" id="googleName" required placeholder="Seu nome ou nick no site">
+                    <input type="text" id="googleName" required placeholder="Seu nome ou nick no site" autocomplete="off">
                 </div>
                 <div class="input-group">
                     <label>Defina uma Senha Segura</label>
-                    <input type="password" id="googlePassword" required placeholder="Mínimo 8 caract., números e símbolos">
+                    <input type="password" id="googlePassword" required placeholder="Mínimo 8 caract., números e símbolos" autocomplete="new-password">
                     
                     <div class="strength-meter">
                         <div id="googleStrengthBar" class="strength-bar"></div>
@@ -156,8 +154,8 @@
             updateProfile,
             updatePassword,
             GoogleAuthProvider,
-            signInWithPopup,
-            getAdditionalUserInfo
+            signInWithRedirect,
+            getRedirectResult
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -186,7 +184,21 @@
             msg.className = '';
         }
 
-        // AVALIADOR DE SENHA (REUTILIZÁVEL)
+        // LIMPAR TODOS OS CAMPOS DE TEXTO
+        function clearAllInputs() {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => input.value = '');
+            
+            document.getElementById('strengthBar').className = 'strength-bar';
+            document.getElementById('strengthText').innerText = '';
+            document.getElementById('googleStrengthBar').className = 'strength-bar';
+            document.getElementById('googleStrengthText').innerText = '';
+            
+            regScore = 0;
+            googleScore = 0;
+        }
+
+        // AVALIADOR DE SENHA
         function checkPasswordStrength(password, barEl, textEl) {
             let score = 0;
             if (password.length >= 8) score++;
@@ -227,33 +239,38 @@
             googleScore = checkPasswordStrength(e.target.value, document.getElementById('googleStrengthBar'), document.getElementById('googleStrengthText'));
         });
 
-        // LOGIN COM GOOGLE (FLUXO INTELIGENTE)
+        // LOGIN VIA GOOGLE (MÉTODO REDIRECT FUNCIONA EM QUALQUER CELULAR)
         document.getElementById('btnGoogleLogin').onclick = async () => {
-            showMsg('Conectando com Google...', 'success');
+            showMsg('Redirecionando para a conta do Google...', 'success');
             try {
-                const result = await signInWithPopup(auth, googleProvider);
-                const details = getAdditionalUserInfo(result);
-
-                // Se for Novo Usuário via Google
-                if (details.isNewUser) {
-                    document.getElementById('loginSection').classList.add('hidden');
-                    document.getElementById('regSection').classList.add('hidden');
-                    document.getElementById('googleSetupSection').classList.remove('hidden');
-                    showMsg('Bem-vindo! Escolha um Nome de Usuário e crie sua senha.', 'success');
-                } else {
-                    showMsg('Login efetuado com sucesso!', 'success');
-                }
+                await signInWithRedirect(auth, googleProvider);
             } catch (err) {
-                showMsg('Erro (' + err.code + '): ' + err.message, 'error');
+                showMsg('Erro ao abrir Google: ' + err.message, 'error');
             }
         };
 
-        // FORMULÁRIO DE SETUP GOOGLE (NOVO USUÁRIO)
+        // VERIFICAR RETORNO DO REDIRECIONAMENTO GOOGLE
+        getRedirectResult(auth).then((result) => {
+            if (result && result.user) {
+                if (!result.user.displayName) {
+                    document.getElementById('loginSection').classList.add('hidden');
+                    document.getElementById('regSection').classList.add('hidden');
+                    document.getElementById('googleSetupSection').classList.remove('hidden');
+                    showMsg('Crie seu nome e senha para concluir o acesso.', 'success');
+                } else {
+                    showMsg('Login com Google realizado!', 'success');
+                }
+            }
+        }).catch((err) => {
+            showMsg('Erro no login do Google: ' + err.message, 'error');
+        });
+
+        // FORMULÁRIO DE SETUP DO GOOGLE
         document.getElementById('googleSetupForm').onsubmit = async (e) => {
             e.preventDefault();
 
             if (googleScore <= 2) {
-                showMsg('A senha escolhida é muito fraca! Use pelo menos 8 caracteres, números e símbolos.', 'error');
+                showMsg('A senha escolhida é muito fraca!', 'error');
                 return;
             }
 
@@ -266,6 +283,7 @@
                 await updatePassword(user, password);
                 
                 showMsg('Perfil e senha salvos!', 'success');
+                clearAllInputs();
                 document.getElementById('googleSetupSection').classList.add('hidden');
                 document.getElementById('dashSection').classList.remove('hidden');
                 document.getElementById('welcomeUser').innerText = name;
@@ -275,15 +293,17 @@
             }
         };
 
-        // NAVEGAÇÃO ENTRE TELAS
+        // NAV ENTRE TELAS (COM LIMPEZA)
         document.getElementById('btnGoToReg').onclick = () => {
             clearMsg();
+            clearAllInputs();
             document.getElementById('loginSection').classList.add('hidden');
             document.getElementById('regSection').classList.remove('hidden');
         };
 
         document.getElementById('btnGoToLogin').onclick = () => {
             clearMsg();
+            clearAllInputs();
             document.getElementById('regSection').classList.add('hidden');
             document.getElementById('loginSection').classList.remove('hidden');
         };
@@ -293,7 +313,7 @@
             e.preventDefault();
             
             if (regScore <= 2) {
-                showMsg('A senha é muito fraca! Ela deve conter pelo menos 8 caracteres, números, maiúsculas e símbolos.', 'error');
+                showMsg('A senha é muito fraca! Pelo menos 8 caracteres com maiúsculas, números e símbolos.', 'error');
                 return;
             }
 
@@ -307,6 +327,7 @@
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 await updateProfile(userCredential.user, { displayName: name });
                 showMsg('Conta criada com sucesso!', 'success');
+                clearAllInputs();
             } catch (err) {
                 showMsg('Erro (' + err.code + '): ' + err.message, 'error');
             }
@@ -323,6 +344,7 @@
             try {
                 await signInWithEmailAndPassword(auth, email, password);
                 showMsg('Login efetuado!', 'success');
+                clearAllInputs();
             } catch (err) {
                 showMsg('Erro (' + err.code + '): ' + err.message, 'error');
             }
@@ -333,7 +355,7 @@
             const email = document.getElementById('loginEmail').value.trim().toLowerCase();
 
             if (!email) {
-                showMsg('Digite o e-mail no campo acima antes de clicar em Esqueci a senha.', 'error');
+                showMsg('Digite o e-mail no campo antes de clicar em Esqueci a senha.', 'error');
                 return;
             }
 
@@ -341,22 +363,22 @@
 
             try {
                 await sendPasswordResetEmail(auth, email);
-                showMsg('E-mail enviado! Verifique a caixa de entrada ou spam.', 'success');
+                showMsg('E-mail enviado! Verifique sua caixa de entrada.', 'success');
             } catch (err) {
                 showMsg('Erro (' + err.code + '): ' + err.message, 'error');
             }
         };
 
-        // LOGOUT
+        // LOGOUT (LIMPANDO DADOS)
         document.getElementById('btnLogout').onclick = async () => {
             await signOut(auth);
             clearMsg();
+            clearAllInputs();
         };
 
         // MONITOR DE SESSÃO
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // Se já tem nome definido, entra direto no painel
                 if (user.displayName) {
                     document.getElementById('loginSection').classList.add('hidden');
                     document.getElementById('regSection').classList.add('hidden');
@@ -364,6 +386,11 @@
                     document.getElementById('dashSection').classList.remove('hidden');
                     document.getElementById('welcomeUser').innerText = user.displayName;
                     document.getElementById('userEmailDisplay').innerText = user.email;
+                    clearAllInputs();
+                } else {
+                    document.getElementById('loginSection').classList.add('hidden');
+                    document.getElementById('regSection').classList.add('hidden');
+                    document.getElementById('googleSetupSection').classList.remove('hidden');
                 }
             } else {
                 document.getElementById('dashSection').classList.add('hidden');
