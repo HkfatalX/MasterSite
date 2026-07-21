@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MasterSite - Sistema Pro</title>
+    <title>MasterFlix - Filmes e Séries</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: #090a10; background-image: radial-gradient(at 0% 0%, rgba(0, 255, 136, 0.12) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(0, 180, 216, 0.12) 0px, transparent 50%); color: #f1f5f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .card { background: rgba(18, 20, 29, 0.9); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; padding: 40px 32px; width: 100%; max-width: 420px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); backdrop-filter: blur(16px); text-align: center; }
-        .logo { font-size: 30px; font-weight: 800; background: linear-gradient(135deg, #00ff88 0%, #00b4d8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; letter-spacing: -0.5px; }
-        .subtitle { color: #94a3b8; font-size: 14px; margin-bottom: 24px; }
+        body { background: #090a10; background-image: radial-gradient(at 0% 0%, rgba(0, 255, 136, 0.1) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(0, 180, 216, 0.1) 0px, transparent 50%); color: #f1f5f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        
+        .card { background: rgba(18, 20, 29, 0.95); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; padding: 32px 24px; width: 100%; max-width: 600px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); backdrop-filter: blur(16px); text-align: center; }
+        .logo { font-size: 32px; font-weight: 800; background: linear-gradient(135deg, #00ff88 0%, #00b4d8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; letter-spacing: -0.5px; }
+        .subtitle { color: #94a3b8; font-size: 14px; margin-bottom: 20px; }
+        
         .input-group { margin-bottom: 18px; text-align: left; }
         .input-group label { display: block; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
         .input-group input { width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(10, 11, 18, 0.8); color: #fff; font-size: 14px; outline: none; transition: all 0.25s ease; }
         .input-group input:focus { border-color: #00ff88; box-shadow: 0 0 12px rgba(0, 255, 136, 0.2); background: rgba(15, 17, 26, 0.95); }
-        .btn-primary { width: 100%; padding: 15px; border: none; border-radius: 12px; background: linear-gradient(135deg, #00ff88 0%, #00b4d8 100%); color: #08090e; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 10px; }
         
+        .btn-primary { width: 100%; padding: 15px; border: none; border-radius: 12px; background: linear-gradient(135deg, #00ff88 0%, #00b4d8 100%); color: #08090e; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 10px; }
         .btn-google { width: 100%; padding: 13px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; transition: background 0.2s; }
         .btn-google:hover { background: rgba(255, 255, 255, 0.12); }
         .btn-google svg { width: 18px; height: 18px; }
@@ -26,28 +28,54 @@
         .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
         .divider span { padding: 0 10px; }
 
-        .btn-danger { width: 100%; padding: 14px; border: none; border-radius: 12px; background: #ef4444; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 20px; }
+        .btn-danger { width: 100%; padding: 12px; border: none; border-radius: 12px; background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 25px; transition: all 0.2s; }
+        .btn-danger:hover { background: #ef4444; color: #fff; }
+
         .toggle-text { margin-top: 16px; font-size: 13px; color: #94a3b8; }
         .toggle-btn { background: none; border: none; color: #00b4d8; font-weight: 600; cursor: pointer; font-size: 13px; text-decoration: underline; }
+        
         #msg { margin-top: 20px; font-size: 13px; font-weight: 600; padding: 10px 14px; border-radius: 10px; word-break: break-word; }
         .msg-success { display: block !important; color: #00ff88; background: rgba(0, 255, 136, 0.1); border: 1px solid rgba(0, 255, 136, 0.2); }
         .msg-error { display: block !important; color: #f87171; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); }
-        .user-box { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 20px; margin: 20px 0 10px 0; text-align: left; }
-        .user-info { margin-bottom: 12px; }
-        .user-info span { font-size: 11px; color: #64748b; text-transform: uppercase; display: block; }
-        .user-info p { font-size: 15px; font-weight: 600; color: #f1f5f9; }
-        .badge-online { display: inline-block; padding: 4px 10px; background: rgba(0, 255, 136, 0.15); color: #00ff88; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 15px; }
+        
         .forgot-btn { background: none; border: none; float: right; margin-top: 6px; font-size: 12px; color: #00b4d8; cursor: pointer; text-decoration: underline; }
         .hidden { display: none !important; }
+
+        /* HEADER DO SITE DE FILMES */
+        .app-header { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 16px; }
+        .user-nav-bar { display: flex; justify-content: space-between; align-items: center; }
+        .user-welcome { font-size: 13px; color: #94a3b8; text-align: left; }
+        .user-welcome span { color: #00ff88; font-weight: 700; }
+        
+        /* CATEGORIAS */
+        .categories-nav { display: flex; justify-content: center; gap: 8px; }
+        .cat-btn { padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.04); color: #94a3b8; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.25s; }
+        .cat-btn.active, .cat-btn:hover { background: linear-gradient(135deg, #00ff88 0%, #00b4d8 100%); color: #08090e; border-color: transparent; }
+
+        /* PESQUISA */
+        .search-box { position: relative; width: 100%; margin-top: 4px; }
+        .search-box input { width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(10, 11, 18, 0.9); color: #fff; font-size: 14px; outline: none; }
+        .search-box input:focus { border-color: #00b4d8; box-shadow: 0 0 10px rgba(0, 180, 216, 0.25); }
+
+        /* GRID DE CATALOGO */
+        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 14px; margin-top: 16px; max-height: 380px; overflow-y: auto; padding-right: 4px; }
+        .catalog-card { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 12px; text-align: left; transition: transform 0.2s; position: relative; }
+        .catalog-card:hover { transform: translateY(-3px); border-color: rgba(0, 255, 136, 0.4); }
+        .tag-type { position: absolute; top: 8px; right: 8px; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 6px; text-transform: uppercase; }
+        .tag-movie { background: rgba(0, 255, 136, 0.2); color: #00ff88; }
+        .tag-serie { background: rgba(0, 180, 216, 0.2); color: #00b4d8; }
+        .media-title { font-size: 13px; font-weight: 700; color: #fff; margin-top: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .media-info { font-size: 11px; color: #64748b; margin-top: 2px; }
+        .no-results { grid-column: 1 / -1; color: #64748b; font-size: 13px; padding: 20px 0; }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <div class="logo">MasterSite</div>
+        <div class="logo">MasterFlix</div>
 
         <div id="loginSection">
-            <p class="subtitle">Acesse sua conta para continuar</p>
+            <p class="subtitle">Acesse para assistir Filmes e Séries grátis</p>
             
             <button type="button" class="btn-google" id="btnGoogleLogin">
                 <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
@@ -66,13 +94,13 @@
                     <input type="password" id="loginPassword" required placeholder="••••••••" autocomplete="new-password">
                     <button type="button" class="forgot-btn" id="btnForgot">Esqueci a senha</button>
                 </div>
-                <button type="submit" class="btn-primary" style="margin-top: 25px;">Entrar no Sistema</button>
+                <button type="submit" class="btn-primary" style="margin-top: 25px;">Entrar no Catálogo</button>
             </form>
             <p class="toggle-text">Não possui conta? <button type="button" class="toggle-btn" id="btnGoToReg">Cadastrar-se</button></p>
         </div>
 
         <div id="regSection" class="hidden">
-            <p class="subtitle">Crie seu perfil seguro</p>
+            <p class="subtitle">Crie seu perfil de acesso</p>
             <form id="regForm" autocomplete="off">
                 <div class="input-group">
                     <label>Nome de Usuário Único</label>
@@ -86,13 +114,13 @@
                     <label>Senha Segura</label>
                     <input type="password" id="regPassword" required placeholder="Mínimo 6 caracteres" autocomplete="new-password">
                 </div>
-                <button type="submit" class="btn-primary">Criar Minha Conta</button>
+                <button type="submit" class="btn-primary">Criar Conta</button>
             </form>
             <p class="toggle-text">Já tem uma conta? <button type="button" class="toggle-btn" id="btnGoToLogin">Fazer Login</button></p>
         </div>
 
         <div id="googleSetupSection" class="hidden">
-            <p class="subtitle">Defina seu Nome Único e Senha para habilitar também o login por E-mail.</p>
+            <p class="subtitle">Defina seu Nome Único e Senha para habilitar o login direto por E-mail.</p>
             <form id="googleSetupForm" autocomplete="off">
                 <div class="input-group">
                     <label>Nome de Usuário Customizado</label>
@@ -102,23 +130,32 @@
                     <label>Crie uma Senha de Acesso</label>
                     <input type="password" id="googlePassword" required placeholder="Mínimo 6 caracteres" autocomplete="new-password">
                 </div>
-                <button type="submit" class="btn-primary">Finalizar Cadastro</button>
+                <button type="submit" class="btn-primary">Finalizar e Assistir</button>
             </form>
         </div>
 
-        <div id="dashSection" class="hidden">
-            <span class="badge-online">● Conta Ativa</span>
-            <div class="user-box">
-                <div class="user-info">
-                    <span>Usuário</span>
-                    <p id="welcomeUser">-</p>
+        <div id="mainSiteSection" class="hidden">
+            
+            <div class="app-header">
+                <div class="user-nav-bar">
+                    <div class="user-welcome">Olá, <span id="appUserName">-</span></div>
                 </div>
-                <div class="user-info" style="margin-top: 14px;">
-                    <span>E-mail Registrado</span>
-                    <p id="userEmailDisplay" style="color: #00b4d8;">-</p>
+
+                <div class="categories-nav">
+                    <button class="cat-btn active" data-cat="all">Início</button>
+                    <button class="cat-btn" data-cat="movie">Filmes</button>
+                    <button class="cat-btn" data-cat="serie">Séries</button>
+                </div>
+
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Pesquisar por nome ou inicial...">
                 </div>
             </div>
-            <button type="button" id="btnLogout" class="btn-danger">Encerrar Sessão</button>
+
+            <div class="catalog-grid" id="catalogGrid">
+                </div>
+
+            <button type="button" id="btnLogout" class="btn-danger">Sair da Conta</button>
         </div>
 
         <p id="msg"></p>
@@ -164,6 +201,20 @@
         const googleProvider = new GoogleAuthProvider();
         googleProvider.setCustomParameters({ prompt: 'select_account' });
 
+        // CATALOGO DE EXEMPLO
+        const mediaCatalog = [
+            { id: 1, title: " Homem-Aranha", type: "movie", year: "2023" },
+            { id: 2, title: " Avatar: O Caminho da Água", type: "movie", year: "2022" },
+            { id: 3, title: " Batman", type: "movie", year: "2022" },
+            { id: 4, title: " Stranger Things", type: "serie", year: "Temporada 4" },
+            { id: 5, title: " Wandinha", type: "serie", year: "Temporada 1" },
+            { id: 6, title: " The Last of Us", type: "serie", year: "Temporada 1" },
+            { id: 7, title: " Vingadores: Ultimato", type: "movie", year: "2019" },
+            { id: 8, title: " A Casa do Dragão", type: "serie", year: "Temporada 2" }
+        ];
+
+        let currentCategory = "all";
+
         function showMsg(text, type) {
             const msg = document.getElementById('msg');
             msg.innerText = text;
@@ -180,7 +231,66 @@
             document.querySelectorAll('input').forEach(i => i.value = '');
         }
 
-        // VERIFICA SE O NOME DE USUÁRIO JÁ EXISTE
+        function hideAllSections() {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('regSection').classList.add('hidden');
+            document.getElementById('googleSetupSection').classList.add('hidden');
+            document.getElementById('mainSiteSection').classList.add('hidden');
+        }
+
+        // FUNÇÃO DE RENDERIZAR O CATÁLOGO
+        function renderCatalog() {
+            const grid = document.getElementById('catalogGrid');
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            
+            grid.innerHTML = "";
+
+            const filtered = mediaCatalog.filter(item => {
+                // Filtro por Categoria
+                const matchCategory = (currentCategory === "all") || (item.type === currentCategory);
+
+                // Filtro por Pesquisa (Buscando no início ou no nome completo)
+                const cleanTitle = item.title.trim().toLowerCase();
+                const matchSearch = cleanTitle.includes(query) || cleanTitle.startsWith(query);
+
+                return matchCategory && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="no-results">Nenhum filme ou série encontrado com "${query}".</div>`;
+                return;
+            }
+
+            filtered.forEach(item => {
+                const isMovie = item.type === "movie";
+                const card = document.createElement('div');
+                card.className = 'catalog-card';
+                card.innerHTML = `
+                    <span class="tag-type ${isMovie ? 'tag-movie' : 'tag-serie'}">${isMovie ? 'Filme' : 'Série'}</span>
+                    <div style="font-size: 24px; margin-top: 6px;">${isMovie ? '🎬' : '📺'}</div>
+                    <div class="media-title">${item.title}</div>
+                    <div class="media-info">${item.year}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // EVENTOS DE NAVEGAÇÃO DE CATEGORIAS
+        document.querySelectorAll('.cat-btn').forEach(btn => {
+            btn.onclick = (e) => {
+                document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentCategory = e.target.getAttribute('data-cat');
+                renderCatalog();
+            };
+        });
+
+        // EVENTO DE PESQUISA EM TEMPO REAL
+        document.getElementById('searchInput').oninput = () => {
+            renderCatalog();
+        };
+
+        // VERIFICA SE O NOME DE USUÁRIO JÁ EXISTE NO BANCO
         async function isUsernameTaken(username) {
             const cleanName = username.trim().toLowerCase().replace(/[^a-z0-9]/g, "_");
             const snapshot = await get(ref(rtdb, "usernames/" + cleanName));
@@ -209,10 +319,9 @@
                 const userSnap = await get(ref(rtdb, "users/" + user.uid));
 
                 if (userSnap.exists() && userSnap.val().hasSetupCompleted) {
-                    showMsg('Bem-vindo!', 'success');
+                    showMsg('Bem-vindo ao MasterFlix!', 'success');
                 } else {
-                    document.getElementById('loginSection').classList.add('hidden');
-                    document.getElementById('regSection').classList.add('hidden');
+                    hideAllSections();
                     document.getElementById('googleSetupSection').classList.remove('hidden');
                     showMsg('Autorizado! Escolha um Nome de Usuário único e sua senha.', 'success');
                 }
@@ -261,10 +370,10 @@
                 showMsg('Cadastro concluído!', 'success');
                 clearInputs();
 
-                document.getElementById('googleSetupSection').classList.add('hidden');
-                document.getElementById('dashSection').classList.remove('hidden');
-                document.getElementById('welcomeUser').innerText = name;
-                document.getElementById('userEmailDisplay').innerText = user.email;
+                hideAllSections();
+                document.getElementById('mainSiteSection').classList.remove('hidden');
+                document.getElementById('appUserName').innerText = name;
+                renderCatalog();
 
             } catch (err) {
                 showMsg('Erro ao salvar: ' + err.message, 'error');
@@ -283,7 +392,7 @@
                 return;
             }
 
-            showMsg('Verificando nome...', 'success');
+            showMsg('Verificando disponibilidade...', 'success');
 
             try {
                 const taken = await isUsernameTaken(name);
@@ -312,7 +421,7 @@
             const email = document.getElementById('loginEmail').value.trim().toLowerCase();
             const password = document.getElementById('loginPassword').value;
 
-            showMsg('Validando...', 'success');
+            showMsg('Entrando...', 'success');
             try {
                 await signInWithEmailAndPassword(auth, email, password);
                 showMsg('Acesso permitido!', 'success');
@@ -337,18 +446,18 @@
             }
         };
 
-        // NAVEGAÇÃO
+        // TROCAR ENTRE TELA DE LOGIN E REGISTRO
         document.getElementById('btnGoToReg').onclick = () => {
             clearMsg();
             clearInputs();
-            document.getElementById('loginSection').classList.add('hidden');
+            hideAllSections();
             document.getElementById('regSection').classList.remove('hidden');
         };
 
         document.getElementById('btnGoToLogin').onclick = () => {
             clearMsg();
             clearInputs();
-            document.getElementById('regSection').classList.add('hidden');
+            hideAllSections();
             document.getElementById('loginSection').classList.remove('hidden');
         };
 
@@ -365,26 +474,20 @@
                 try {
                     const userSnap = await get(ref(rtdb, "users/" + user.uid));
                     if (userSnap.exists() && userSnap.val().hasSetupCompleted) {
-                        document.getElementById('loginSection').classList.add('hidden');
-                        document.getElementById('regSection').classList.add('hidden');
-                        document.getElementById('googleSetupSection').classList.add('hidden');
-                        document.getElementById('dashSection').classList.remove('hidden');
-
-                        document.getElementById('welcomeUser').innerText = userSnap.val().displayName || user.displayName;
-                        document.getElementById('userEmailDisplay').innerText = user.email;
+                        hideAllSections();
+                        document.getElementById('mainSiteSection').classList.remove('hidden');
+                        document.getElementById('appUserName').innerText = userSnap.val().displayName || user.displayName || "Usuário";
+                        renderCatalog();
                         clearInputs();
                     } else {
-                        document.getElementById('loginSection').classList.add('hidden');
-                        document.getElementById('regSection').classList.add('hidden');
+                        hideAllSections();
                         document.getElementById('googleSetupSection').classList.remove('hidden');
                     }
                 } catch (e) {
-                    console.log("Aguardando definição de perfil...");
+                    console.log("Aguardando carregamento de perfil...");
                 }
             } else {
-                document.getElementById('dashSection').classList.add('hidden');
-                document.getElementById('googleSetupSection').classList.add('hidden');
-                document.getElementById('regSection').classList.add('hidden');
+                hideAllSections();
                 document.getElementById('loginSection').classList.remove('hidden');
             }
         });
