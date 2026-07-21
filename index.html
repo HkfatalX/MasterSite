@@ -92,7 +92,7 @@
                 </div>
                 <div class="input-group">
                     <label>Senha Segura</label>
-                    <input type="password" id="regPassword" required placeholder="Mínimo 8 caract., números e símbolos" autocomplete="new-password">
+                    <input type="password" id="regPassword" required placeholder="Mínimo 6 caracteres" autocomplete="new-password">
                     
                     <div class="strength-meter">
                         <div id="strengthBar" class="strength-bar"></div>
@@ -102,26 +102,6 @@
                 <button type="submit" class="btn-primary">Criar Minha Conta</button>
             </form>
             <p class="toggle-text">Já tem uma conta? <button type="button" class="toggle-btn" id="btnGoToLogin">Fazer Login</button></p>
-        </div>
-
-        <div id="googleSetupSection" class="hidden">
-            <p class="subtitle">Conclua o seu cadastro</p>
-            <form id="googleSetupForm" autocomplete="off">
-                <div class="input-group">
-                    <label>Escolha seu Nome de Usuário</label>
-                    <input type="text" id="googleName" required placeholder="Seu nome ou nick no site" autocomplete="off">
-                </div>
-                <div class="input-group">
-                    <label>Defina uma Senha Segura</label>
-                    <input type="password" id="googlePassword" required placeholder="Mínimo 8 caract., números e símbolos" autocomplete="new-password">
-                    
-                    <div class="strength-meter">
-                        <div id="googleStrengthBar" class="strength-bar"></div>
-                    </div>
-                    <div id="googleStrengthText" class="strength-text"></div>
-                </div>
-                <button type="submit" class="btn-primary">Finalizar Cadastro</button>
-            </form>
         </div>
 
         <div id="dashSection" class="hidden">
@@ -152,7 +132,6 @@
             signOut, 
             onAuthStateChanged,
             updateProfile,
-            updatePassword,
             GoogleAuthProvider,
             signInWithPopup
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -187,41 +166,35 @@
             const inputs = document.querySelectorAll('input');
             inputs.forEach(input => input.value = '');
             
-            document.getElementById('strengthBar').className = 'strength-bar';
-            document.getElementById('strengthBar').style.width = '0%';
-            document.getElementById('strengthText').innerText = '';
-            document.getElementById('googleStrengthBar').className = 'strength-bar';
-            document.getElementById('googleStrengthBar').style.width = '0%';
-            document.getElementById('googleStrengthText').innerText = '';
-            
-            regScore = 0;
-            googleScore = 0;
+            const bar = document.getElementById('strengthBar');
+            const text = document.getElementById('strengthText');
+            if(bar) { bar.className = 'strength-bar'; bar.style.width = '0%'; }
+            if(text) { text.innerText = ''; }
         }
 
         function translateError(code) {
             switch (code) {
                 case 'auth/invalid-credential':
-                    return 'E-mail ou senha incorretos. Verifique os dados digitados.';
+                    return 'E-mail ou senha incorretos. Se não possui conta, faça o Cadastro primeiro.';
                 case 'auth/user-not-found':
-                    return 'Nenhuma conta encontrada com este e-mail.';
+                    return 'Conta não encontrada. Verifique o e-mail ou cadastre-se.';
                 case 'auth/wrong-password':
                     return 'Senha incorreta.';
                 case 'auth/email-already-in-use':
-                    return 'Este e-mail já está cadastrado em outra conta.';
+                    return 'Este e-mail já está cadastrado. Faça login.';
                 case 'auth/weak-password':
-                    return 'A senha deve conter pelo menos 6 caracteres.';
+                    return 'A senha deve ter no mínimo 6 caracteres.';
                 case 'auth/popup-closed-by-user':
-                    return 'O login com o Google foi cancelado antes da conclusão.';
+                    return 'Login do Google cancelado pelo usuário.';
                 default:
-                    return 'Ocorreu um erro ao processar. Tente novamente.';
+                    return 'Erro ao autenticar. Tente novamente.';
             }
         }
 
         function checkPasswordStrength(password, barEl, textEl) {
             let score = 0;
+            if (password.length >= 6) score++;
             if (password.length >= 8) score++;
-            if (/[A-Z]/.test(password)) score++;
-            if (/[a-z]/.test(password)) score++;
             if (/[0-9]/.test(password)) score++;
             if (/[^A-Za-z0-9]/.test(password)) score++;
 
@@ -230,80 +203,46 @@
             if (password.length === 0) {
                 barEl.style.width = '0%';
                 textEl.innerText = '';
-            } else if (score <= 2) {
+            } else if (password.length < 6) {
                 barEl.classList.add('strength-weak');
-                textEl.innerText = 'Senha Fraca';
+                textEl.innerText = 'Muito curta (Mín. 6 letras)';
                 textEl.style.color = '#ef4444';
-            } else if (score <= 4) {
+            } else if (score <= 2) {
                 barEl.classList.add('strength-medium');
-                textEl.innerText = 'Senha Média (adicione números/símbolos)';
+                textEl.innerText = 'Senha Média (Aceita)';
                 textEl.style.color = '#f59e0b';
             } else {
                 barEl.classList.add('strength-strong');
                 textEl.innerText = 'Senha Forte!';
                 textEl.style.color = '#00ff88';
             }
-            return score;
+            return password.length >= 6;
         }
 
-        let regScore = 0;
-        let googleScore = 0;
-
         document.getElementById('regPassword').addEventListener('input', (e) => {
-            regScore = checkPasswordStrength(e.target.value, document.getElementById('strengthBar'), document.getElementById('strengthText'));
+            checkPasswordStrength(e.target.value, document.getElementById('strengthBar'), document.getElementById('strengthText'));
         });
 
-        document.getElementById('googlePassword').addEventListener('input', (e) => {
-            googleScore = checkPasswordStrength(e.target.value, document.getElementById('googleStrengthBar'), document.getElementById('googleStrengthText'));
-        });
-
-        // LOGIN COM GOOGLE
+        // LOGIN COM GOOGLE (DIRETO)
         document.getElementById('btnGoogleLogin').onclick = async () => {
-            showMsg('Conectando ao Google...', 'success');
+            clearMsg();
+            showMsg('Entrando com a conta do Google...', 'success');
             try {
                 const result = await signInWithPopup(auth, googleProvider);
                 const user = result.user;
-
-                // Se o usuário já tiver nome cadastrado, entra direto
-                if (user.displayName) {
-                    showMsg('Bem-vindo de volta!', 'success');
-                } else {
-                    // Primeiro acesso: exige criar nome de usuário e senha
-                    document.getElementById('loginSection').classList.add('hidden');
-                    document.getElementById('regSection').classList.add('hidden');
-                    document.getElementById('googleSetupSection').classList.remove('hidden');
-                    showMsg('Complete seu cadastro definindo um nome e senha.', 'success');
-                }
-            } catch (err) {
-                showMsg(translateError(err.code), 'error');
-            }
-        };
-
-        // SETUP DO PRIMEIRO ACESSO VIA GOOGLE
-        document.getElementById('googleSetupForm').onsubmit = async (e) => {
-            e.preventDefault();
-
-            if (googleScore <= 2) {
-                showMsg('Crie uma senha mais forte para prosseguir.', 'error');
-                return;
-            }
-
-            const name = document.getElementById('googleName').value.trim();
-            const password = document.getElementById('googlePassword').value;
-
-            try {
-                const user = auth.currentUser;
-                await updateProfile(user, { displayName: name });
-                await updatePassword(user, password);
                 
-                showMsg('Cadastro concluído com sucesso!', 'success');
-                clearAllInputs();
+                // Se o perfil do Google não tiver nome, usa o início do e-mail
+                if (!user.displayName) {
+                    const defaultName = user.email.split('@')[0];
+                    await updateProfile(user, { displayName: defaultName });
+                }
+                showMsg('Login com Google efetuado com sucesso!', 'success');
             } catch (err) {
                 showMsg(translateError(err.code), 'error');
             }
         };
 
-        // NAVEGAÇÃO ENTRE TELAS
+        // NAVEGAÇÃO
         document.getElementById('btnGoToReg').onclick = () => {
             clearMsg();
             clearAllInputs();
@@ -322,14 +261,14 @@
         document.getElementById('regForm').onsubmit = async (e) => {
             e.preventDefault();
             
-            if (regScore <= 2) {
-                showMsg('A senha é muito fraca. Insira pelo menos 8 caracteres com números e símbolos.', 'error');
-                return;
-            }
-
             const name = document.getElementById('regName').value.trim();
             const email = document.getElementById('regEmail').value.trim().toLowerCase();
             const password = document.getElementById('regPassword').value;
+
+            if (password.length < 6) {
+                showMsg('A senha precisa ter pelo menos 6 caracteres.', 'error');
+                return;
+            }
 
             showMsg('Criando conta...', 'success');
 
@@ -349,23 +288,23 @@
             const email = document.getElementById('loginEmail').value.trim().toLowerCase();
             const password = document.getElementById('loginPassword').value;
 
-            showMsg('Autenticando...', 'success');
+            showMsg('Entrando...', 'success');
 
             try {
                 await signInWithEmailAndPassword(auth, email, password);
-                showMsg('Login efetuado!', 'success');
+                showMsg('Login efetuado com sucesso!', 'success');
                 clearAllInputs();
             } catch (err) {
                 showMsg(translateError(err.code), 'error');
             }
         };
 
-        // REDEFINIR SENHA
+        // ESQUECI A SENHA
         document.getElementById('btnForgot').onclick = async () => {
             const email = document.getElementById('loginEmail').value.trim().toLowerCase();
 
             if (!email) {
-                showMsg('Insira seu e-mail no campo acima antes de solicitar a recuperação.', 'error');
+                showMsg('Digite seu e-mail no campo antes de clicar em Esqueci a senha.', 'error');
                 return;
             }
 
@@ -386,25 +325,18 @@
             clearAllInputs();
         };
 
-        // GERENCIADOR DE ESTADO DE AUTENTICAÇÃO
+        // OBSERVADOR DE SESSÃO
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                if (user.displayName) {
-                    document.getElementById('loginSection').classList.add('hidden');
-                    document.getElementById('regSection').classList.add('hidden');
-                    document.getElementById('googleSetupSection').classList.add('hidden');
-                    document.getElementById('dashSection').classList.remove('hidden');
-                    document.getElementById('welcomeUser').innerText = user.displayName;
-                    document.getElementById('userEmailDisplay').innerText = user.email;
-                    clearAllInputs();
-                } else {
-                    document.getElementById('loginSection').classList.add('hidden');
-                    document.getElementById('regSection').classList.add('hidden');
-                    document.getElementById('googleSetupSection').classList.remove('hidden');
-                }
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('regSection').classList.add('hidden');
+                document.getElementById('dashSection').classList.remove('hidden');
+                
+                document.getElementById('welcomeUser').innerText = user.displayName || user.email.split('@')[0];
+                document.getElementById('userEmailDisplay').innerText = user.email;
+                clearAllInputs();
             } else {
                 document.getElementById('dashSection').classList.add('hidden');
-                document.getElementById('googleSetupSection').classList.add('hidden');
                 document.getElementById('regSection').classList.add('hidden');
                 document.getElementById('loginSection').classList.remove('hidden');
             }
