@@ -7,8 +7,6 @@
     
     <meta name="description" content="Assista filmes e séries online em HD gratuitamente. O melhor catálogo de entretenimento.">
     <meta name="keywords" content="assistir filmes online, assistir series online, masterflix online, streaming gratis">
-    <meta property="og:title" content="MasterFlix - Filmes e Séries Online">
-    <meta property="og:description" content="Assista seus filmes e séries favoritos onde e quando quiser.">
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
@@ -18,7 +16,6 @@
             --bg-color: #141414;
             --card-bg: #1f1f1f;
             --text-color: #ffffff;
-            --accent-color: #ff2a35;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -27,18 +24,27 @@
         header { position: fixed; top: 0; left: 0; width: 100%; height: 65px; background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: space-between; padding: 0 4%; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.08); }
         .brand { font-size: 22px; font-weight: 900; color: var(--primary-color); letter-spacing: -1px; text-decoration: none; cursor: pointer; }
         
-        .nav-actions { display: flex; align-items: center; gap: 12px; }
+        .nav-actions { display: flex; align-items: center; gap: 10px; }
         .user-avatar-btn { width: 38px; height: 38px; border-radius: 50%; background: var(--primary-color); display: flex; align-items: center; justify-content: center; font-weight: 800; cursor: pointer; border: 2px solid #fff; overflow: hidden; font-size: 14px; }
+        .user-avatar-btn img { width: 100%; height: 100%; object-fit: cover; }
 
         button, input, select, textarea { outline: none; }
         button:focus-visible, input:focus-visible { outline: 2px solid var(--primary-color); }
 
         .app-container { padding-top: 80px; padding-bottom: 60px; width: 100%; max-width: 100vw; }
 
+        /* HERO BANNER */
         .hero-banner { width: 92%; margin: 0 auto 25px auto; min-height: 300px; border-radius: 16px; background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, var(--bg-color) 100%), #222 center/cover no-repeat; display: flex; flex-direction: column; justify-content: flex-end; padding: 25px; border: 1px solid rgba(255,255,255,0.08); }
         .hero-title { font-size: clamp(22px, 5vw, 38px); font-weight: 900; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(0,0,0,0.9); }
         .hero-desc { max-width: 600px; color: #ccc; font-size: clamp(12px, 2vw, 14px); line-height: 1.4; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
+        /* CATEGORIAS */
+        .categories-bar { display: flex; gap: 8px; overflow-x: auto; padding: 0 4% 15px 4%; scrollbar-width: none; }
+        .categories-bar::-webkit-scrollbar { display: none; }
+        .category-chip { padding: 8px 16px; border-radius: 20px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+        .category-chip.active { background: var(--primary-color); border-color: var(--primary-color); }
+
+        /* SEÇÕES E CARROSSEIS */
         .section-row { margin-bottom: 30px; padding-left: 4%; }
         .section-title { font-size: clamp(16px, 3vw, 20px); font-weight: 800; margin-bottom: 12px; color: var(--text-color); display: flex; align-items: center; justify-content: space-between; padding-right: 4%; }
 
@@ -55,11 +61,10 @@
         .progress-bar-card { width: 100%; height: 4px; background: #444; position: absolute; bottom: 0; left: 0; }
         .progress-bar-fill { height: 100%; background: var(--primary-color); width: 0%; }
 
-        .btn-card-edit { position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,0.8); color: #fff; border: 1px solid #444; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; cursor: pointer; z-index: 10; }
-
         .btn-primary { padding: 10px 18px; border: none; border-radius: 8px; background: var(--primary-color); color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; transition: opacity 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
         .btn-primary:hover { opacity: 0.9; }
         .btn-secondary { padding: 8px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); color: var(--text-color); font-size: 12px; font-weight: 600; cursor: pointer; }
+        .btn-danger { background: #c62828; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; }
 
         .input-group { margin-bottom: 12px; text-align: left; }
         .input-group label { display: block; font-size: 11px; font-weight: 700; color: #aaa; margin-bottom: 4px; text-transform: uppercase; }
@@ -82,7 +87,7 @@
         .player-network-error { position: absolute; inset: 0; background: rgba(0,0,0,0.9); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 25; padding: 20px; text-align: center; }
         .player-controls-bar { padding: 12px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; background: #111; gap: 10px; }
 
-        .auth-toggle-text { font-size: 12px; color: #aaa; margin-top: 15px; cursor: pointer; text-decoration: underline; }
+        .admin-manage-item { display: flex; align-items: center; justify-content: space-between; background: #222; border: 1px solid #333; padding: 10px; border-radius: 8px; margin-bottom: 8px; }
 
         footer { padding: 30px 4%; border-top: 1px solid #222; text-align: center; color: #666; font-size: 12px; margin-top: 40px; }
 
@@ -99,8 +104,11 @@
         
         <div class="nav-actions">
             <input type="text" id="searchInput" placeholder="Pesquisar..." style="padding: 6px 12px; border-radius: 16px; border: 1px solid #333; background: #000; color: #fff; font-size: 11px; width: 120px;">
-            <button class="btn-primary hidden" id="btnOpenCreator" style="padding: 6px 10px; font-size: 11px;">+ Criar</button>
-            <div class="user-avatar-btn" id="btnOpenProfile" title="Meu Perfil">U</div>
+            <button class="btn-primary hidden" id="btnAdminManager" style="padding: 6px 10px; font-size: 11px;">🔍 Gerenciar</button>
+            <div class="user-avatar-btn" id="btnOpenProfile" title="Meu Perfil">
+                <span id="avatarText">U</span>
+                <img id="avatarImg" class="hidden" src="" alt="Avatar">
+            </div>
         </div>
     </header>
 
@@ -121,7 +129,21 @@
                 <button type="submit" class="btn-primary" id="btnAuthSubmit" style="width: 100%; margin-top: 8px;">Entrar na Conta</button>
             </form>
 
-            <p class="auth-toggle-text" id="toggleAuthMode">Não tem uma conta? Crie uma agora</p>
+            <p style="font-size: 12px; color: #aaa; margin-top: 15px; cursor: pointer; text-decoration: underline;" id="toggleAuthMode">Não tem uma conta? Crie uma agora</p>
+        </div>
+    </div>
+
+    <div id="adminModal" class="modal-overlay hidden">
+        <div class="modal-body">
+            <button class="modal-close" id="btnCloseAdmin">&times;</button>
+            <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 15px;">⚙️ Gerenciar Catálogo</h2>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <input type="text" id="adminSearchInput" placeholder="Pesquisar por título..." style="flex:1; padding: 8px 12px; border-radius: 8px; border:1px solid #333; background:#111; color:#fff;">
+                <button class="btn-primary" id="btnAddNewFromAdmin">+ Adicionar Novo</button>
+            </div>
+
+            <div id="adminCatalogList" style="max-height: 50vh; overflow-y: auto;"></div>
         </div>
     </div>
 
@@ -131,9 +153,18 @@
             <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 15px;">👤 Meu Perfil</h2>
 
             <div style="text-align: center; margin-bottom: 20px;">
-                <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--primary-color); margin: 0 auto 10px auto; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 900; border: 3px solid #fff;" id="profileAvatarBig">U</div>
+                <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--primary-color); margin: 0 auto 10px auto; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 900; border: 3px solid #fff; overflow:hidden;" id="profileAvatarBigBox">
+                    <span id="profileAvatarBigText">U</span>
+                    <img id="profileAvatarBigImg" class="hidden" src="" style="width:100%; height:100%; object-fit:cover;">
+                </div>
                 <p id="profileEmailDisplay" style="font-size: 13px; color: #aaa;"></p>
                 <span id="profileAdminBadge" class="hidden" style="background: var(--primary-color); font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 800; text-transform: uppercase; margin-top: 5px; display: inline-block;">Administrador</span>
+            </div>
+
+            <div class="input-group">
+                <label>Foto de Perfil (Enviar Imagem ou URL)</label>
+                <input type="file" id="profilePhotoFile" accept="image/*">
+                <input type="url" id="profilePhotoUrl" placeholder="Ou cole a URL da imagem" style="margin-top: 6px;">
             </div>
 
             <div class="input-group">
@@ -142,7 +173,7 @@
             </div>
 
             <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button class="btn-primary" id="btnSaveTheme" style="flex: 1;">Salvar Cores</button>
+                <button class="btn-primary" id="btnSaveProfile" style="flex: 1;">Salvar Alterações</button>
                 <button class="btn-secondary" id="btnLogout" style="flex: 1; border-color: #c62828; color: #ff5252;">Sair da Conta</button>
             </div>
         </div>
@@ -153,10 +184,21 @@
         <div class="hero-banner" id="heroBanner">
             <span style="font-size: 10px; font-weight: 800; color: var(--primary-color); text-transform: uppercase;">Destaque do Catálogo</span>
             <h1 class="hero-title" id="heroTitle">Bem-vindo ao MasterFlix</h1>
-            <p class="hero-desc" id="heroDesc">Assista aos melhores filmes e séries diretamente do seu navegador com máxima qualidade.</p>
+            <p class="hero-desc" id="heroDesc">Assista aos melhores filmes e séries diretamente do seu navegador.</p>
             <div>
                 <button class="btn-primary" id="heroPlayBtn">▶ Assistir Agora</button>
             </div>
+        </div>
+
+        <div class="categories-bar" id="categoriesBar">
+            <div class="category-chip active" data-cat="Todos">Todos</div>
+            <div class="category-chip" data-cat="Ação">Ação</div>
+            <div class="category-chip" data-cat="Comédia">Comédia</div>
+            <div class="category-chip" data-cat="Drama">Drama</div>
+            <div class="category-chip" data-cat="Terror">Terror</div>
+            <div class="category-chip" data-cat="Animação">Animação</div>
+            <div class="category-chip" data-cat="Sci-Fi">Sci-Fi</div>
+            <div class="category-chip" data-cat="Romance">Romance</div>
         </div>
 
         <div class="section-row hidden" id="continueSection">
@@ -193,6 +235,18 @@
                         </select>
                     </div>
                     <div class="input-group" style="flex:1;">
+                        <label>Categoria</label>
+                        <select id="mediaCategory">
+                            <option value="Ação">Ação</option>
+                            <option value="Comédia">Comédia</option>
+                            <option value="Drama">Drama</option>
+                            <option value="Terror">Terror</option>
+                            <option value="Animação">Animação</option>
+                            <option value="Sci-Fi">Sci-Fi</option>
+                            <option value="Romance">Romance</option>
+                        </select>
+                    </div>
+                    <div class="input-group" style="flex:1;">
                         <label>Ano</label>
                         <input type="text" id="mediaYear" placeholder="2026" required>
                     </div>
@@ -204,7 +258,7 @@
                 </div>
 
                 <div class="input-group">
-                    <label>Capa (Arquivo Local ou URL)</label>
+                    <label>Capa Principal (Arquivo Local ou URL)</label>
                     <input type="file" id="mediaCoverFile" accept="image/*">
                     <input type="url" id="mediaCoverUrl" placeholder="Ou cole a URL da imagem" style="margin-top: 6px;">
                 </div>
@@ -228,7 +282,7 @@
                     <div id="seasonsList"></div>
                 </div>
 
-                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 15px;">Publicar / Salvar Alterações</button>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 15px;">Salvar para Todo Mundo</button>
             </form>
         </div>
     </div>
@@ -285,7 +339,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getDatabase, ref, get, set, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, get, set, push, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const ADMIN_EMAIL = "raiyuri.freefire@gmail.com";
 
@@ -306,7 +360,7 @@
         let mediaCatalog = [];
         let activeItem = null;
         let seasonsBuilder = [];
-        let localFileStore = {};
+        let selectedCategory = "Todos";
         let isSignUpMode = false;
         
         let audioCtx, gainNode, isAudioBoosted = false;
@@ -339,6 +393,17 @@
         const savedColor = localStorage.getItem('masterflix_theme_color');
         if (savedColor) applyUserTheme(savedColor);
 
+        // CATEGORIAS
+        document.querySelectorAll('.category-chip').forEach(chip => {
+            chip.onclick = () => {
+                document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                selectedCategory = chip.dataset.cat;
+                renderApp();
+            };
+        });
+
+        // ROTAS
         function handleHashRouting() {
             const hash = window.location.hash;
             if (hash.startsWith('#/midia/')) {
@@ -347,7 +412,6 @@
                 if (item) openDetails(item);
             }
         }
-
         window.addEventListener('hashchange', handleHashRouting);
 
         document.getElementById('mediaType').onchange = (e) => {
@@ -369,9 +433,14 @@
                 const sDiv = document.createElement('div');
                 sDiv.style.cssText = "background:#222; border:1px solid #333; border-radius:8px; padding:10px; margin-top:8px;";
                 sDiv.innerHTML = `
-                    <div style="display:flex; justify-between; align-items:center; margin-bottom:6px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
                         <strong style="color:var(--primary-color); font-size:12px;">Temporada ${sIdx + 1}</strong>
                         <button type="button" class="btn-secondary" style="font-size:10px; padding:2px 6px;" onclick="addEpisode(${sIdx})">+ Add Episódio</button>
+                    </div>
+                    <div class="input-group">
+                        <label>Capa da Temporada ${sIdx + 1} (Opcional)</label>
+                        <input type="file" accept="image/*" onchange="storeSeasonCoverFile(event, ${sIdx})">
+                        <input type="url" value="${season.seasonCoverUrl || ''}" placeholder="Ou cole a URL da imagem" onchange="seasonsBuilder[${sIdx}].seasonCoverUrl = this.value" style="margin-top:4px;">
                     </div>
                 `;
 
@@ -381,12 +450,12 @@
                     epDiv.innerHTML = `
                         <div class="input-group">
                             <label>Episódio ${eIdx + 1} - Título</label>
-                            <input type="text" value="${ep.title || ''}" onchange="updateEp(${sIdx}, ${eIdx}, 'title', this.value)" placeholder="Título" required>
+                            <input type="text" value="${ep.title || ''}" onchange="seasonsBuilder[${sIdx}].episodes[${eIdx}].title = this.value" placeholder="Título do Episódio" required>
                         </div>
                         <div class="input-group">
                             <label>Vídeo do Episódio (Arquivo ou URL)</label>
-                            <input type="file" accept="video/*" onchange="storeEpFile(event, ${sIdx}, ${eIdx})">
-                            <input type="url" value="${ep.videoUrl || ''}" placeholder="Ou cole a URL (.mp4)" onchange="updateEp(${sIdx}, ${eIdx}, 'videoUrl', this.value)" style="margin-top:4px;">
+                            <input type="file" accept="video/*" onchange="storeEpVideoFile(event, ${sIdx}, ${eIdx})">
+                            <input type="url" value="${ep.videoUrl || ''}" placeholder="Ou cole a URL do vídeo (.mp4)" onchange="seasonsBuilder[${sIdx}].episodes[${eIdx}].videoUrl = this.value" style="margin-top:4px;">
                         </div>
                     `;
                     sDiv.appendChild(epDiv);
@@ -396,25 +465,28 @@
             });
         }
 
+        window.storeSeasonCoverFile = async (e, sIdx) => {
+            const file = e.target.files[0];
+            if (file) {
+                seasonsBuilder[sIdx].seasonCoverBase64 = await fileToBase64(file);
+            }
+        };
+
+        window.storeEpVideoFile = async (e, sIdx, eIdx) => {
+            const file = e.target.files[0];
+            if (file) {
+                seasonsBuilder[sIdx].episodes[eIdx].videoBase64 = await fileToBase64(file);
+            }
+        };
+
         function addSeason() {
-            seasonsBuilder.push({ seasonNumber: seasonsBuilder.length + 1, episodes: [{ title: '', videoUrl: '', videoKey: '' }] });
+            seasonsBuilder.push({ seasonNumber: seasonsBuilder.length + 1, episodes: [{ title: '', videoUrl: '' }] });
             renderSeasonsBuilder();
         }
 
         window.addEpisode = (sIdx) => {
-            seasonsBuilder[sIdx].episodes.push({ title: '', videoUrl: '', videoKey: '' });
+            seasonsBuilder[sIdx].episodes.push({ title: '', videoUrl: '' });
             renderSeasonsBuilder();
-        };
-
-        window.updateEp = (sIdx, eIdx, field, val) => seasonsBuilder[sIdx].episodes[eIdx][field] = val;
-
-        window.storeEpFile = (e, sIdx, eIdx) => {
-            const file = e.target.files[0];
-            if (file) {
-                const key = `ep_${Date.now()}_${sIdx}_${eIdx}`;
-                localFileStore[key] = URL.createObjectURL(file);
-                seasonsBuilder[sIdx].episodes[eIdx].videoKey = key;
-            }
         };
 
         document.getElementById('btnAddSeasonBtn').onclick = addSeason;
@@ -428,6 +500,7 @@
                     for (let k in data) mediaCatalog.push({ id: k, ...data[k] });
                 }
                 renderApp();
+                renderAdminCatalogList();
                 handleHashRouting();
             } catch (e) {
                 showMsg('Erro ao carregar catálogo: ' + e.message, 'error');
@@ -442,11 +515,9 @@
             moviesCarousel.innerHTML = "";
             seriesCarousel.innerHTML = "";
 
-            const user = auth.currentUser;
-            const isAdmin = user && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
-
             mediaCatalog.forEach(item => {
                 if (query && !item.title.toLowerCase().includes(query)) return;
+                if (selectedCategory !== "Todos" && item.category !== selectedCategory) return;
 
                 const card = document.createElement('div');
                 card.className = 'media-card';
@@ -455,9 +526,8 @@
 
                 card.innerHTML = `
                     <img src="${coverSrc}" alt="${item.title}">
-                    ${isAdmin ? `<button class="btn-card-edit" onclick="event.stopPropagation(); editMedia('${item.id}')">✏️ Editar</button>` : ''}
                     <div class="media-card-overlay">
-                        <span class="media-card-tag">${item.type === 'movie' ? 'Filme' : 'Série'}</span>
+                        <span class="media-card-tag">${item.category || (item.type === 'movie' ? 'Filme' : 'Série')}</span>
                         <div class="media-card-title">${item.title}</div>
                     </div>
                 `;
@@ -531,10 +601,10 @@
 
         function openDetails(item) {
             activeItem = item;
-            const coverSrc = item.coverBase64 || item.coverUrl || '';
-            document.getElementById('detailCover').src = coverSrc;
+            const defaultCover = item.coverBase64 || item.coverUrl || '';
+            document.getElementById('detailCover').src = defaultCover;
             document.getElementById('detailTitle').innerText = item.title;
-            document.getElementById('detailMeta').innerText = `${item.type === 'movie' ? 'FILME ONLINE' : 'SÉRLE ONLINE'} • ${item.year}`;
+            document.getElementById('detailMeta').innerText = `${item.category || 'Geral'} • ${item.type === 'movie' ? 'FILME' : 'SÉRIE'} • ${item.year}`;
             document.getElementById('detailDesc').innerText = item.description;
 
             document.title = `Assistir ${item.title} Online - MasterFlix`;
@@ -543,7 +613,7 @@
                 document.getElementById('detailMovieArea').classList.remove('hidden');
                 document.getElementById('detailSerieArea').classList.add('hidden');
                 document.getElementById('btnPlayMovieFile').onclick = () => {
-                    const videoSrc = item.videoKey ? localFileStore[item.videoKey] : item.videoUrl;
+                    const videoSrc = item.videoBase64 || item.videoUrl;
                     playVideo(videoSrc, item.title, item.id, item.id);
                 };
             } else {
@@ -560,12 +630,21 @@
                     tab.onclick = () => {
                         document.querySelectorAll('.season-tab').forEach(t => t.classList.remove('active'));
                         tab.classList.add('active');
-                        renderEpisodesList(item.seasons[idx]?.episodes || [], idx);
+
+                        // ATUALIZA CAPA PELA TEMPORADA OU ANTERIOR
+                        const seasonCover = s.seasonCoverBase64 || s.seasonCoverUrl || defaultCover;
+                        document.getElementById('detailCover').src = seasonCover;
+
+                        renderEpisodesList(s.episodes || [], idx);
                     };
                     tabs.appendChild(tab);
                 });
 
-                if (item.seasons && item.seasons.length > 0) renderEpisodesList(item.seasons[0].episodes || [], 0);
+                if (item.seasons && item.seasons.length > 0) {
+                    const s0 = item.seasons[0];
+                    document.getElementById('detailCover').src = s0.seasonCoverBase64 || s0.seasonCoverUrl || defaultCover;
+                    renderEpisodesList(s0.episodes || [], 0);
+                }
             }
 
             document.getElementById('detailsModal').classList.remove('hidden');
@@ -579,7 +658,7 @@
                 const epDiv = document.createElement('div');
                 epDiv.className = 'episode-card';
                 
-                const epVideoSrc = ep.videoKey ? localFileStore[ep.videoKey] : ep.videoUrl;
+                const epVideoSrc = ep.videoBase64 || ep.videoUrl;
                 const epKey = `${activeItem.id}_s${seasonIdx}_e${idx}`;
 
                 epDiv.onclick = () => {
@@ -678,42 +757,74 @@
             }
         };
 
+        // SALVAR MÍDIA (SEM PERDER ARQUIVOS / CAPAS EXISTENTES)
         document.getElementById('mediaForm').onsubmit = async (e) => {
             e.preventDefault();
 
             const editId = document.getElementById('editMediaId').value;
+            const existingItem = editId ? mediaCatalog.find(m => m.id === editId) : null;
+
             const type = document.getElementById('mediaType').value;
+            const category = document.getElementById('mediaCategory').value;
             const title = document.getElementById('mediaTitle').value.trim();
             const year = document.getElementById('mediaYear').value.trim();
             const description = document.getElementById('mediaDesc').value.trim();
-            const coverUrl = document.getElementById('mediaCoverUrl').value.trim();
-            const videoUrl = document.getElementById('movieVideoUrl').value.trim();
+            
+            const inputCoverUrl = document.getElementById('mediaCoverUrl').value.trim();
+            const inputVideoUrl = document.getElementById('movieVideoUrl').value.trim();
 
-            let payload = { type, title, year, description, coverUrl };
+            let payload = {
+                type,
+                category,
+                title,
+                year,
+                description,
+                coverUrl: inputCoverUrl || (existingItem ? existingItem.coverUrl || '' : ''),
+                coverBase64: existingItem ? existingItem.coverBase64 || '' : ''
+            };
 
+            // SE ENVIOU UMA NOVA CAPA, ATUALIZA
             const coverFile = document.getElementById('mediaCoverFile').files[0];
-            if (coverFile) payload.coverBase64 = await fileToBase64(coverFile);
+            if (coverFile) {
+                payload.coverBase64 = await fileToBase64(coverFile);
+            }
 
             if (type === 'movie') {
-                payload.videoUrl = videoUrl;
+                payload.videoUrl = inputVideoUrl || (existingItem ? existingItem.videoUrl || '' : '');
+                payload.videoBase64 = existingItem ? existingItem.videoBase64 || '' : '';
+
                 const videoFile = document.getElementById('movieVideoFile').files[0];
                 if (videoFile) {
-                    const vKey = `movie_vid_${Date.now()}`;
-                    localFileStore[vKey] = URL.createObjectURL(videoFile);
-                    payload.videoKey = vKey;
+                    payload.videoBase64 = await fileToBase64(videoFile);
                 }
             } else {
-                payload.seasons = seasonsBuilder;
+                // SÉRIE: PRESERVA EPISÓDIOS E CAPAS DAS TEMPORADAS
+                payload.seasons = seasonsBuilder.map((s, sIdx) => {
+                    const oldSeason = existingItem?.seasons?.[sIdx];
+                    return {
+                        seasonNumber: s.seasonNumber || sIdx + 1,
+                        seasonCoverUrl: s.seasonCoverUrl || oldSeason?.seasonCoverUrl || '',
+                        seasonCoverBase64: s.seasonCoverBase64 || oldSeason?.seasonCoverBase64 || '',
+                        episodes: (s.episodes || []).map((ep, eIdx) => {
+                            const oldEp = oldSeason?.episodes?.[eIdx];
+                            return {
+                                title: ep.title,
+                                videoUrl: ep.videoUrl || oldEp?.videoUrl || '',
+                                videoBase64: ep.videoBase64 || oldEp?.videoBase64 || ''
+                            };
+                        })
+                    };
+                });
             }
 
             try {
                 if (editId) {
                     await set(ref(rtdb, "catalog/" + editId), payload);
-                    showMsg('Conteúdo atualizado!', 'success');
+                    showMsg('Conteúdo salvo para todos!', 'success');
                 } else {
                     const newRef = push(ref(rtdb, "catalog"));
                     await set(newRef, payload);
-                    showMsg('Publicado com sucesso!', 'success');
+                    showMsg('Publicado para todos com sucesso!', 'success');
                 }
 
                 document.getElementById('creatorModal').classList.add('hidden');
@@ -725,12 +836,14 @@
             }
         };
 
+        // CARREGAR DADOS NO EDITOR
         window.editMedia = (id) => {
             const item = mediaCatalog.find(m => m.id === id);
             if (!item) return;
 
             document.getElementById('editMediaId').value = item.id;
             document.getElementById('mediaType').value = item.type;
+            document.getElementById('mediaCategory').value = item.category || 'Ação';
             document.getElementById('mediaTitle').value = item.title;
             document.getElementById('mediaYear').value = item.year;
             document.getElementById('mediaDesc').value = item.description;
@@ -740,7 +853,7 @@
             document.getElementById('creatorTitle').innerText = "Editar Conteúdo";
 
             if (item.type === 'serie') {
-                seasonsBuilder = item.seasons || [];
+                seasonsBuilder = JSON.parse(JSON.stringify(item.seasons || []));
                 document.getElementById('movieFileArea').classList.add('hidden');
                 document.getElementById('seriesBuilderArea').classList.remove('hidden');
                 renderSeasonsBuilder();
@@ -749,10 +862,102 @@
                 document.getElementById('seriesBuilderArea').classList.add('hidden');
             }
 
+            document.getElementById('adminModal').classList.add('hidden');
             document.getElementById('creatorModal').classList.remove('hidden');
         };
 
-        // EXIBIÇÃO & CONTROLE DE MODO LOGIN / CADASTRO
+        window.deleteMedia = async (id) => {
+            if (confirm("Tem certeza que deseja excluir esta mídia do catálogo global?")) {
+                try {
+                    await remove(ref(rtdb, "catalog/" + id));
+                    showMsg('Mídia removida com sucesso!', 'success');
+                    loadCatalog();
+                } catch (e) {
+                    showMsg('Erro ao deletar: ' + e.message, 'error');
+                }
+            }
+        };
+
+        // GERENCIADOR DE CATÁLOGO (ADMIN)
+        function renderAdminCatalogList() {
+            const container = document.getElementById('adminCatalogList');
+            const searchVal = document.getElementById('adminSearchInput').value.toLowerCase();
+            container.innerHTML = "";
+
+            mediaCatalog.forEach(item => {
+                if (searchVal && !item.title.toLowerCase().includes(searchVal)) return;
+
+                const div = document.createElement('div');
+                div.className = 'admin-manage-item';
+                div.innerHTML = `
+                    <div>
+                        <strong style="font-size:13px;">${item.title}</strong>
+                        <div style="font-size:10px; color:#aaa;">${item.type === 'movie' ? 'Filme' : 'Série'} • ${item.category || 'Geral'}</div>
+                    </div>
+                    <div style="display:flex; gap:6px;">
+                        <button class="btn-secondary" style="font-size:11px;" onclick="editMedia('${item.id}')">✏️ Editar</button>
+                        <button class="btn-danger" onclick="deleteMedia('${item.id}')">🗑️ Excluir</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        document.getElementById('adminSearchInput').oninput = renderAdminCatalogList;
+        document.getElementById('btnAdminManager').onclick = () => {
+            renderAdminCatalogList();
+            document.getElementById('adminModal').classList.remove('hidden');
+        };
+        document.getElementById('btnCloseAdmin').onclick = () => document.getElementById('adminModal').classList.add('hidden');
+        document.getElementById('btnAddNewFromAdmin').onclick = () => {
+            document.getElementById('adminModal').classList.add('hidden');
+            document.getElementById('btnOpenCreator').click();
+        };
+
+        // PERFIL & FOTO DE PERFIL
+        document.getElementById('btnSaveProfile').onclick = async () => {
+            const newColor = document.getElementById('themeColorPicker').value;
+            applyUserTheme(newColor);
+
+            const file = document.getElementById('profilePhotoFile').files[0];
+            const photoUrl = document.getElementById('profilePhotoUrl').value.trim();
+
+            if (file) {
+                const b64 = await fileToBase64(file);
+                localStorage.setItem('masterflix_user_avatar', b64);
+            } else if (photoUrl) {
+                localStorage.setItem('masterflix_user_avatar', photoUrl);
+            }
+
+            updateUserAvatarUI();
+            showMsg('Perfil atualizado com sucesso!', 'success');
+            document.getElementById('profileModal').classList.add('hidden');
+        };
+
+        function updateUserAvatarUI() {
+            const avatarData = localStorage.getItem('masterflix_user_avatar');
+            const user = auth.currentUser;
+            const letter = user ? user.email.charAt(0).toUpperCase() : 'U';
+
+            if (avatarData) {
+                document.getElementById('avatarImg').src = avatarData;
+                document.getElementById('avatarImg').classList.remove('hidden');
+                document.getElementById('avatarText').classList.add('hidden');
+
+                document.getElementById('profileAvatarBigImg').src = avatarData;
+                document.getElementById('profileAvatarBigImg').classList.remove('hidden');
+                document.getElementById('profileAvatarBigText').classList.add('hidden');
+            } else {
+                document.getElementById('avatarText').innerText = letter;
+                document.getElementById('avatarImg').classList.add('hidden');
+                document.getElementById('avatarText').classList.remove('hidden');
+
+                document.getElementById('profileAvatarBigText').innerText = letter;
+                document.getElementById('profileAvatarBigImg').classList.add('hidden');
+                document.getElementById('profileAvatarBigText').classList.remove('hidden');
+            }
+        }
+
         document.getElementById('toggleAuthMode').onclick = () => {
             isSignUpMode = !isSignUpMode;
             if (isSignUpMode) {
@@ -787,13 +992,6 @@
 
         document.getElementById('btnOpenProfile').onclick = () => document.getElementById('profileModal').classList.remove('hidden');
         document.getElementById('btnCloseProfile').onclick = () => document.getElementById('profileModal').classList.add('hidden');
-
-        document.getElementById('btnSaveTheme').onclick = () => {
-            const newColor = document.getElementById('themeColorPicker').value;
-            applyUserTheme(newColor);
-            showMsg('Cor do tema atualizada!', 'success');
-            document.getElementById('profileModal').classList.add('hidden');
-        };
 
         document.getElementById('btnOpenCreator').onclick = () => {
             document.getElementById('editMediaId').value = "";
@@ -835,14 +1033,13 @@
                 const isAdm = user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
                 document.getElementById('profileEmailDisplay').innerText = user.email;
-                document.getElementById('profileAvatarBig').innerText = user.email.charAt(0).toUpperCase();
-                document.getElementById('btnOpenProfile').innerText = user.email.charAt(0).toUpperCase();
+                updateUserAvatarUI();
 
                 if (isAdm) {
-                    document.getElementById('btnOpenCreator').classList.remove('hidden');
+                    document.getElementById('btnAdminManager').classList.remove('hidden');
                     document.getElementById('profileAdminBadge').classList.remove('hidden');
                 } else {
-                    document.getElementById('btnOpenCreator').classList.add('hidden');
+                    document.getElementById('btnAdminManager').classList.add('hidden');
                     document.getElementById('profileAdminBadge').classList.add('hidden');
                 }
 
