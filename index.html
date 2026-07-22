@@ -90,13 +90,11 @@
         .episode-thumb { width: 85px; height: 50px; border-radius: 6px; overflow: hidden; background: #000; flex-shrink: 0; }
         .episode-thumb img { width: 100%; height: 100%; object-fit: cover; }
         
-        /* PLAYER MIXDROP / HÍBRIDO */
         .player-wrapper { width: 100%; max-width: 960px; background: #000; border-radius: 12px; overflow: hidden; position: relative; border: 1px solid #333; }
         .player-container-view { width: 100%; height: 60vh; max-height: 540px; background: #000; position: relative; }
         .player-container-view iframe, .player-container-view video { width: 100%; height: 100%; border: none; display: block; }
         .admin-item { display: flex; align-items: center; justify-content: space-between; background: #222; border: 1px solid #333; padding: 10px; border-radius: 8px; margin-bottom: 8px; }
 
-        /* MODO SMART TV */
         body.is-smart-tv header { padding: 0 6%; height: 75px; }
         body.is-smart-tv .brand { font-size: 26px; }
         body.is-smart-tv .btn-primary, body.is-smart-tv .btn-secondary { font-size: 14px; padding: 12px 20px; }
@@ -286,7 +284,7 @@
 
                 <div id="movieFileArea" class="input-group">
                     <label>Link do Vídeo (Mixdrop / Embed / MP4 Direct)</label>
-                    <input type="text" id="movieVideoUrl" placeholder="Ex: https://mixdrop.top/e/xxxx ou link .mp4">
+                    <input type="text" id="movieVideoUrl" placeholder="Ex: https://mixdrop.top/e/8l4374qzunqml0">
                 </div>
 
                 <div id="seriesBuilderArea" class="hidden">
@@ -751,21 +749,18 @@
             });
         }
 
-        /* FORMATADOR E REPRODUTOR UNIVERSAL (MIXDROP DE QUALQUER EXTENSÃO + EMBEDS + MP4) */
         function formatVideoUrl(url) {
             if (!url) return '';
             let formatted = url.trim();
 
-            // Suporte completo a domínios Mixdrop (.top, .ag, .co, .is, .ch, etc)
             if (formatted.includes('mixdrop.')) {
                 if (formatted.includes('/f/')) {
                     formatted = formatted.replace('/f/', '/e/');
                 } else if (!formatted.includes('/e/')) {
-                    const parts = formatted.split('/');
-                    const id = parts.pop() || parts.pop();
-                    const domainMatch = formatted.match(/https?:\/\/[^\/]+/);
-                    const domain = domainMatch ? domainMatch[0] : 'https://mixdrop.top';
-                    formatted = `${domain}/e/${id}`;
+                    const match = formatted.match(/(?:mixdrop\.[a-z]+)\/(?:e\/|f\/)?([a-zA-Z0-9]+)/);
+                    if (match && match[1]) {
+                        formatted = `https://mixdrop.top/e/${match[1]}`;
+                    }
                 }
             }
             return formatted;
@@ -773,7 +768,7 @@
 
         function playVideo(rawUrl, title) {
             if (!rawUrl) {
-                showMsg('Nenhum link de vídeo fornecido!', 'error');
+                showMsg('Nenhum link de vídeo cadastrado!', 'error');
                 return;
             }
 
@@ -782,9 +777,9 @@
             document.getElementById('playerVideoTitle').innerText = title;
             container.innerHTML = "";
 
-            const isEmbed = url.includes('mixdrop.') || url.includes('/e/') || url.includes('/embed/') || !url.endsWith('.mp4');
+            const isMp4Direct = url.toLowerCase().endsWith('.mp4');
 
-            if (isEmbed) {
+            if (!isMp4Direct) {
                 const iframe = document.createElement('iframe');
                 iframe.src = url;
                 iframe.allow = "autoplay; fullscreen; encrypted-media";
@@ -818,12 +813,17 @@
             const inputCoverUrl = document.getElementById('mediaCoverUrl').value.trim();
             const inputVideoUrl = document.getElementById('movieVideoUrl').value.trim();
 
+            if (type === 'movie' && !inputVideoUrl) {
+                showMsg('Por favor, insira o link do vídeo do filme!', 'error');
+                return;
+            }
+
             let payload = {
-                type,
-                category,
-                title,
-                year,
-                description,
+                type: type,
+                category: category,
+                title: title,
+                year: year,
+                description: description,
                 coverUrl: inputCoverUrl || (existingItem ? existingItem.coverUrl || '' : ''),
                 coverBase64: tempCoverBase64 || (existingItem ? existingItem.coverBase64 || '' : '')
             };
@@ -853,20 +853,20 @@
             try {
                 if (editId) {
                     await set(ref(rtdb, "catalog/" + editId), payload);
-                    showMsg('Mídia editada com sucesso!', 'success');
+                    showMsg('Mídia editada e salva com sucesso!', 'success');
                 } else {
                     const newRef = push(ref(rtdb, "catalog"));
                     await set(newRef, payload);
-                    showMsg('Publicado com sucesso!', 'success');
+                    showMsg('Conteúdo salvo com sucesso!', 'success');
                 }
 
                 document.getElementById('creatorModal').classList.add('hidden');
                 document.getElementById('mediaForm').reset();
                 tempCoverBase64 = "";
                 seasonsBuilder = [];
-                loadCatalog();
+                await loadCatalog();
             } catch (err) {
-                showMsg('Erro no banco: ' + err.message, 'error');
+                showMsg('Erro ao salvar no banco: ' + err.message, 'error');
             }
         };
 
@@ -1043,6 +1043,7 @@
         document.getElementById('btnOpenCreator').onclick = () => {
             document.getElementById('editMediaId').value = "";
             document.getElementById('mediaForm').reset();
+            document.getElementById('movieVideoUrl').value = "";
             document.getElementById('coverFileNameDisplay').innerText = "Escolher Capa Local...";
             tempCoverBase64 = "";
             updateCoverPreview("");
