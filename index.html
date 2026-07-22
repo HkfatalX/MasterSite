@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MasterFlix - Filmes e Séries</title>
 
+    <!-- ============ FAVICON DO SITE (Ícone da Aba) ============ -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23141414'/%3E%3Cpath d='M20 78 L20 22 L35 22 L50 55 L65 22 L80 22 L80 78 L68 78 L68 42 L56 68 L44 68 L32 42 L32 78 Z' fill='%23e50914'/%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23141414'/%3E%3Cpath d='M20 78 L20 22 L35 22 L50 55 L65 22 L80 22 L80 78 L68 78 L68 42 L56 68 L44 68 L32 42 L32 78 Z' fill='%23e50914'/%3E%3C/svg%3E">
+    <meta name="theme-color" content="#e50914">
+    <!-- ========================================================= -->
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
@@ -31,10 +37,170 @@
             padding: 0 16px; z-index: 100; transition: background 0.3s ease;
         }
         header.scrolled { background: rgba(20, 20, 20, 0.95); border-bottom: 1px solid rgba(255,255,255,0.08); }
-        .brand { font-size: 20px; font-weight: 900; color: var(--primary-color); letter-spacing: -0.5px; cursor: pointer; text-transform: uppercase; }
+        .brand { font-size: 20px; font-weight: 900; color: var(--primary-color); letter-spacing: -0.5px; cursor: pointer; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+        .brand-logo { width: 26px; height: 26px; flex-shrink: 0; }
         
         .nav-actions { display: flex; align-items: center; gap: 8px; }
         
+        /* ============ BARRA DE PESQUISA ESTILO NETFLIX ============ */
+        .search-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.75);
+            border: 1px solid transparent;
+            border-radius: 4px;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            width: 40px;
+            height: 36px;
+        }
+        
+        .search-box.active {
+            width: 240px;
+            border-color: rgba(255, 255, 255, 0.85);
+            background: rgba(0, 0, 0, 0.9);
+        }
+        
+        .search-icon-btn {
+            width: 36px;
+            height: 36px;
+            background: transparent;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 16px;
+            transition: color 0.2s;
+        }
+        
+        .search-icon-btn:hover { color: var(--primary-color); }
+        
+        .search-input-field {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #fff;
+            padding: 0 10px 0 4px;
+            font-size: 13px;
+            font-weight: 500;
+            width: 0;
+            opacity: 0;
+            transition: opacity 0.3s ease 0.1s;
+            outline: none;
+        }
+        
+        .search-box.active .search-input-field {
+            width: auto;
+            opacity: 1;
+        }
+        
+        .search-input-field::placeholder {
+            color: #8c8c8c;
+        }
+        
+        .search-clear-btn {
+            background: transparent;
+            border: none;
+            color: #8c8c8c;
+            cursor: pointer;
+            padding: 4px 8px;
+            font-size: 14px;
+            display: none;
+            transition: color 0.2s;
+        }
+        .search-clear-btn:hover { color: #fff; }
+        .search-box.active.has-text .search-clear-btn { display: block; }
+        
+        /* Dropdown de resultados de pesquisa */
+        .search-results-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 320px;
+            max-width: 90vw;
+            max-height: 400px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8);
+            display: none;
+            z-index: 200;
+            animation: fadeInDown 0.25s ease-out;
+        }
+        
+        .search-results-dropdown.visible { display: block; }
+        
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.15s;
+        }
+        .search-result-item:last-child { border-bottom: none; }
+        .search-result-item:hover, .search-result-item:focus {
+            background: rgba(229, 9, 20, 0.15);
+            outline: none;
+        }
+        
+        .search-result-thumb {
+            width: 50px;
+            height: 70px;
+            border-radius: 4px;
+            object-fit: cover;
+            background: #222;
+            flex-shrink: 0;
+        }
+        
+        .search-result-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .search-result-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .search-result-meta {
+            font-size: 10px;
+            color: #999;
+            margin-top: 2px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .search-result-meta .tag {
+            color: var(--primary-color);
+        }
+        
+        .search-no-results {
+            padding: 20px 12px;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+        }
+        
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* ============================================================== */
+
         .user-avatar-btn { 
             width: 38px; height: 38px; border-radius: 50%; background: var(--primary-color); 
             display: flex; align-items: center; justify-content: center; font-weight: 800; 
@@ -141,10 +307,8 @@
         .msg-success { background: #2e7d32; color: #fff; }
         .msg-error { background: #c62828; color: #fff; }
 
-        /* ============ PLAYER TOTALMENTE REFEITO ============ */
-        #playerModal {
-            padding: 10px;
-        }
+        /* ============ PLAYER ============ */
+        #playerModal { padding: 10px; }
         
         .player-modal-box { 
             width: 100%; max-width: 1200px; height: 85vh; max-height: 700px; background: #000; 
@@ -152,20 +316,13 @@
             margin: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.95); display: flex; flex-direction: column;
         }
 
-        /* Em fullscreen, o box ocupa tudo */
-        .player-modal-box:fullscreen,
-        .player-modal-box:-webkit-full-screen {
+        .player-modal-box:fullscreen, .player-modal-box:-webkit-full-screen {
             width: 100vw; height: 100vh; max-width: none; max-height: none;
             border-radius: 0; border: none;
         }
 
-        /* Estado "cursor oculto" */
-        .player-modal-box.cursor-hidden {
-            cursor: none;
-        }
-        .player-modal-box.cursor-hidden * {
-            cursor: none !important;
-        }
+        .player-modal-box.cursor-hidden { cursor: none; }
+        .player-modal-box.cursor-hidden * { cursor: none !important; }
 
         .player-controls-top {
             position: absolute; top: 0; left: 0; width: 100%;
@@ -177,46 +334,15 @@
             pointer-events: auto;
         }
         .player-controls-top.is-hidden {
-            opacity: 0;
-            transform: translateY(-10px);
-            pointer-events: none;
+            opacity: 0; transform: translateY(-10px); pointer-events: none;
         }
 
         .player-container-view { 
-            width: 100%; height: 100%; background: #000; position: relative; flex: 1; 
-            overflow: hidden;
+            width: 100%; height: 100%; background: #000; position: relative; flex: 1; overflow: hidden;
         }
         .player-container-view iframe { 
             width: 100%; height: 100%; border: none; display: block; 
         }
-
-        /* Overlay clique-guard: bloqueia cliques indesejados no iframe quando em fullscreen sem interação */
-        .player-click-guard {
-            position: absolute; inset: 0; z-index: 20;
-            background: transparent;
-            cursor: pointer;
-            display: none;
-        }
-        .player-click-guard.active {
-            display: block;
-        }
-        .player-click-guard-hint {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0,0,0,0.75); color: #fff;
-            padding: 14px 22px; border-radius: 50px;
-            font-size: 13px; font-weight: 700;
-            border: 1px solid rgba(255,255,255,0.2);
-            pointer-events: none;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.6);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .player-click-guard.active .player-click-guard-hint {
-            opacity: 1;
-        }
-
-        /* ==================================================== */
 
         .season-tab-container { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 16px; padding-bottom: 4px; }
         .season-tab { padding: 8px 16px; border-radius: 20px; background: #222; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; border: 1px solid #333; transition: all 0.2s; }
@@ -254,16 +380,40 @@
             .profile-avatar-overlay { left: 20px; transform: none; }
         }
 
+        /* Ajustes de pesquisa em telas menores */
+        @media (max-width: 480px) {
+            .search-box.active { width: 200px; }
+            .search-results-dropdown { width: 280px; }
+        }
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <header id="mainHeader">
-        <div class="brand" onclick="window.location.hash = ''">🎬 MASTERFLIX</div>
+        <div class="brand" onclick="window.location.hash = ''">
+            <svg class="brand-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100" height="100" rx="20" fill="#141414"/>
+                <path d="M20 78 L20 22 L35 22 L50 55 L65 22 L80 22 L80 78 L68 78 L68 42 L56 68 L44 68 L32 42 L32 78 Z" fill="var(--primary-color)"/>
+            </svg>
+            MASTERFLIX
+        </div>
         
         <div class="nav-actions">
-            <input type="text" id="searchInput" placeholder="Buscar..." style="padding: 6px 12px; border-radius: 18px; border: 1px solid #333; background: rgba(0,0,0,0.6); color: #fff; font-size: 12px; width: 110px;">
+            
+            <!-- ============ NOVA BARRA DE PESQUISA ESTILO NETFLIX ============ -->
+            <div class="search-wrapper" id="searchWrapper">
+                <div class="search-box" id="searchBox">
+                    <button class="search-icon-btn" id="searchIconBtn" title="Pesquisar" aria-label="Pesquisar">
+                        🔍
+                    </button>
+                    <input type="text" class="search-input-field" id="searchInput" placeholder="Títulos, gêneros...">
+                    <button class="search-clear-btn" id="searchClearBtn" title="Limpar" aria-label="Limpar">✕</button>
+                </div>
+                <div class="search-results-dropdown" id="searchResultsDropdown"></div>
+            </div>
+            <!-- ================================================================ -->
             
             <button class="btn-icon-admin hidden" id="btnAdminManager" title="Gerenciar Catálogo">⚙️</button>
             <button class="btn-icon-admin hidden" id="btnOpenCreator" style="background: var(--primary-color); border:none;" title="Criar Conteúdo">➕</button>
@@ -277,7 +427,13 @@
 
     <div id="authOverlay" class="modal-overlay hidden">
         <div class="modal-body" style="max-width: 400px; text-align: center;">
-            <div class="brand" style="font-size: 26px; margin-bottom: 8px;">🎬 MASTERFLIX</div>
+            <div class="brand" style="font-size: 26px; margin-bottom: 8px; justify-content:center;">
+                <svg class="brand-logo" style="width:34px; height:34px;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="100" height="100" rx="20" fill="#141414"/>
+                    <path d="M20 78 L20 22 L35 22 L50 55 L65 22 L80 22 L80 78 L68 78 L68 42 L56 68 L44 68 L32 42 L32 78 Z" fill="var(--primary-color)"/>
+                </svg>
+                MASTERFLIX
+            </div>
             <p style="color: #aaa; font-size: 13px; margin-bottom: 20px;" id="authSubtitle">Entre na sua conta para continuar</p>
             
             <form id="authForm">
@@ -517,7 +673,6 @@
         </div>
     </div>
 
-    <!-- ================= PLAYER MODAL REFEITO ================= -->
     <div id="playerModal" class="modal-overlay hidden">
         <div class="player-modal-box" id="playerModalBox">
             <div class="player-controls-top" id="playerControlsTop">
@@ -527,15 +682,9 @@
                     <button class="modal-close" id="btnClosePlayer" style="position: relative; top: 0; right: 0;">&times;</button>
                 </div>
             </div>
-            <div class="player-container-view" id="playerContainerView">
-                <!-- iframe é adicionado via JS -->
-                <div class="player-click-guard" id="playerClickGuard">
-                    <div class="player-click-guard-hint">👆 Toque novamente para reproduzir</div>
-                </div>
-            </div>
+            <div class="player-container-view" id="playerContainerView"></div>
         </div>
     </div>
-    <!-- ======================================================== -->
 
     <div id="cropperModal" class="modal-overlay hidden" style="z-index: 3500;">
         <div class="modal-body" style="max-width: 500px;">
@@ -549,21 +698,15 @@
             <div class="device-preview-wrapper">
                 <div class="device-box">
                     <label>📱 CELULAR</label>
-                    <div class="device-screen device-mobile">
-                        <img id="prevMobile" src="">
-                    </div>
+                    <div class="device-screen device-mobile"><img id="prevMobile" src=""></div>
                 </div>
                 <div class="device-box">
                     <label>💻 DESKTOP</label>
-                    <div class="device-screen device-pc">
-                        <img id="prevPC" src="">
-                    </div>
+                    <div class="device-screen device-pc"><img id="prevPC" src=""></div>
                 </div>
                 <div class="device-box">
                     <label>📺 SMART TV</label>
-                    <div class="device-screen device-tv">
-                        <img id="prevTV" src="">
-                    </div>
+                    <div class="device-screen device-tv"><img id="prevTV" src=""></div>
                 </div>
             </div>
 
@@ -742,6 +885,136 @@
             }
         }
         window.addEventListener('hashchange', handleHashRouting);
+
+        /* ================================================================
+           ==========  BARRA DE PESQUISA ESTILO NETFLIX  ==================
+           ================================================================ */
+        const searchWrapper = document.getElementById('searchWrapper');
+        const searchBox = document.getElementById('searchBox');
+        const searchIconBtn = document.getElementById('searchIconBtn');
+        const searchInput = document.getElementById('searchInput');
+        const searchClearBtn = document.getElementById('searchClearBtn');
+        const searchDropdown = document.getElementById('searchResultsDropdown');
+
+        function openSearch() {
+            searchBox.classList.add('active');
+            setTimeout(() => searchInput.focus(), 200);
+        }
+
+        function closeSearch() {
+            if (searchInput.value.trim() === '') {
+                searchBox.classList.remove('active');
+                searchBox.classList.remove('has-text');
+                searchDropdown.classList.remove('visible');
+                renderApp();
+            }
+        }
+
+        searchIconBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (searchBox.classList.contains('active')) {
+                if (searchInput.value.trim() !== '') {
+                    // Já tem texto, executa pesquisa
+                    renderApp();
+                } else {
+                    closeSearch();
+                }
+            } else {
+                openSearch();
+            }
+        });
+
+        searchInput.addEventListener('input', () => {
+            const val = searchInput.value.trim();
+            if (val.length > 0) {
+                searchBox.classList.add('has-text');
+                renderSearchDropdown(val);
+            } else {
+                searchBox.classList.remove('has-text');
+                searchDropdown.classList.remove('visible');
+            }
+            renderApp();
+        });
+
+        searchClearBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            searchInput.value = '';
+            searchBox.classList.remove('has-text');
+            searchDropdown.classList.remove('visible');
+            searchInput.focus();
+            renderApp();
+        });
+
+        searchInput.addEventListener('focus', () => {
+            if (searchInput.value.trim().length > 0) {
+                renderSearchDropdown(searchInput.value.trim());
+            }
+        });
+
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                searchInput.value = '';
+                searchBox.classList.remove('has-text');
+                searchDropdown.classList.remove('visible');
+                closeSearch();
+                searchInput.blur();
+                renderApp();
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                const firstResult = searchDropdown.querySelector('.search-result-item');
+                if (firstResult) firstResult.click();
+            }
+        });
+
+        // Fecha ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (!searchWrapper.contains(e.target)) {
+                searchDropdown.classList.remove('visible');
+                if (searchInput.value.trim() === '') {
+                    searchBox.classList.remove('active');
+                }
+            }
+        });
+
+        function renderSearchDropdown(query) {
+            const q = query.toLowerCase();
+            const results = mediaCatalog.filter(item => 
+                item.title.toLowerCase().includes(q) ||
+                (item.category && item.category.toLowerCase().includes(q)) ||
+                (item.description && item.description.toLowerCase().includes(q))
+            ).slice(0, 8);
+
+            searchDropdown.innerHTML = '';
+
+            if (results.length === 0) {
+                searchDropdown.innerHTML = `<div class="search-no-results">🔍 Nenhum resultado para "<strong>${query}</strong>"</div>`;
+            } else {
+                results.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'search-result-item';
+                    div.tabIndex = 0;
+                    const cover = item.coverUrl || 'https://via.placeholder.com/50x70?text=?';
+                    const typeLabel = item.type === 'movie' ? 'Filme' : 'Série';
+                    div.innerHTML = `
+                        <img class="search-result-thumb" src="${cover}" alt="${item.title}">
+                        <div class="search-result-info">
+                            <div class="search-result-title">${item.title}</div>
+                            <div class="search-result-meta">
+                                <span class="tag">${typeLabel}</span> • ${item.category || 'Geral'} • ${item.year || ''}
+                            </div>
+                        </div>
+                    `;
+                    div.onclick = () => {
+                        searchDropdown.classList.remove('visible');
+                        window.location.hash = `#/midia/${item.id}`;
+                        openDetails(item);
+                    };
+                    searchDropdown.appendChild(div);
+                });
+            }
+            searchDropdown.classList.add('visible');
+        }
+        /* ================================================================ */
 
         document.getElementById('mediaType').onchange = (e) => {
             const type = e.target.value;
@@ -928,7 +1201,7 @@
             else { moviesRow.classList.remove('hidden'); seriesRow.classList.remove('hidden'); }
 
             mediaCatalog.forEach(item => {
-                if (query && !item.title.toLowerCase().includes(query)) return;
+                if (query && !item.title.toLowerCase().includes(query) && !(item.category || '').toLowerCase().includes(query)) return;
                 if (selectedCategory !== "Todos" && selectedCategory !== "Filmes" && selectedCategory !== "Séries") {
                     if (item.category !== selectedCategory) return;
                 }
@@ -1057,47 +1330,31 @@
             return formatted;
         }
 
-        /* ================================================================
-           ============  SISTEMA DE PLAYER TOTALMENTE REFEITO  ============
-           ================================================================ */
-        
+        /* ============ PLAYER ============ */
         let controlsHideTimer = null;
         let cursorHideTimer = null;
-        let clickGuardActive = false;
 
         const playerBox = document.getElementById('playerModalBox');
         const playerControls = document.getElementById('playerControlsTop');
         const playerContainer = document.getElementById('playerContainerView');
-        const clickGuard = document.getElementById('playerClickGuard');
 
         function isPlayerOpen() {
             return !document.getElementById('playerModal').classList.contains('hidden');
         }
 
         function isInFullscreen() {
-            return !!(
-                document.fullscreenElement || 
-                document.webkitFullscreenElement || 
-                document.mozFullScreenElement || 
-                document.msFullscreenElement
-            );
+            return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
         }
 
         function showPlayerControls() {
             if (!isPlayerOpen()) return;
-            
             playerControls.classList.remove('is-hidden');
             playerBox.classList.remove('cursor-hidden');
-            
             clearTimeout(controlsHideTimer);
             clearTimeout(cursorHideTimer);
-            
-            // Esconde controles após 4s
             controlsHideTimer = setTimeout(() => {
                 playerControls.classList.add('is-hidden');
             }, 4000);
-
-            // Esconde cursor após 3s (só em desktop)
             if (!isTVDevice() && !('ontouchstart' in window)) {
                 cursorHideTimer = setTimeout(() => {
                     playerBox.classList.add('cursor-hidden');
@@ -1113,23 +1370,10 @@
             clearTimeout(cursorHideTimer);
         }
 
-        // Listener: quando o mouse sai da janela (provavelmente clicou no iframe/anúncio)
-        // ativa o guard para próxima interação
-        function enableClickGuard() {
-            if (!isInFullscreen()) {
-                // Se estava em fullscreen e o iframe roubou o foco, sai da fullscreen
-                if (document.exitFullscreen) document.exitFullscreen().catch(()=>{});
-            }
-        }
-
-        // Detecta quando o iframe rouba o foco (indica clique em anúncio)
         window.addEventListener('blur', () => {
             if (!isPlayerOpen()) return;
-            
             setTimeout(() => {
                 if (document.activeElement && document.activeElement.tagName === 'IFRAME') {
-                    // Iframe pegou foco = possível clique em anúncio
-                    // Se estiver em fullscreen, sair para evitar bug
                     if (isInFullscreen()) {
                         try {
                             if (document.exitFullscreen) document.exitFullscreen();
@@ -1137,8 +1381,6 @@
                             else if (document.msExitFullscreen) document.msExitFullscreen();
                         } catch(e) {}
                     }
-                    
-                    // Força mostrar controles ao voltar
                     setTimeout(() => {
                         window.focus();
                         forceShowControls();
@@ -1148,7 +1390,6 @@
             }, 100);
         });
 
-        // Ao voltar o foco para janela (voltou de aba/anúncio)
         window.addEventListener('focus', () => {
             if (isPlayerOpen()) {
                 forceShowControls();
@@ -1156,7 +1397,6 @@
             }
         });
 
-        // Detecta visibilidade da página (voltou de outra aba)
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden && isPlayerOpen()) {
                 forceShowControls();
@@ -1164,31 +1404,26 @@
             }
         });
 
-        // Eventos de interação globais - fazem controles aparecerem
         ['mousemove', 'mousedown', 'click', 'touchstart', 'touchmove', 'pointerdown', 'keydown', 'wheel'].forEach(evtType => {
-            document.addEventListener(evtType, (e) => {
+            document.addEventListener(evtType, () => {
                 if (isPlayerOpen()) {
                     showPlayerControls();
                 }
             }, { passive: true, capture: true });
         });
 
-        // Especificamente no playerBox
         playerBox.addEventListener('mousemove', showPlayerControls);
         playerBox.addEventListener('touchstart', showPlayerControls, { passive: true });
 
-        // Atualiza texto do botão fullscreen
         function updateFullscreenButtonText() {
             const btn = document.getElementById('btnToggleFullscreen');
             if (!btn) return;
             btn.innerText = isInFullscreen() ? "🗗 Sair da Tela Cheia" : "⛶ Tela Cheia";
         }
 
-        // Listener para mudanças de fullscreen
         ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => {
             document.addEventListener(evt, () => {
                 updateFullscreenButtonText();
-                // Ao mudar estado, forçar mostrar controles
                 if (isPlayerOpen()) {
                     forceShowControls();
                     showPlayerControls();
@@ -1196,10 +1431,8 @@
             });
         });
 
-        // Botão fullscreen
         document.getElementById('btnToggleFullscreen').onclick = (e) => {
             e.stopPropagation();
-            
             if (!isInFullscreen()) {
                 if (playerBox.requestFullscreen) playerBox.requestFullscreen();
                 else if (playerBox.webkitRequestFullscreen) playerBox.webkitRequestFullscreen();
@@ -1211,7 +1444,6 @@
                 else if (document.msExitFullscreen) document.msExitFullscreen();
                 else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
             }
-            
             showPlayerControls();
         };
 
@@ -1221,12 +1453,8 @@
                 return; 
             }
             const url = formatVideoUrl(rawUrl);
-            
             document.getElementById('playerTitleDisplay').innerText = title || 'Assistindo Mídia';
-
-            // Limpa iframe anterior (mantém o guard)
-            const existingIframe = playerContainer.querySelector('iframe');
-            if (existingIframe) existingIframe.remove();
+            playerContainer.innerHTML = '';
 
             const iframe = document.createElement('iframe');
             iframe.src = url;
@@ -1234,17 +1462,12 @@
             iframe.setAttribute('webkitallowfullscreen', 'true');
             iframe.setAttribute('mozallowfullscreen', 'true');
             iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope');
-            
-            // Sandbox: bloqueia pop-ups e redirects mas mantém funcionalidade
             iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-presentation allow-forms');
             iframe.setAttribute('referrerpolicy', 'no-referrer');
-            
             iframe.style.width = '100%';
             iframe.style.height = '100%';
             iframe.style.border = 'none';
-            
-            // Insere ANTES do click-guard (guard fica sobre)
-            playerContainer.insertBefore(iframe, clickGuard);
+            playerContainer.appendChild(iframe);
 
             document.getElementById('playerModal').classList.remove('hidden');
             updateFullscreenButtonText();
@@ -1252,13 +1475,10 @@
             showPlayerControls();
         }
 
-        // Fechar player
         document.getElementById('btnClosePlayer').onclick = (e) => { 
             e.stopPropagation();
             clearTimeout(controlsHideTimer);
             clearTimeout(cursorHideTimer);
-            
-            // Sair da fullscreen se estiver
             if (isInFullscreen()) {
                 try {
                     if (document.exitFullscreen) document.exitFullscreen();
@@ -1266,16 +1486,11 @@
                     else if (document.msExitFullscreen) document.msExitFullscreen();
                 } catch(e) {}
             }
-            
-            playerContainer.querySelectorAll('iframe').forEach(i => i.remove());
+            playerContainer.innerHTML = '';
             document.getElementById('playerModal').classList.add('hidden');
             playerBox.classList.remove('cursor-hidden');
             playerControls.classList.remove('is-hidden');
         };
-
-        /* ================================================================
-           ================  FIM DO SISTEMA DE PLAYER  ====================
-           ================================================================ */
 
         document.getElementById('mediaForm').onsubmit = async (e) => {
             e.preventDefault();
@@ -1574,8 +1789,6 @@
 
         document.getElementById('btnCloseCreator').onclick = () => document.getElementById('creatorModal').classList.add('hidden');
         document.getElementById('btnCloseDetails').onclick = () => { window.location.hash = ''; document.getElementById('detailsModal').classList.add('hidden'); };
-
-        document.getElementById('searchInput').oninput = renderApp;
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
