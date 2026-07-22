@@ -6,127 +6,155 @@
     <title>MasterFlix - Filmes e Séries</title>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Netflx+Sans:wght@300;400;500;700;900&family=Inter:wght@300;400;600;700;800;900&display=swap');
 
         :root {
             --primary-color: #e50914;
-            --bg-color: #0f0f12;
-            --card-bg: #18181c;
-            --modal-bg: #141418;
+            --primary-hover: #f40612;
+            --bg-color: #141414;
+            --card-bg: #181818;
+            --modal-bg: #181818;
             --text-color: #ffffff;
+            --glass-bg: rgba(20, 20, 20, 0.85);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; overflow-x: hidden; width: 100vw; }
 
-        /* HEADER MOBILE OPTIMIZED */
+        /* HEADER ANIMADO */
         header { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 60px; 
-            background: rgba(15, 15, 18, 0.95); backdrop-filter: blur(12px); 
+            position: fixed; top: 0; left: 0; width: 100%; height: 64px; 
+            background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%); 
+            backdrop-filter: blur(10px);
             display: flex; align-items: center; justify-content: space-between; 
-            padding: 0 12px; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.08); 
+            padding: 0 24px; z-index: 100; transition: background 0.3s ease;
         }
-        .brand { font-size: 18px; font-weight: 900; color: var(--primary-color); letter-spacing: -0.5px; cursor: pointer; white-space: nowrap; }
+        header.scrolled { background: rgba(20, 20, 20, 0.95); border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .brand { font-size: 22px; font-weight: 900; color: var(--primary-color); letter-spacing: -0.5px; cursor: pointer; text-transform: uppercase; }
         
-        .nav-actions { display: flex; align-items: center; gap: 6px; }
+        .nav-actions { display: flex; align-items: center; gap: 10px; }
         
         .user-avatar-btn { 
-            width: 34px; height: 34px; border-radius: 50%; background: var(--primary-color); 
+            width: 36px; height: 36px; border-radius: 6px; background: var(--primary-color); 
             display: flex; align-items: center; justify-content: center; font-weight: 800; 
-            cursor: pointer; border: 2px solid #fff; overflow: hidden; font-size: 13px; flex-shrink: 0; 
+            cursor: pointer; overflow: hidden; font-size: 14px; flex-shrink: 0; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: transform 0.2s;
         }
+        .user-avatar-btn:hover { transform: scale(1.05); }
         .user-avatar-btn img { width: 100%; height: 100%; object-fit: cover; }
 
         .btn-icon-admin {
-            background: #25252c; border: 1px solid rgba(255,255,255,0.1); color: #fff;
-            padding: 6px 10px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer;
-            display: inline-flex; align-items: center; gap: 4px;
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff;
+            padding: 7px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;
         }
+        .btn-icon-admin:hover { background: rgba(255,255,255,0.25); }
 
         button, input, select, textarea { outline: none; }
         
-        .app-container { padding-top: 70px; padding-bottom: 40px; width: 100%; max-width: 100vw; }
+        .app-container { padding-top: 70px; padding-bottom: 50px; width: 100%; max-width: 100vw; }
 
-        /* HERO BANNER */
+        /* HERO BANNER ESTILO NETFLIX */
         .hero-banner { 
-            width: 92%; margin: 0 auto 20px auto; min-height: 220px; border-radius: 14px; 
-            background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, var(--bg-color) 100%), #222 center/cover no-repeat; 
-            display: flex; flex-direction: column; justify-content: flex-end; padding: 16px; 
-            border: 1px solid rgba(255,255,255,0.08); 
+            width: 95%; max-width: 1400px; margin: 0 auto 28px auto; min-height: 380px; border-radius: 16px; 
+            background: linear-gradient(180deg, rgba(20,20,20,0.1) 0%, var(--bg-color) 100%), #1f1f1f center/cover no-repeat; 
+            display: flex; flex-direction: column; justify-content: flex-end; padding: 32px; 
+            position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.8); transition: background-image 0.5s ease-in-out;
         }
-        .hero-title { font-size: clamp(20px, 5vw, 32px); font-weight: 900; margin-bottom: 6px; text-shadow: 0 2px 10px rgba(0,0,0,0.9); }
-        .hero-desc { max-width: 600px; color: #ccc; font-size: 12px; line-height: 1.4; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        @media(max-width: 600px) { .hero-banner { min-height: 260px; padding: 16px; } }
+
+        .hero-badge { display: inline-block; background: var(--primary-color); font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 4px; margin-bottom: 8px; text-transform: uppercase; width: fit-content; }
+        .hero-title { font-size: clamp(24px, 5vw, 42px); font-weight: 900; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(0,0,0,0.9); }
+        .hero-desc { max-width: 650px; color: #d2d2d2; font-size: 13px; line-height: 1.5; margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
         /* CATEGORIAS */
-        .categories-bar { display: flex; gap: 6px; overflow-x: auto; padding: 0 4% 12px 4%; scrollbar-width: none; }
+        .categories-bar { display: flex; gap: 8px; overflow-x: auto; padding: 0 2.5% 16px 2.5%; scrollbar-width: none; }
         .categories-bar::-webkit-scrollbar { display: none; }
-        .category-chip { padding: 6px 14px; border-radius: 18px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); font-size: 11px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: 0.2s; }
-        .category-chip.active { background: var(--primary-color); border-color: var(--primary-color); }
+        .category-chip { padding: 8px 18px; border-radius: 20px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+        .category-chip:hover, .category-chip.active { background: var(--primary-color); border-color: var(--primary-color); transform: translateY(-2px); }
 
-        /* CARROSSEL MOBILE-FRIENDLY */
-        .section-row { margin-bottom: 24px; padding-left: 4%; }
-        .section-title { font-size: 15px; font-weight: 800; margin-bottom: 10px; color: var(--text-color); }
-        .carousel-container { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; padding-right: 4%; scrollbar-width: none; scroll-snap-type: x mandatory; }
+        /* CARROSSEL DE CARDS ANIMADOS */
+        .section-row { margin-bottom: 32px; padding-left: 2.5%; }
+        .section-title { font-size: 18px; font-weight: 800; margin-bottom: 12px; color: var(--text-color); display: flex; align-items: center; gap: 8px; }
+        .carousel-container { display: flex; gap: 12px; overflow-x: auto; padding: 8px 2.5% 12px 0; scrollbar-width: none; scroll-snap-type: x mandatory; }
         .carousel-container::-webkit-scrollbar { display: none; }
 
-        .media-card { flex: 0 0 120px; height: 180px; border-radius: 8px; position: relative; overflow: hidden; background: var(--card-bg); cursor: pointer; border: 1px solid rgba(255,255,255,0.08); scroll-snap-align: start; }
+        .media-card { 
+            flex: 0 0 145px; height: 215px; border-radius: 8px; position: relative; overflow: hidden; 
+            background: var(--card-bg); cursor: pointer; border: 1px solid rgba(255,255,255,0.05); 
+            scroll-snap-align: start; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        @media(min-width: 768px) { .media-card { flex: 0 0 170px; height: 250px; } }
+        
+        .media-card:hover { transform: scale(1.08) translateY(-5px); z-index: 10; box-shadow: 0 12px 25px rgba(0,0,0,0.8); }
         .media-card img { width: 100%; height: 100%; object-fit: cover; }
-        .media-card-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.9) 100%); padding: 8px; display: flex; flex-direction: column; justify-content: flex-end; }
-        .media-card-title { font-size: 11px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .media-card-tag { font-size: 8px; font-weight: 800; color: var(--primary-color); text-transform: uppercase; }
+        .media-card-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.95) 100%); padding: 10px; display: flex; flex-direction: column; justify-content: flex-end; }
+        .media-card-title { font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .media-card-tag { font-size: 9px; font-weight: 800; color: var(--primary-color); text-transform: uppercase; }
 
-        .btn-primary { padding: 10px 16px; border: none; border-radius: 8px; background: var(--primary-color); color: #fff; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
-        .btn-secondary { padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); color: var(--text-color); font-size: 11px; font-weight: 600; cursor: pointer; }
+        /* BARRA DE PROGRESSO NO CARD */
+        .card-progress-bar { position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: rgba(255,255,255,0.2); }
+        .card-progress-fill { height: 100%; background: var(--primary-color); width: 0%; }
 
-        .input-group { margin-bottom: 12px; text-align: left; }
-        .input-group label { display: block; font-size: 10px; font-weight: 700; color: #aaa; margin-bottom: 4px; text-transform: uppercase; }
-        .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #2a2a32; background: #18181c; color: #fff; font-size: 12px; }
+        .btn-primary { padding: 10px 20px; border: none; border-radius: 6px; background: var(--primary-color); color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s, transform 0.2s; }
+        .btn-primary:hover { background: var(--primary-hover); transform: scale(1.03); }
+        .btn-secondary { padding: 9px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: var(--text-color); font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .btn-secondary:hover { background: rgba(255,255,255,0.2); }
 
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: flex-end; z-index: 1000; }
-        @media(min-width: 600px) { .modal-overlay { align-items: center; padding: 16px; } }
+        .input-group { margin-bottom: 14px; text-align: left; }
+        .input-group label { display: block; font-size: 11px; font-weight: 700; color: #aaa; margin-bottom: 4px; text-transform: uppercase; }
+        .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 10px 12px; border-radius: 6px; border: 1px solid #333; background: #111; color: #fff; font-size: 13px; transition: border 0.2s; }
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus { border-color: var(--primary-color); }
+
+        /* MODAIS MODERNOS */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(12px); display: flex; justify-content: center; align-items: flex-end; z-index: 1000; animation: fadeIn 0.25s ease-out; }
+        @media(min-width: 600px) { .modal-overlay { align-items: center; padding: 20px; } }
         
         .modal-body { 
-            background: var(--modal-bg); border: 1px solid #2a2a32; border-radius: 16px 16px 0 0; 
-            width: 100%; max-width: 600px; max-height: 88vh; overflow-y: auto; padding: 18px; position: relative; 
-            box-shadow: 0 -5px 25px rgba(0,0,0,0.8); 
+            background: var(--modal-bg); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px 16px 0 0; 
+            width: 100%; max-width: 680px; max-height: 90vh; overflow-y: auto; padding: 20px; position: relative; 
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.9); 
         }
-        @media(min-width: 600px) { .modal-body { border-radius: 14px; max-height: 90vh; } }
+        @media(min-width: 600px) { .modal-body { border-radius: 12px; } }
         
-        .modal-close { position: absolute; top: 12px; right: 12px; background: #2a2a32; color: #fff; border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 14px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 10; }
+        .modal-close { position: absolute; top: 14px; right: 14px; background: rgba(255,255,255,0.1); color: #fff; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 16px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 10; transition: background 0.2s; }
+        .modal-close:hover { background: var(--primary-color); }
 
         .hidden { display: none !important; }
-        #msg { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); padding: 10px 18px; border-radius: 8px; font-size: 11px; font-weight: 700; z-index: 2000; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        #msg { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); padding: 12px 24px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 2000; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.8); animation: fadeIn 0.3s ease; }
         .msg-success { background: #2e7d32; color: #fff; }
         .msg-error { background: #c62828; color: #fff; }
 
         /* PLAYER AVANÇADO */
-        .player-modal-box { width: 100%; max-width: 850px; background: #000; border-radius: 12px; overflow: hidden; position: relative; border: 1px solid #2a2a32; margin: auto; }
-        .player-container-view { width: 100%; height: 50vh; max-height: 480px; min-height: 220px; background: #000; position: relative; }
+        .player-modal-box { width: 100%; max-width: 960px; background: #000; border-radius: 12px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.1); margin: auto; box-shadow: 0 15px 40px rgba(0,0,0,0.95); }
+        .player-container-view { width: 100%; height: 55vh; max-height: 520px; min-height: 240px; background: #000; position: relative; }
         .player-container-view iframe, .player-container-view video { width: 100%; height: 100%; border: none; display: block; }
 
-        /* SHIELD DE ANÚNCIOS PARA FULLSCREEN */
-        .player-controls-bar { padding: 10px 12px; background: #141418; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; border-top: 1px solid #2a2a32; }
-        .player-tools { display: flex; gap: 6px; align-items: center; }
+        .player-controls-bar { padding: 12px 16px; background: #141414; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; border-top: 1px solid rgba(255,255,255,0.08); }
+        .player-tools { display: flex; gap: 8px; align-items: center; }
 
-        .season-tab-container { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 12px; padding-bottom: 4px; }
-        .season-tab { padding: 6px 12px; border-radius: 16px; background: #222; font-size: 11px; font-weight: 700; cursor: pointer; white-space: nowrap; border: 1px solid #333; }
+        .season-tab-container { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 16px; padding-bottom: 4px; }
+        .season-tab { padding: 8px 16px; border-radius: 20px; background: #222; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; border: 1px solid #333; transition: all 0.2s; }
         .season-tab.active { background: var(--primary-color); border-color: var(--primary-color); }
 
-        .episode-card { display: flex; align-items: center; gap: 10px; background: #1c1c22; padding: 8px; border-radius: 8px; cursor: pointer; margin-bottom: 6px; border: 1px solid #2a2a32; }
-        .episode-thumb { width: 70px; height: 42px; border-radius: 4px; overflow: hidden; background: #000; flex-shrink: 0; }
+        .episode-card { display: flex; align-items: center; gap: 12px; background: #1f1f1f; padding: 10px; border-radius: 8px; cursor: pointer; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); transition: background 0.2s, transform 0.2s; }
+        .episode-card:hover { background: #2a2a2a; transform: translateX(4px); }
+        .episode-thumb { width: 95px; height: 56px; border-radius: 6px; overflow: hidden; background: #000; flex-shrink: 0; position: relative; }
         .episode-thumb img { width: 100%; height: 100%; object-fit: cover; }
-        .admin-item { display: flex; align-items: center; justify-content: space-between; background: #1c1c22; border: 1px solid #2a2a32; padding: 8px 12px; border-radius: 8px; margin-bottom: 6px; }
+        .admin-item { display: flex; align-items: center; justify-content: space-between; background: #1f1f1f; border: 1px solid #333; padding: 10px 14px; border-radius: 8px; margin-bottom: 8px; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <header>
+    <header id="mainHeader">
         <div class="brand" onclick="window.location.hash = ''">🎬 MASTERFLIX</div>
         
         <div class="nav-actions">
-            <input type="text" id="searchInput" placeholder="Buscar..." style="padding: 5px 10px; border-radius: 14px; border: 1px solid #2a2a32; background: #000; color: #fff; font-size: 11px; width: 85px;">
+            <input type="text" id="searchInput" placeholder="Buscar..." style="padding: 6px 12px; border-radius: 16px; border: 1px solid #333; background: rgba(0,0,0,0.6); color: #fff; font-size: 12px; width: 110px;">
             
-            <button class="btn-icon-admin hidden" id="btnAdminManager" title="Gerenciar Catalog">⚙️ <span style="display:none;" class="mobile-hide">Gerenciar</span></button>
+            <button class="btn-icon-admin hidden" id="btnAdminManager" title="Gerenciar Catálogo">⚙️ <span style="display:none;" class="mobile-hide">Gerenciar</span></button>
             <button class="btn-icon-admin hidden" id="btnOpenCreator" style="background: var(--primary-color); border:none;" title="Criar Conteúdo">➕ <span style="display:none;" class="mobile-hide">Publicar</span></button>
 
             <div class="user-avatar-btn" id="btnOpenProfile" title="Meu Perfil">
@@ -137,9 +165,9 @@
     </header>
 
     <div id="authOverlay" class="modal-overlay hidden">
-        <div class="modal-body" style="max-width: 360px; text-align: center; margin: auto;">
-            <div class="brand" style="font-size: 26px; margin-bottom: 8px;">🎬 MASTERFLIX</div>
-            <p style="color: #888; font-size: 11px; margin-bottom: 16px;" id="authSubtitle">Entre na sua conta para continuar</p>
+        <div class="modal-body" style="max-width: 380px; text-align: center; margin: auto;">
+            <div class="brand" style="font-size: 28px; margin-bottom: 8px;">🎬 MASTERFLIX</div>
+            <p style="color: #aaa; font-size: 12px; margin-bottom: 18px;" id="authSubtitle">Entre na sua conta para continuar</p>
             
             <form id="authForm">
                 <div class="input-group">
@@ -150,53 +178,53 @@
                     <label>Senha</label>
                     <input type="password" id="authPassword" placeholder="••••••••" required minlength="6">
                 </div>
-                <button type="submit" class="btn-primary" id="btnAuthSubmit" style="width: 100%; margin-top: 6px;">Entrar na Conta</button>
+                <button type="submit" class="btn-primary" id="btnAuthSubmit" style="width: 100%; margin-top: 8px;">Entrar na Conta</button>
             </form>
 
-            <p style="font-size: 11px; color: #aaa; margin-top: 12px; cursor: pointer; text-decoration: underline;" id="toggleAuthMode">Não tem uma conta? Crie uma agora</p>
+            <p style="font-size: 12px; color: #aaa; margin-top: 16px; cursor: pointer; text-decoration: underline;" id="toggleAuthMode">Não tem uma conta? Crie uma agora</p>
         </div>
     </div>
 
     <div id="adminModal" class="modal-overlay hidden">
         <div class="modal-body">
             <button class="modal-close" id="btnCloseAdmin">&times;</button>
-            <h2 style="font-size: 16px; font-weight: 800; margin-bottom: 12px;">⚙️ Gerenciar Catálogo</h2>
+            <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 14px;">⚙️ Gerenciar Catálogo</h2>
             
-            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
-                <input type="text" id="adminSearchInput" placeholder="Pesquisar..." style="flex:1; padding: 8px 10px; border-radius: 8px; border:1px solid #2a2a32; background:#111; color:#fff; font-size:12px;">
-                <button class="btn-primary" id="btnAddNewFromAdmin" style="font-size:11px;">+ Novo</button>
+            <div style="display: flex; gap: 8px; margin-bottom: 14px;">
+                <input type="text" id="adminSearchInput" placeholder="Pesquisar título..." style="flex:1;">
+                <button class="btn-primary" id="btnAddNewFromAdmin" style="font-size:12px;">+ Novo Conteúdo</button>
             </div>
 
-            <div id="adminCatalogList" style="max-height: 50vh; overflow-y: auto;"></div>
+            <div id="adminCatalogList" style="max-height: 55vh; overflow-y: auto;"></div>
         </div>
     </div>
 
     <div id="profileModal" class="modal-overlay hidden">
-        <div class="modal-body" style="max-width: 380px;">
+        <div class="modal-body" style="max-width: 400px;">
             <button class="modal-close" id="btnCloseProfile">&times;</button>
-            <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 12px; text-align: center;">👤 Meu Perfil</h2>
+            <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 14px; text-align: center;">👤 Meu Perfil</h2>
 
-            <div style="text-align: center; margin-bottom: 12px;">
-                <div style="width: 70px; height: 70px; border-radius: 50%; background: var(--primary-color); margin: 0 auto 8px auto; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; border: 3px solid #fff; overflow:hidden;" id="profileAvatarBigBox">
+            <div style="text-align: center; margin-bottom: 16px;">
+                <div style="width: 80px; height: 80px; border-radius: 8px; background: var(--primary-color); margin: 0 auto 10px auto; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 900; overflow:hidden; box-shadow:0 6px 15px rgba(0,0,0,0.5);" id="profileAvatarBigBox">
                     <span id="profileAvatarBigText">U</span>
                     <img id="profileAvatarBigImg" class="hidden" src="" style="width:100%; height:100%; object-fit:cover;">
                 </div>
-                <p id="profileEmailDisplay" style="font-size: 11px; color: #aaa; word-break: break-all;"></p>
-                <span id="profileAdminBadge" class="hidden" style="background: var(--primary-color); font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 800; text-transform: uppercase; margin-top: 4px; display: inline-block;">Admin</span>
+                <p id="profileEmailDisplay" style="font-size: 12px; color: #aaa; word-break: break-all;"></p>
+                <span id="profileAdminBadge" class="hidden" style="background: var(--primary-color); font-size: 9px; padding: 3px 8px; border-radius: 4px; font-weight: 800; text-transform: uppercase; margin-top: 6px; display: inline-block;">Administrador</span>
             </div>
 
             <div class="input-group">
                 <label>Foto de Perfil (URL)</label>
-                <input type="url" id="profilePhotoUrl" placeholder="Cole a URL da foto">
+                <input type="url" id="profilePhotoUrl" placeholder="https://link-da-imagem.jpg">
             </div>
 
             <div class="input-group">
                 <label>Cor do Tema</label>
-                <input type="color" id="themeColorPicker" value="#e50914" style="height: 36px; padding: 2px; cursor: pointer;">
+                <input type="color" id="themeColorPicker" value="#e50914" style="height: 40px; padding: 2px; cursor: pointer;">
             </div>
 
-            <div style="display: flex; gap: 8px; margin-top: 12px;">
-                <button class="btn-primary" id="btnSaveProfile" style="flex: 1;">Salvar</button>
+            <div style="display: flex; gap: 10px; margin-top: 16px;">
+                <button class="btn-primary" id="btnSaveProfile" style="flex: 1;">Salvar Alterações</button>
                 <button class="btn-secondary" id="btnLogout" style="flex: 1; border-color: #c62828; color: #ff5252;">Sair</button>
             </div>
         </div>
@@ -205,9 +233,9 @@
     <main class="app-container">
         
         <div class="hero-banner" id="heroBanner">
-            <span style="font-size: 9px; font-weight: 800; color: var(--primary-color); text-transform: uppercase;">Destaque</span>
-            <h1 class="hero-title" id="heroTitle">Bem-vindo ao MasterFlix</h1>
-            <p class="hero-desc" id="heroDesc">Os melhores filmes e séries diretamente no seu dispositivo.</p>
+            <span class="hero-badge">Destaque</span>
+            <h1 class="hero-title" id="heroTitle">Carregando...</h1>
+            <p class="hero-desc" id="heroDesc">Aguarde enquanto os títulos são carregados.</p>
             <div>
                 <button class="btn-primary" id="heroPlayBtn">▶ Assistir Agora</button>
             </div>
@@ -239,12 +267,12 @@
     <div id="creatorModal" class="modal-overlay hidden">
         <div class="modal-body">
             <button class="modal-close" id="btnCloseCreator">&times;</button>
-            <h2 style="font-size: 16px; font-weight: 800; margin-bottom: 12px;" id="creatorTitle">Publicar Conteúdo</h2>
+            <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 14px;" id="creatorTitle">Publicar Conteúdo</h2>
 
             <form id="mediaForm">
                 <input type="hidden" id="editMediaId">
 
-                <div style="display: flex; gap: 6px;">
+                <div style="display: flex; gap: 8px;">
                     <div class="input-group" style="flex:1;">
                         <label>Tipo</label>
                         <select id="mediaType">
@@ -270,17 +298,17 @@
 
                 <div class="input-group">
                     <label>Título</label>
-                    <input type="text" id="mediaTitle" placeholder="Ex: Nome do Conteúdo" required>
+                    <input type="text" id="mediaTitle" placeholder="Ex: Nome da Mídia" required>
                 </div>
 
                 <div class="input-group">
-                    <label>URL da Capa</label>
+                    <label>URL da Capa Principal</label>
                     <input type="url" id="mediaCoverUrl" placeholder="https://link-da-imagem.jpg" required>
                 </div>
 
                 <div class="input-group">
-                    <label>Sinopse</label>
-                    <textarea id="mediaDesc" rows="2" placeholder="Descrição rápida..." required></textarea>
+                    <label>Sinopse / Descrição</label>
+                    <textarea id="mediaDesc" rows="2" placeholder="Resumo do conteúdo..." required></textarea>
                 </div>
 
                 <div id="movieFileArea" class="input-group">
@@ -289,14 +317,14 @@
                 </div>
 
                 <div id="seriesBuilderArea" class="hidden">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
-                        <span style="font-size: 11px; font-weight: 700; color: var(--primary-color);">Temporadas e Episódios</span>
-                        <button type="button" class="btn-secondary" id="btnAddSeasonBtn" style="font-size:10px; padding:4px 8px;">+ Temporada</button>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                        <span style="font-size: 12px; font-weight: 800; color: var(--primary-color);">Estrutura de Temporadas e Episódios</span>
+                        <button type="button" class="btn-secondary" id="btnAddSeasonBtn" style="font-size:10px; padding:4px 8px;">+ Adicionar Temporada</button>
                     </div>
                     <div id="seasonsList"></div>
                 </div>
 
-                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 12px;">Salvar Conteúdo</button>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 14px;">Salvar Conteúdo</button>
             </form>
         </div>
     </div>
@@ -304,10 +332,10 @@
     <div id="detailsModal" class="modal-overlay hidden">
         <div class="modal-body">
             <button class="modal-close" id="btnCloseDetails">&times;</button>
-            <img id="detailCover" src="" style="width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;">
-            <h2 id="detailTitle" style="font-size: 18px; font-weight: 800;"></h2>
-            <div style="font-size: 10px; color: var(--primary-color); font-weight: 700; margin: 2px 0 8px 0;" id="detailMeta"></div>
-            <p id="detailDesc" style="font-size: 11px; color: #aaa; line-height: 1.4; margin-bottom: 12px;"></p>
+            <img id="detailCover" src="" style="width: 100%; height: 220px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; transition: src 0.3s ease;">
+            <h2 id="detailTitle" style="font-size: 20px; font-weight: 800;"></h2>
+            <div style="font-size: 11px; color: var(--primary-color); font-weight: 700; margin: 4px 0 10px 0;" id="detailMeta"></div>
+            <p id="detailDesc" style="font-size: 12px; color: #ccc; line-height: 1.5; margin-bottom: 16px;"></p>
 
             <div id="detailMovieArea" class="hidden">
                 <button class="btn-primary" id="btnPlayMovieFile" style="width: 100%;">▶ Assistir Filme</button>
@@ -322,25 +350,25 @@
 
     <div id="playerModal" class="modal-overlay hidden" style="align-items: center; padding: 10px;">
         <div class="player-modal-box" id="playerModalBox">
-            <button class="modal-close" id="btnClosePlayer" style="z-index: 50; top: 8px; right: 8px;">&times;</button>
+            <button class="modal-close" id="btnClosePlayer" style="z-index: 50; top: 10px; right: 10px;">&times;</button>
             
             <div class="player-container-view" id="playerContainerView"></div>
             
             <div class="player-controls-bar">
-                <span id="playerVideoTitle" style="font-size: 11px; font-weight: 700; max-width: 50%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></span>
+                <span id="playerVideoTitle" style="font-size: 12px; font-weight: 700; max-width: 50%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></span>
                 
                 <div class="player-tools">
-                    <button class="btn-secondary" id="btnSeekBack" style="padding: 4px 8px;">⏪ 10s</button>
-                    <button class="btn-secondary" id="btnSeekForward" style="padding: 4px 8px;">10s ⏩</button>
+                    <button class="btn-secondary" id="btnSeekBack" style="padding: 5px 10px;">⏪ 10s</button>
+                    <button class="btn-secondary" id="btnSeekForward" style="padding: 5px 10px;">10s ⏩</button>
                     
-                    <select id="speedSelect" class="btn-secondary" style="padding: 4px; font-size: 10px;">
+                    <select id="speedSelect" class="btn-secondary" style="padding: 5px; font-size: 11px;">
                         <option value="1">1.0x</option>
                         <option value="1.25">1.25x</option>
                         <option value="1.5">1.5x</option>
                         <option value="2">2.0x</option>
                     </select>
 
-                    <button class="btn-primary" id="btnToggleFull" style="padding: 4px 8px; font-size: 11px;">🖥️ Tela Cheia</button>
+                    <button class="btn-primary" id="btnToggleFull" style="padding: 5px 10px; font-size: 11px;">🖥️ Tela Cheia</button>
                 </div>
             </div>
         </div>
@@ -374,6 +402,14 @@
         let seasonsBuilder = [];
         let selectedCategory = "Todos";
         let isSignUpMode = false;
+        let currentPlayingKey = null;
+
+        // Animação Header ao Rolar
+        window.onscroll = () => {
+            const header = document.getElementById('mainHeader');
+            if (window.scrollY > 50) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
+        };
 
         function showMsg(text, type) {
             const msg = document.getElementById('msg');
@@ -421,18 +457,25 @@
             }
         };
 
+        /* ====================================================
+           SISTEMA DE FOTOS POR TEMPORADA E EPISÓDIO
+           ==================================================== */
         function renderSeasonsBuilder() {
             const container = document.getElementById('seasonsList');
             container.innerHTML = "";
 
             seasonsBuilder.forEach((season, sIdx) => {
                 const sDiv = document.createElement('div');
-                sDiv.style.cssText = "background:#1c1c22; border:1px solid #2a2a32; border-radius:8px; padding:8px; margin-top:8px;";
+                sDiv.style.cssText = "background:#181818; border:1px solid #333; border-radius:8px; padding:10px; margin-top:10px;";
 
                 sDiv.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                        <strong style="color:var(--primary-color); font-size:12px;">Temporada ${sIdx + 1}</strong>
-                        <button type="button" class="btn-secondary" style="font-size:9px; padding:3px 6px;" onclick="addEpisode(${sIdx})">+ Add Episódio</button>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <strong style="color:var(--primary-color); font-size:13px;">Temporada ${sIdx + 1}</strong>
+                        <button type="button" class="btn-secondary" style="font-size:10px; padding:3px 8px;" onclick="addEpisode(${sIdx})">+ Add Episódio</button>
+                    </div>
+                    <div class="input-group" style="margin-bottom:8px;">
+                        <label style="font-size:10px;">URL da Foto da Temporada ${sIdx + 1}</label>
+                        <input type="url" id="seasonCover_${sIdx}" value="${season.seasonCoverUrl || ''}" placeholder="https://link-da-imagem.jpg">
                     </div>
                     <div id="episodesListBuilder_${sIdx}"></div>
                 `;
@@ -442,13 +485,17 @@
 
                 (season.episodes || []).forEach((ep, eIdx) => {
                     const epDiv = document.createElement('div');
-                    epDiv.style.cssText = "background:#141418; border:1px solid #2a2a32; border-radius:6px; padding:8px; margin-top:6px;";
+                    epDiv.style.cssText = "background:#111; border:1px solid #282828; border-radius:6px; padding:8px; margin-top:8px;";
 
                     epDiv.innerHTML = `
                         <strong style="font-size:10px; color:#aaa;">EPISÓDIO ${eIdx + 1}</strong>
                         <div class="input-group" style="margin-top:4px; margin-bottom:6px;">
                             <label style="font-size:9px;">Título</label>
-                            <input type="text" id="epTitle_${sIdx}_${eIdx}" value="${ep.title || ''}" placeholder="Ex: Piloto">
+                            <input type="text" id="epTitle_${sIdx}_${eIdx}" value="${ep.title || ''}" placeholder="Ex: Nome do Episódio">
+                        </div>
+                        <div class="input-group" style="margin-bottom:6px;">
+                            <label style="font-size:9px;">URL da Foto (Thumbnail) do Episódio</label>
+                            <input type="url" id="epThumb_${sIdx}_${eIdx}" value="${ep.thumbUrl || ''}" placeholder="https://link-da-foto.jpg">
                         </div>
                         <div class="input-group" style="margin-bottom:2px;">
                             <label style="font-size:9px;">Link do Vídeo</label>
@@ -461,12 +508,16 @@
         }
 
         function addSeason() {
-            seasonsBuilder.push({ seasonNumber: seasonsBuilder.length + 1, episodes: [{ title: 'Episódio 1', videoUrl: '' }] });
+            seasonsBuilder.push({ 
+                seasonNumber: seasonsBuilder.length + 1, 
+                seasonCoverUrl: '', 
+                episodes: [{ title: 'Episódio 1', videoUrl: '', thumbUrl: '' }] 
+            });
             renderSeasonsBuilder();
         }
 
         window.addEpisode = (sIdx) => {
-            seasonsBuilder[sIdx].episodes.push({ title: `Episódio ${seasonsBuilder[sIdx].episodes.length + 1}`, videoUrl: '' });
+            seasonsBuilder[sIdx].episodes.push({ title: `Episódio ${seasonsBuilder[sIdx].episodes.length + 1}`, videoUrl: '', thumbUrl: '' });
             renderSeasonsBuilder();
         };
 
@@ -512,12 +563,17 @@
                 card.className = 'media-card';
                 const coverSrc = item.coverUrl || 'https://via.placeholder.com/200x300?text=Sem+Capa';
 
+                // Progresso salvo
+                const progressKey = `progress_${item.id}`;
+                const savedTime = localStorage.getItem(progressKey) ? parseFloat(localStorage.getItem(progressKey)) : 0;
+
                 card.innerHTML = `
                     <img src="${coverSrc}" alt="${item.title}" loading="lazy">
                     <div class="media-card-overlay">
                         <span class="media-card-tag">${item.category || (item.type === 'movie' ? 'Filme' : 'Série')}</span>
                         <div class="media-card-title">${item.title}</div>
                     </div>
+                    ${savedTime > 0 ? `<div class="card-progress-bar"><div class="card-progress-fill" style="width: 60%;"></div></div>` : ''}
                 `;
                 card.onclick = () => { window.location.hash = `#/midia/${item.id}`; openDetails(item); };
                 if (item.type === 'movie') moviesCarousel.appendChild(card);
@@ -532,7 +588,7 @@
             document.getElementById('heroTitle').innerText = item.title;
             document.getElementById('heroDesc').innerText = item.description;
             const coverSrc = item.coverUrl || '';
-            if (coverSrc) document.getElementById('heroBanner').style.backgroundImage = `linear-gradient(180deg, rgba(0,0,0,0.3) 0%, var(--bg-color) 100%), url('${coverSrc}')`;
+            if (coverSrc) document.getElementById('heroBanner').style.backgroundImage = `linear-gradient(180deg, rgba(20,20,20,0.2) 0%, var(--bg-color) 100%), url('${coverSrc}')`;
             document.getElementById('heroPlayBtn').onclick = () => openDetails(item);
         }
 
@@ -547,7 +603,7 @@
             if (item.type === 'movie') {
                 document.getElementById('detailMovieArea').classList.remove('hidden');
                 document.getElementById('detailSerieArea').classList.add('hidden');
-                document.getElementById('btnPlayMovieFile').onclick = () => playVideo(item.videoUrl, item.title);
+                document.getElementById('btnPlayMovieFile').onclick = () => playVideo(item.videoUrl, item.title, item.id);
             } else {
                 document.getElementById('detailMovieArea').classList.add('hidden');
                 document.getElementById('detailSerieArea').classList.remove('hidden');
@@ -562,12 +618,18 @@
                     tab.onclick = () => {
                         document.querySelectorAll('.season-tab').forEach(t => t.classList.remove('active'));
                         tab.classList.add('active');
+                        
+                        // Troca a foto da capa para a imagem da temporada selecionada!
+                        if (s.seasonCoverUrl) document.getElementById('detailCover').src = s.seasonCoverUrl;
+                        else document.getElementById('detailCover').src = defaultCover;
+
                         renderEpisodesList(s.episodes || [], idx, defaultCover);
                     };
                     tabs.appendChild(tab);
                 });
 
                 if (item.seasons && item.seasons.length > 0) {
+                    if (item.seasons[0].seasonCoverUrl) document.getElementById('detailCover').src = item.seasons[0].seasonCoverUrl;
                     renderEpisodesList(item.seasons[0].episodes || [], 0, defaultCover);
                 }
             }
@@ -581,17 +643,19 @@
             episodes.forEach((ep, idx) => {
                 const epDiv = document.createElement('div');
                 epDiv.className = 'episode-card';
-                const epThumb = seriesCover || 'https://via.placeholder.com/150x90?text=Episodio';
+                const epThumb = ep.thumbUrl || seriesCover || 'https://via.placeholder.com/150x90?text=Episódio';
+
+                const epKey = `${activeItem.id}_s${seasonIdx + 1}_e${idx + 1}`;
 
                 epDiv.onclick = () => {
                     document.getElementById('detailsModal').classList.add('hidden');
-                    playVideo(ep.videoUrl, `${activeItem.title} - T${seasonIdx + 1} E${idx + 1}: ${ep.title}`);
+                    playVideo(ep.videoUrl, `${activeItem.title} - T${seasonIdx + 1} E${idx + 1}: ${ep.title}`, epKey);
                 };
                 epDiv.innerHTML = `
                     <div class="episode-thumb"><img src="${epThumb}"></div>
                     <div style="flex:1;">
-                        <div style="font-size:11px; font-weight:800;">T${seasonIdx + 1} E${idx + 1} - ${ep.title || 'Sem Título'}</div>
-                        <span style="font-size:9px; color:var(--primary-color); font-weight:700;">▶ Assistir</span>
+                        <div style="font-size:12px; font-weight:800;">T${seasonIdx + 1} E${idx + 1} - ${ep.title || 'Sem Título'}</div>
+                        <span style="font-size:10px; color:var(--primary-color); font-weight:700;">▶ Assistir</span>
                     </div>
                 `;
                 container.appendChild(epDiv);
@@ -612,11 +676,13 @@
         }
 
         /* ====================================================
-           PLAYER MELHORADO + PROTEÇÃO DE ANÚNCIOS + TELA CHEIA
+           PLAYER E SALVAMENTO DE TEMPO DE VÍDEO EM TEMPO REAL
            ==================================================== */
-        function playVideo(rawUrl, title) {
+        function playVideo(rawUrl, title, contentKey) {
             if (!rawUrl) { showMsg('Nenhum link de vídeo fornecido!', 'error'); return; }
             const url = formatVideoUrl(rawUrl);
+            currentPlayingKey = contentKey;
+            
             const container = document.getElementById('playerContainerView');
             document.getElementById('playerVideoTitle').innerText = title;
             container.innerHTML = "";
@@ -624,13 +690,11 @@
             const isDirectVideo = url.toLowerCase().endsWith('.mp4') || url.toLowerCase().endsWith('.m3u8');
 
             if (!isDirectVideo) {
-                // IFRAME COM SANDBOX PARA BLOQUEAR POPUPS DE ANÚNCIOS NO FULLSCREEN
+                // IFRAME MIXDROP (Suporte nativo a anúncios e player Mixdrop)
                 const iframe = document.createElement('iframe');
                 iframe.src = url;
                 iframe.allow = "autoplay; fullscreen; encrypted-media";
                 iframe.allowFullscreen = true;
-                // 'sandbox' restringe popups indesejadas e redirecionamentos
-                iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
                 container.appendChild(iframe);
             } else {
                 const video = document.createElement('video');
@@ -640,7 +704,28 @@
                 video.autoplay = true;
                 container.appendChild(video);
 
-                // Configurações dos botões do Player para MP4/Vídeo Direto
+                // Recupera tempo onde o usuário parou
+                const savedTime = localStorage.getItem(`progress_${contentKey}`);
+                if (savedTime) {
+                    video.currentTime = parseFloat(savedTime);
+                }
+
+                // Gravação em Tempo Real
+                video.ontimeupdate = () => {
+                    if (video.currentTime > 2) {
+                        localStorage.setItem(`progress_${contentKey}`, video.currentTime);
+                        
+                        // Salva no banco de dados se autenticado
+                        const user = auth.currentUser;
+                        if (user) {
+                            set(ref(rtdb, `users/${user.uid}/progress/${contentKey}`), {
+                                time: video.currentTime,
+                                updated: Date.now()
+                            });
+                        }
+                    }
+                };
+
                 document.getElementById('btnSeekBack').onclick = () => video.currentTime -= 10;
                 document.getElementById('btnSeekForward').onclick = () => video.currentTime += 10;
                 document.getElementById('speedSelect').onchange = (e) => video.playbackRate = parseFloat(e.target.value);
@@ -649,29 +734,20 @@
             document.getElementById('playerModal').classList.remove('hidden');
         }
 
-        // TELA CHEIA NATIVA CORRIGIDA PARA CELULAR
+        // TELA CHEIA NATIVA
         document.getElementById('btnToggleFull').onclick = () => {
             const playerBox = document.getElementById('playerModalBox');
-            
             if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                if (playerBox.requestFullscreen) {
-                    playerBox.requestFullscreen();
-                } else if (playerBox.webkitRequestFullscreen) {
-                    playerBox.webkitRequestFullscreen();
-                } else if (playerBox.msRequestFullscreen) {
-                    playerBox.msRequestFullscreen();
-                }
+                if (playerBox.requestFullscreen) playerBox.requestFullscreen();
+                else if (playerBox.webkitRequestFullscreen) playerBox.webkitRequestFullscreen();
             } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                }
+                if (document.exitFullscreen) document.exitFullscreen();
+                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
             }
         };
 
         /* ====================================================
-           SALVAMENTO DO CONTEÚDO
+           SALVAMENTO NO FIREBASE
            ==================================================== */
         document.getElementById('mediaForm').onsubmit = async (e) => {
             e.preventDefault();
@@ -692,14 +768,18 @@
                 payload.videoUrl = document.getElementById('movieVideoUrl').value.trim();
             } else {
                 payload.seasons = seasonsBuilder.map((s, sIdx) => {
+                    const seasonCoverInput = document.getElementById(`seasonCover_${sIdx}`);
                     return {
                         seasonNumber: s.seasonNumber || sIdx + 1,
+                        seasonCoverUrl: seasonCoverInput ? seasonCoverInput.value.trim() : '',
                         episodes: (s.episodes || []).map((ep, eIdx) => {
                             const inputLink = document.getElementById(`epVideoUrl_${sIdx}_${eIdx}`);
                             const inputTitle = document.getElementById(`epTitle_${sIdx}_${eIdx}`);
+                            const inputThumb = document.getElementById(`epThumb_${sIdx}_${eIdx}`);
                             return {
                                 title: inputTitle ? inputTitle.value.trim() : `Episódio ${eIdx + 1}`,
-                                videoUrl: inputLink ? inputLink.value.trim() : ''
+                                videoUrl: inputLink ? inputLink.value.trim() : '',
+                                thumbUrl: inputThumb ? inputThumb.value.trim() : ''
                             };
                         })
                     };
@@ -713,7 +793,7 @@
                 } else {
                     const newRef = push(ref(rtdb, "catalog"));
                     await set(newRef, payload);
-                    showMsg('Conteúdo publicado!', 'success');
+                    showMsg('Conteúdo publicado com sucesso!', 'success');
                 }
 
                 document.getElementById('creatorModal').classList.add('hidden');
@@ -771,10 +851,10 @@
                 const div = document.createElement('div');
                 div.className = 'admin-item';
                 div.innerHTML = `
-                    <div><strong style="font-size:12px;">${item.title}</strong><div style="font-size:9px; color:#aaa;">${item.type === 'movie' ? 'Filme' : 'Série'}</div></div>
-                    <div style="display:flex; gap:4px;">
-                        <button class="btn-secondary" style="font-size:10px; padding:4px 8px;" onclick="editMedia('${item.id}')">✏️ Edit</button>
-                        <button class="btn-secondary" style="font-size:10px; padding:4px 8px; color:#ff5252;" onclick="deleteMedia('${item.id}')">🗑️</button>
+                    <div><strong style="font-size:13px;">${item.title}</strong><div style="font-size:10px; color:#aaa;">${item.type === 'movie' ? 'Filme' : 'Série'}</div></div>
+                    <div style="display:flex; gap:6px;">
+                        <button class="btn-secondary" style="font-size:11px; padding:4px 8px;" onclick="editMedia('${item.id}')">✏️ Editar</button>
+                        <button class="btn-secondary" style="font-size:11px; padding:4px 8px; color:#ff5252;" onclick="deleteMedia('${item.id}')">🗑️</button>
                     </div>
                 `;
                 container.appendChild(div);
@@ -823,8 +903,8 @@
             e.preventDefault();
             const email = document.getElementById('authEmail').value.trim(), pass = document.getElementById('authPassword').value;
             try {
-                if (isSignUpMode) { await createUserWithEmailAndPassword(auth, email, pass); showMsg('Conta criada!', 'success'); }
-                else { await signInWithEmailAndPassword(auth, email, pass); showMsg('Autenticado!', 'success'); }
+                if (isSignUpMode) { await createUserWithEmailAndPassword(auth, email, pass); showMsg('Conta criada com sucesso!', 'success'); }
+                else { await signInWithEmailAndPassword(auth, email, pass); showMsg('Seja bem-vindo!', 'success'); }
                 document.getElementById('authOverlay').classList.add('hidden');
             } catch (err) { showMsg('Erro: ' + err.message, 'error'); }
         };
