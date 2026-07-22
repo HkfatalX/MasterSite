@@ -23,7 +23,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         html, body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; overflow-x: hidden; width: 100%; font-size: 14px; touch-action: manipulation; }
 
-        /* HEADER ANIMADO */
         header { 
             position: fixed; top: 0; left: 0; width: 100%; height: 64px; 
             background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%); 
@@ -57,7 +56,6 @@
         
         .app-container { padding-top: 74px; padding-bottom: 50px; width: 100%; max-width: 100vw; }
 
-        /* HERO BANNER */
         .hero-banner { 
             width: 95%; max-width: 1600px; margin: 0 auto 28px auto; min-height: 380px; border-radius: 16px; 
             background: linear-gradient(180deg, rgba(20,20,20,0.1) 0%, var(--bg-color) 100%), #1f1f1f center/cover no-repeat; 
@@ -69,13 +67,11 @@
         .hero-title { font-size: clamp(22px, 5vw, 42px); font-weight: 900; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(0,0,0,0.9); }
         .hero-desc { max-width: 650px; color: #d2d2d2; font-size: 13px; line-height: 1.5; margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
-        /* CATEGORIAS */
         .categories-bar { display: flex; gap: 10px; overflow-x: auto; padding: 0 2.5% 16px 2.5%; scrollbar-width: none; }
         .categories-bar::-webkit-scrollbar { display: none; }
         .category-chip { padding: 8px 18px; border-radius: 20px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
         .category-chip:hover, .category-chip.active { background: var(--primary-color); border-color: var(--primary-color); transform: translateY(-2px); }
 
-        /* CARROSSEL DE MÍDIAS */
         .section-row { margin-bottom: 36px; padding-left: 2.5%; }
         .section-title { font-size: 18px; font-weight: 800; margin-bottom: 14px; color: var(--text-color); display: flex; align-items: center; gap: 8px; }
         .carousel-container { display: flex; gap: 14px; overflow-x: auto; padding: 8px 2.5% 12px 0; scrollbar-width: none; scroll-snap-type: x mandatory; }
@@ -93,7 +89,6 @@
         .media-card-title { font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .media-card-tag { font-size: 9px; font-weight: 800; color: var(--primary-color); text-transform: uppercase; }
 
-        /* CARD CONTINUAR ASSISTINDO */
         .continue-card {
             flex: 0 0 220px; height: 140px; border-radius: 10px; position: relative; overflow: hidden;
             background: var(--card-bg); cursor: pointer; border: 1px solid rgba(255,255,255,0.1);
@@ -110,7 +105,6 @@
         .btn-secondary { padding: 9px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: var(--text-color); font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
         .btn-secondary:hover { background: rgba(255,255,255,0.2); }
 
-        /* UPLOAD ESTILIZADO DE ARQUIVOS */
         .file-upload-box {
             border: 2px dashed rgba(255,255,255,0.2); border-radius: 8px; padding: 12px; text-align: center;
             background: rgba(0,0,0,0.3); cursor: pointer; transition: all 0.2s; margin-top: 4px;
@@ -126,7 +120,6 @@
         }
         .input-group input:focus, .input-group select:focus, .input-group textarea:focus { border-color: var(--primary-color); }
 
-        /* MODAIS RESPONSIVOS */
         .modal-overlay { 
             position: fixed; inset: 0; background: rgba(0,0,0,0.88); 
             backdrop-filter: blur(12px); display: flex; justify-content: center; 
@@ -148,34 +141,82 @@
         .msg-success { background: #2e7d32; color: #fff; }
         .msg-error { background: #c62828; color: #fff; }
 
-        /* PLAYER COM CONTROLES RESPONSIVOS E INTELIGENTES */
+        /* ============ PLAYER TOTALMENTE REFEITO ============ */
+        #playerModal {
+            padding: 10px;
+        }
+        
         .player-modal-box { 
             width: 100%; max-width: 1200px; height: 85vh; max-height: 700px; background: #000; 
             border-radius: 12px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.1); 
             margin: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.95); display: flex; flex-direction: column;
         }
 
-        /* Classe ativada quando o usuário fica inativo */
-        .player-modal-box.is-idle {
-            cursor: none; /* Esconde o cursor do mouse */
+        /* Em fullscreen, o box ocupa tudo */
+        .player-modal-box:fullscreen,
+        .player-modal-box:-webkit-full-screen {
+            width: 100vw; height: 100vh; max-width: none; max-height: none;
+            border-radius: 0; border: none;
         }
-        .player-modal-box.is-idle .player-controls-top {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
+
+        /* Estado "cursor oculto" */
+        .player-modal-box.cursor-hidden {
+            cursor: none;
+        }
+        .player-modal-box.cursor-hidden * {
+            cursor: none !important;
         }
 
         .player-controls-top {
             position: absolute; top: 0; left: 0; width: 100%;
             display: flex; justify-content: space-between; align-items: center;
-            background: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, transparent 100%); 
-            padding: 16px 16px 30px 16px; border-bottom: none; z-index: 30;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-            opacity: 1; visibility: visible; pointer-events: auto;
+            background: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 80%, rgba(0,0,0,0) 100%);
+            padding: 12px 16px 24px 16px; z-index: 50;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            opacity: 1; transform: translateY(0);
+            pointer-events: auto;
         }
-        
-        .player-container-view { width: 100%; height: 100%; background: #000; position: relative; flex: 1; z-index: 10; }
-        .player-container-view iframe { width: 100%; height: 100%; border: none; display: block; position: relative; z-index: 10; }
+        .player-controls-top.is-hidden {
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+        }
+
+        .player-container-view { 
+            width: 100%; height: 100%; background: #000; position: relative; flex: 1; 
+            overflow: hidden;
+        }
+        .player-container-view iframe { 
+            width: 100%; height: 100%; border: none; display: block; 
+        }
+
+        /* Overlay clique-guard: bloqueia cliques indesejados no iframe quando em fullscreen sem interação */
+        .player-click-guard {
+            position: absolute; inset: 0; z-index: 20;
+            background: transparent;
+            cursor: pointer;
+            display: none;
+        }
+        .player-click-guard.active {
+            display: block;
+        }
+        .player-click-guard-hint {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.75); color: #fff;
+            padding: 14px 22px; border-radius: 50px;
+            font-size: 13px; font-weight: 700;
+            border: 1px solid rgba(255,255,255,0.2);
+            pointer-events: none;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .player-click-guard.active .player-click-guard-hint {
+            opacity: 1;
+        }
+
+        /* ==================================================== */
 
         .season-tab-container { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 16px; padding-bottom: 4px; }
         .season-tab { padding: 8px 16px; border-radius: 20px; background: #222; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; border: 1px solid #333; transition: all 0.2s; }
@@ -187,7 +228,6 @@
         .episode-thumb img { width: 100%; height: 100%; object-fit: contain; background: #000; }
         .admin-item { display: flex; align-items: center; justify-content: space-between; background: #1f1f1f; border: 1px solid #333; padding: 12px 16px; border-radius: 8px; margin-bottom: 8px; }
 
-        /* PERFIL */
         .profile-card-header { position: relative; border-radius: 12px; overflow: hidden; background: #222; height: 140px; margin-bottom: 50px; border: 1px solid rgba(255,255,255,0.1); }
         .profile-banner-bg { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
         .profile-avatar-overlay { 
@@ -477,18 +517,25 @@
         </div>
     </div>
 
-    <div id="playerModal" class="modal-overlay hidden" style="padding: 10px; z-index: 2000;">
+    <!-- ================= PLAYER MODAL REFEITO ================= -->
+    <div id="playerModal" class="modal-overlay hidden">
         <div class="player-modal-box" id="playerModalBox">
             <div class="player-controls-top" id="playerControlsTop">
-                <span id="playerTitleDisplay" style="font-size: 14px; font-weight: 800; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">Assistindo Mídia</span>
+                <span id="playerTitleDisplay" style="font-size: 12px; font-weight: 800; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex:1; margin-right: 12px;">Assistindo Mídia</span>
                 <div style="display: flex; gap: 8px; align-items: center;">
-                    <button class="btn-secondary" id="btnToggleFullscreen" style="font-size: 12px; padding: 6px 10px; background: rgba(0,0,0,0.6); border: none;">⛶ Tela Cheia</button>
-                    <button class="modal-close" id="btnClosePlayer" style="position: relative; top: 0; right: 0; background: rgba(229,9,20,0.8); border: none;">&times;</button>
+                    <button class="btn-secondary" id="btnToggleFullscreen" style="font-size: 11px; padding: 4px 8px;">⛶ Tela Cheia</button>
+                    <button class="modal-close" id="btnClosePlayer" style="position: relative; top: 0; right: 0;">&times;</button>
                 </div>
             </div>
-            <div class="player-container-view" id="playerContainerView"></div>
+            <div class="player-container-view" id="playerContainerView">
+                <!-- iframe é adicionado via JS -->
+                <div class="player-click-guard" id="playerClickGuard">
+                    <div class="player-click-guard-hint">👆 Toque novamente para reproduzir</div>
+                </div>
+            </div>
         </div>
     </div>
+    <!-- ======================================================== -->
 
     <div id="cropperModal" class="modal-overlay hidden" style="z-index: 3500;">
         <div class="modal-body" style="max-width: 500px;">
@@ -724,7 +771,7 @@
                 sDiv.style.cssText = "background:#181818; border:1px solid #333; border-radius:8px; padding:12px; margin-top:12px;";
 
                 sDiv.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-align:center; margin-bottom:8px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                         <strong style="color:var(--primary-color); font-size:13px;">Temporada ${sIdx + 1}</strong>
                         <button type="button" class="btn-secondary" style="font-size:10px; padding:4px 8px;" onclick="addEpisode(${sIdx})">+ Episódio</button>
                     </div>
@@ -1010,97 +1057,176 @@
             return formatted;
         }
 
-        /* ---------------------------------------------------------------------- 
-           NOVO SISTEMA INTELIGENTE DE PLAYER (RESOLVE BUGS DE FOCO E CONTROLES) 
-           ---------------------------------------------------------------------- */
-        let playerIdleTimer = null;
-        const playerBoxElem = document.getElementById('playerModalBox');
+        /* ================================================================
+           ============  SISTEMA DE PLAYER TOTALMENTE REFEITO  ============
+           ================================================================ */
+        
+        let controlsHideTimer = null;
+        let cursorHideTimer = null;
+        let clickGuardActive = false;
 
-        // Função para mostrar os controles e esconder o mouse após inatividade
-        function resetPlayerIdle() {
-            const playerModal = document.getElementById('playerModal');
-            if (playerModal && !playerModal.classList.contains('hidden')) {
-                playerBoxElem.classList.remove('is-idle');
-                clearTimeout(playerIdleTimer);
-                playerIdleTimer = setTimeout(() => {
-                    playerBoxElem.classList.add('is-idle');
-                }, 3500); // 3.5 segundos de inatividade a barra e o mouse somem
+        const playerBox = document.getElementById('playerModalBox');
+        const playerControls = document.getElementById('playerControlsTop');
+        const playerContainer = document.getElementById('playerContainerView');
+        const clickGuard = document.getElementById('playerClickGuard');
+
+        function isPlayerOpen() {
+            return !document.getElementById('playerModal').classList.contains('hidden');
+        }
+
+        function isInFullscreen() {
+            return !!(
+                document.fullscreenElement || 
+                document.webkitFullscreenElement || 
+                document.mozFullScreenElement || 
+                document.msFullscreenElement
+            );
+        }
+
+        function showPlayerControls() {
+            if (!isPlayerOpen()) return;
+            
+            playerControls.classList.remove('is-hidden');
+            playerBox.classList.remove('cursor-hidden');
+            
+            clearTimeout(controlsHideTimer);
+            clearTimeout(cursorHideTimer);
+            
+            // Esconde controles após 4s
+            controlsHideTimer = setTimeout(() => {
+                playerControls.classList.add('is-hidden');
+            }, 4000);
+
+            // Esconde cursor após 3s (só em desktop)
+            if (!isTVDevice() && !('ontouchstart' in window)) {
+                cursorHideTimer = setTimeout(() => {
+                    playerBox.classList.add('cursor-hidden');
+                }, 3000);
             }
         }
 
-        // Interações que "acordam" o player
-        ['mousemove', 'mousedown', 'touchstart', 'pointerdown', 'keydown', 'wheel'].forEach(evt => {
-            window.addEventListener(evt, resetPlayerIdle, { passive: true });
-        });
+        function forceShowControls() {
+            if (!isPlayerOpen()) return;
+            playerControls.classList.remove('is-hidden');
+            playerBox.classList.remove('cursor-hidden');
+            clearTimeout(controlsHideTimer);
+            clearTimeout(cursorHideTimer);
+        }
 
-        // Resolve o bug de clicar num anúncio e bugar o foco/tela cheia
-        window.addEventListener('blur', () => {
-            // Se perdeu o foco e a tela cheia tá ativada, desativa na hora
-            const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
-            if (isFS) {
+        // Listener: quando o mouse sai da janela (provavelmente clicou no iframe/anúncio)
+        // ativa o guard para próxima interação
+        function enableClickGuard() {
+            if (!isInFullscreen()) {
+                // Se estava em fullscreen e o iframe roubou o foco, sai da fullscreen
                 if (document.exitFullscreen) document.exitFullscreen().catch(()=>{});
-                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-                else if (document.msExitFullscreen) document.msExitFullscreen();
+            }
+        }
+
+        // Detecta quando o iframe rouba o foco (indica clique em anúncio)
+        window.addEventListener('blur', () => {
+            if (!isPlayerOpen()) return;
+            
+            setTimeout(() => {
+                if (document.activeElement && document.activeElement.tagName === 'IFRAME') {
+                    // Iframe pegou foco = possível clique em anúncio
+                    // Se estiver em fullscreen, sair para evitar bug
+                    if (isInFullscreen()) {
+                        try {
+                            if (document.exitFullscreen) document.exitFullscreen();
+                            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                            else if (document.msExitFullscreen) document.msExitFullscreen();
+                        } catch(e) {}
+                    }
+                    
+                    // Força mostrar controles ao voltar
+                    setTimeout(() => {
+                        window.focus();
+                        forceShowControls();
+                        showPlayerControls();
+                    }, 100);
+                }
+            }, 100);
+        });
+
+        // Ao voltar o foco para janela (voltou de aba/anúncio)
+        window.addEventListener('focus', () => {
+            if (isPlayerOpen()) {
+                forceShowControls();
+                showPlayerControls();
             }
         });
 
-        // Quando o usuário volta para a página, acorda a barra de controles
+        // Detecta visibilidade da página (voltou de outra aba)
         document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'visible') {
-                resetPlayerIdle();
-            } else {
-                // Prevenção extra para fechar tela cheia caso o blur falhe
-                const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
-                if (isFS && document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+            if (!document.hidden && isPlayerOpen()) {
+                forceShowControls();
+                showPlayerControls();
             }
         });
 
-        // Monitora as mudanças na tela cheia para mudar o texto do botão
+        // Eventos de interação globais - fazem controles aparecerem
+        ['mousemove', 'mousedown', 'click', 'touchstart', 'touchmove', 'pointerdown', 'keydown', 'wheel'].forEach(evtType => {
+            document.addEventListener(evtType, (e) => {
+                if (isPlayerOpen()) {
+                    showPlayerControls();
+                }
+            }, { passive: true, capture: true });
+        });
+
+        // Especificamente no playerBox
+        playerBox.addEventListener('mousemove', showPlayerControls);
+        playerBox.addEventListener('touchstart', showPlayerControls, { passive: true });
+
+        // Atualiza texto do botão fullscreen
         function updateFullscreenButtonText() {
             const btn = document.getElementById('btnToggleFullscreen');
             if (!btn) return;
-
-            const isFS = !!(
-                document.fullscreenElement || 
-                document.webkitFullscreenElement || 
-                document.mozFullScreenElement || 
-                document.msFullscreenElement
-            );
-
-            btn.innerText = isFS ? "🗗 Sair da Tela Cheia" : "⛶ Tela Cheia";
+            btn.innerText = isInFullscreen() ? "🗗 Sair da Tela Cheia" : "⛶ Tela Cheia";
         }
 
+        // Listener para mudanças de fullscreen
         ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => {
-            document.addEventListener(evt, updateFullscreenButtonText);
+            document.addEventListener(evt, () => {
+                updateFullscreenButtonText();
+                // Ao mudar estado, forçar mostrar controles
+                if (isPlayerOpen()) {
+                    forceShowControls();
+                    showPlayerControls();
+                }
+            });
         });
 
-        document.getElementById('btnToggleFullscreen').onclick = () => {
-            const isFS = !!(
-                document.fullscreenElement || 
-                document.webkitFullscreenElement || 
-                document.mozFullScreenElement || 
-                document.msFullscreenElement
-            );
-
-            if (!isFS) {
-                if (playerBoxElem.requestFullscreen) playerBoxElem.requestFullscreen();
-                else if (playerBoxElem.webkitRequestFullscreen) playerBoxElem.webkitRequestFullscreen();
-                else if (playerBoxElem.msRequestFullscreen) playerBoxElem.msRequestFullscreen();
+        // Botão fullscreen
+        document.getElementById('btnToggleFullscreen').onclick = (e) => {
+            e.stopPropagation();
+            
+            if (!isInFullscreen()) {
+                if (playerBox.requestFullscreen) playerBox.requestFullscreen();
+                else if (playerBox.webkitRequestFullscreen) playerBox.webkitRequestFullscreen();
+                else if (playerBox.msRequestFullscreen) playerBox.msRequestFullscreen();
+                else if (playerBox.mozRequestFullScreen) playerBox.mozRequestFullScreen();
             } else {
                 if (document.exitFullscreen) document.exitFullscreen();
                 else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
                 else if (document.msExitFullscreen) document.msExitFullscreen();
+                else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
             }
+            
+            showPlayerControls();
         };
 
         function playVideo(rawUrl, title) {
-            if (!rawUrl) { showMsg('Nenhum link de vídeo fornecido!', 'error'); return; }
+            if (!rawUrl) { 
+                showMsg('Nenhum link de vídeo fornecido!', 'error'); 
+                return; 
+            }
             const url = formatVideoUrl(rawUrl);
             
             document.getElementById('playerTitleDisplay').innerText = title || 'Assistindo Mídia';
 
-            const container = document.getElementById('playerContainerView');
-            container.innerHTML = "";
+            // Limpa iframe anterior (mantém o guard)
+            const existingIframe = playerContainer.querySelector('iframe');
+            if (existingIframe) existingIframe.remove();
 
             const iframe = document.createElement('iframe');
             iframe.src = url;
@@ -1108,17 +1234,48 @@
             iframe.setAttribute('webkitallowfullscreen', 'true');
             iframe.setAttribute('mozallowfullscreen', 'true');
             iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope');
+            
+            // Sandbox: bloqueia pop-ups e redirects mas mantém funcionalidade
+            iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-presentation allow-forms');
+            iframe.setAttribute('referrerpolicy', 'no-referrer');
+            
             iframe.style.width = '100%';
             iframe.style.height = '100%';
             iframe.style.border = 'none';
             
-            container.appendChild(iframe);
-            document.getElementById('playerModal').classList.remove('hidden');
+            // Insere ANTES do click-guard (guard fica sobre)
+            playerContainer.insertBefore(iframe, clickGuard);
 
+            document.getElementById('playerModal').classList.remove('hidden');
             updateFullscreenButtonText();
-            resetPlayerIdle(); // Inicia o timer para sumir com os controles
+            forceShowControls();
+            showPlayerControls();
         }
-        /* ---------------------------------------------------------------------- */
+
+        // Fechar player
+        document.getElementById('btnClosePlayer').onclick = (e) => { 
+            e.stopPropagation();
+            clearTimeout(controlsHideTimer);
+            clearTimeout(cursorHideTimer);
+            
+            // Sair da fullscreen se estiver
+            if (isInFullscreen()) {
+                try {
+                    if (document.exitFullscreen) document.exitFullscreen();
+                    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                    else if (document.msExitFullscreen) document.msExitFullscreen();
+                } catch(e) {}
+            }
+            
+            playerContainer.querySelectorAll('iframe').forEach(i => i.remove());
+            document.getElementById('playerModal').classList.add('hidden');
+            playerBox.classList.remove('cursor-hidden');
+            playerControls.classList.remove('is-hidden');
+        };
+
+        /* ================================================================
+           ================  FIM DO SISTEMA DE PLAYER  ====================
+           ================================================================ */
 
         document.getElementById('mediaForm').onsubmit = async (e) => {
             e.preventDefault();
@@ -1417,13 +1574,6 @@
 
         document.getElementById('btnCloseCreator').onclick = () => document.getElementById('creatorModal').classList.add('hidden');
         document.getElementById('btnCloseDetails').onclick = () => { window.location.hash = ''; document.getElementById('detailsModal').classList.add('hidden'); };
-        
-        document.getElementById('btnClosePlayer').onclick = () => { 
-            clearTimeout(playerIdleTimer);
-            document.getElementById('playerBoxElem')?.classList.remove('is-idle');
-            document.getElementById('playerContainerView').innerHTML = ""; 
-            document.getElementById('playerModal').classList.add('hidden'); 
-        };
 
         document.getElementById('searchInput').oninput = renderApp;
 
@@ -1452,4 +1602,3 @@
     </script>
 </body>
 </html>
-
