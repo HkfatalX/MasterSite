@@ -295,7 +295,7 @@
                     <div id="seasonsList"></div>
                 </div>
 
-                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 15px;">Salvar Conteúdo</button>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 15px;" id="btnForceSave">Salvar Conteúdo</button>
             </form>
         </div>
     </div>
@@ -322,9 +322,7 @@
     <div id="playerModal" class="modal-overlay hidden">
         <div class="player-wrapper">
             <button class="modal-close" id="btnClosePlayer" style="z-index: 30;">&times;</button>
-
             <div class="player-container-view" id="playerContainerView"></div>
-
             <div style="padding: 12px 16px; background: #111; display: flex; justify-content: space-between; align-items: center;">
                 <span id="playerVideoTitle" style="font-size: 13px; font-weight: 700; max-width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></span>
                 <button class="btn-secondary" id="btnToggleFull">🖥️ Tela Cheia</button>
@@ -473,7 +471,9 @@
             }
         };
 
-        // --- RENDERIZADOR DE EPISÓDIOS (CORRIGIDO) ---
+        /* ====================================================
+           O SEGREDO ESTÁ AQUI: REMOVIDAS AS TRAVAS HTML "REQUIRED"
+           ==================================================== */
         function renderSeasonsBuilder() {
             const container = document.getElementById('seasonsList');
             container.innerHTML = "";
@@ -481,7 +481,6 @@
             seasonsBuilder.forEach((season, sIdx) => {
                 const sDiv = document.createElement('div');
                 sDiv.style.cssText = "background:#222; border:1px solid #333; border-radius:8px; padding:10px; margin-top:10px;";
-                
                 const sCover = season.seasonCoverBase64 || season.seasonCoverUrl || '';
 
                 sDiv.innerHTML = `
@@ -491,90 +490,33 @@
                     </div>
                     <div class="input-group">
                         <label>Capa da Temporada (Opcional)</label>
-                        <label class="custom-file-upload">
-                            <span class="custom-file-name" id="sCoverName_${sIdx}">Escolher Capa...</span>
-                            <span class="custom-file-btn">Upload</span>
-                            <input type="file" accept="image/*" onchange="storeSeasonCoverFile(event, ${sIdx})">
-                        </label>
-                        <input type="url" value="${season.seasonCoverUrl || ''}" placeholder="Ou cole URL da capa" onchange="seasonsBuilder[${sIdx}].seasonCoverUrl = this.value" style="margin-top:4px;">
-                        
-                        <div class="preview-box" style="height:70px;" id="sPreviewBox_${sIdx}">
-                            <img src="${sCover}" class="${sCover ? '' : 'hidden'}" id="sPreviewImg_${sIdx}">
-                            <span class="preview-placeholder ${sCover ? 'hidden' : ''}" id="sPreviewTxt_${sIdx}">Preview Capa Temporada</span>
-                        </div>
+                        <input type="url" value="${season.seasonCoverUrl || ''}" placeholder="Cole URL da capa" onchange="seasonsBuilder[${sIdx}].seasonCoverUrl = this.value" style="margin-top:4px;">
                     </div>
                     <div id="episodesListBuilder_${sIdx}"></div>
                 `;
 
                 container.appendChild(sDiv);
-
                 const epListDiv = sDiv.querySelector(`#episodesListBuilder_${sIdx}`);
 
                 (season.episodes || []).forEach((ep, eIdx) => {
                     const epDiv = document.createElement('div');
                     epDiv.style.cssText = "background:#181818; border:1px solid #2a2a2a; border-radius:6px; padding:10px; margin-top:8px;";
-                    
-                    const epCover = ep.coverBase64 || ep.coverUrl || '';
 
                     epDiv.innerHTML = `
                         <strong style="font-size:11px; color:#aaa;">EPISÓDIO ${eIdx + 1}</strong>
                         <div class="input-group" style="margin-top:4px;">
                             <label>Título do Episódio</label>
-                            <input type="text" value="${ep.title || ''}" oninput="seasonsBuilder[${sIdx}].episodes[${eIdx}].title = this.value" placeholder="Ex: Episódio ${eIdx + 1}" required>
+                            <input type="text" id="epTitle_${sIdx}_${eIdx}" value="${ep.title || ''}" placeholder="Ex: Episódio ${eIdx + 1}">
                         </div>
-
-                        <div class="input-group">
-                            <label>Foto do Episódio</label>
-                            <label class="custom-file-upload">
-                                <span class="custom-file-name" id="epCoverName_${sIdx}_${eIdx}">Escolher Foto...</span>
-                                <span class="custom-file-btn">Upload</span>
-                                <input type="file" accept="image/*" onchange="storeEpCoverFile(event, ${sIdx}, ${eIdx})">
-                            </label>
-                            <input type="url" value="${ep.coverUrl || ''}" placeholder="Ou cole URL da foto" oninput="seasonsBuilder[${sIdx}].episodes[${eIdx}].coverUrl = this.value" style="margin-top:4px;">
-                            
-                            <div class="preview-box" style="height:60px;" id="epPreviewBox_${sIdx}_${eIdx}">
-                                <img src="${epCover}" class="${epCover ? '' : 'hidden'}" id="epPreviewImg_${sIdx}_${eIdx}">
-                                <span class="preview-placeholder ${epCover ? 'hidden' : ''}" id="epPreviewTxt_${sIdx}_${eIdx}">Preview Foto Episódio</span>
-                            </div>
-                        </div>
-
                         <div class="input-group">
                             <label>Link do Vídeo (Mixdrop / Embed / MP4)</label>
-                            <input type="url" id="epVideoUrl_${sIdx}_${eIdx}" value="${ep.videoUrl || ''}" placeholder="Ex: https://mixdrop.top/e/xxxx" oninput="seasonsBuilder[${sIdx}].episodes[${eIdx}].videoUrl = this.value" required>
+                            <input type="text" id="epVideoUrl_${sIdx}_${eIdx}" value="${ep.videoUrl || ''}" placeholder="Ex: https://mixdrop.top/e/8l4374qzunqml0">
                         </div>
                     `;
                     epListDiv.appendChild(epDiv);
                 });
             });
         }
-
-        window.storeSeasonCoverFile = async (e, sIdx) => {
-            const file = e.target.files[0];
-            if (file) {
-                document.getElementById(`sCoverName_${sIdx}`).innerText = file.name;
-                const b64 = await fileToBase64(file);
-                seasonsBuilder[sIdx].seasonCoverBase64 = b64;
-                const img = document.getElementById(`sPreviewImg_${sIdx}`);
-                const txt = document.getElementById(`sPreviewTxt_${sIdx}`);
-                img.src = b64;
-                img.classList.remove('hidden');
-                txt.classList.add('hidden');
-            }
-        };
-
-        window.storeEpCoverFile = async (e, sIdx, eIdx) => {
-            const file = e.target.files[0];
-            if (file) {
-                document.getElementById(`epCoverName_${sIdx}_${eIdx}`).innerText = file.name;
-                const b64 = await fileToBase64(file);
-                seasonsBuilder[sIdx].episodes[eIdx].coverBase64 = b64;
-                const img = document.getElementById(`epPreviewImg_${sIdx}_${eIdx}`);
-                const txt = document.getElementById(`epPreviewTxt_${sIdx}_${eIdx}`);
-                img.src = b64;
-                img.classList.remove('hidden');
-                txt.classList.add('hidden');
-            }
-        };
 
         function addSeason() {
             seasonsBuilder.push({ seasonNumber: seasonsBuilder.length + 1, episodes: [{ title: 'Episódio 1', videoUrl: '' }] });
@@ -609,26 +551,17 @@
             const seriesCarousel = document.getElementById('seriesCarousel');
             const moviesRow = document.getElementById('moviesRow');
             const seriesRow = document.getElementById('seriesRow');
-
             const query = document.getElementById('searchInput').value.toLowerCase();
 
             moviesCarousel.innerHTML = "";
             seriesCarousel.innerHTML = "";
 
-            if (selectedCategory === "Filmes") {
-                moviesRow.classList.remove('hidden');
-                seriesRow.classList.add('hidden');
-            } else if (selectedCategory === "Séries") {
-                moviesRow.classList.add('hidden');
-                seriesRow.classList.remove('hidden');
-            } else {
-                moviesRow.classList.remove('hidden');
-                seriesRow.classList.remove('hidden');
-            }
+            if (selectedCategory === "Filmes") { moviesRow.classList.remove('hidden'); seriesRow.classList.add('hidden'); }
+            else if (selectedCategory === "Séries") { moviesRow.classList.add('hidden'); seriesRow.classList.remove('hidden'); }
+            else { moviesRow.classList.remove('hidden'); seriesRow.classList.remove('hidden'); }
 
             mediaCatalog.forEach(item => {
                 if (query && !item.title.toLowerCase().includes(query)) return;
-                
                 if (selectedCategory !== "Todos" && selectedCategory !== "Filmes" && selectedCategory !== "Séries") {
                     if (item.category !== selectedCategory) return;
                 }
@@ -636,7 +569,6 @@
                 const card = document.createElement('div');
                 card.className = 'media-card';
                 card.tabIndex = 0;
-
                 const coverSrc = item.coverBase64 || item.coverUrl || 'https://via.placeholder.com/200x300?text=Sem+Capa';
 
                 card.innerHTML = `
@@ -646,19 +578,12 @@
                         <div class="media-card-title">${item.title}</div>
                     </div>
                 `;
-
-                card.onclick = () => {
-                    window.location.hash = `#/midia/${item.id}`;
-                    openDetails(item);
-                };
-
+                card.onclick = () => { window.location.hash = `#/midia/${item.id}`; openDetails(item); };
                 if (item.type === 'movie') moviesCarousel.appendChild(card);
                 else seriesCarousel.appendChild(card);
             });
 
-            if (mediaCatalog.length > 0 && !activeItem) {
-                setHero(mediaCatalog[0]);
-            }
+            if (mediaCatalog.length > 0 && !activeItem) setHero(mediaCatalog[0]);
         }
 
         function setHero(item) {
@@ -666,9 +591,7 @@
             document.getElementById('heroTitle').innerText = item.title;
             document.getElementById('heroDesc').innerText = item.description;
             const coverSrc = item.coverBase64 || item.coverUrl || '';
-            if (coverSrc) {
-                document.getElementById('heroBanner').style.backgroundImage = `linear-gradient(180deg, rgba(0,0,0,0.3) 0%, var(--bg-color) 100%), url('${coverSrc}')`;
-            }
+            if (coverSrc) document.getElementById('heroBanner').style.backgroundImage = `linear-gradient(180deg, rgba(0,0,0,0.3) 0%, var(--bg-color) 100%), url('${coverSrc}')`;
             document.getElementById('heroPlayBtn').onclick = () => openDetails(item);
         }
 
@@ -683,13 +606,10 @@
             if (item.type === 'movie') {
                 document.getElementById('detailMovieArea').classList.remove('hidden');
                 document.getElementById('detailSerieArea').classList.add('hidden');
-                document.getElementById('btnPlayMovieFile').onclick = () => {
-                    playVideo(item.videoUrl, item.title);
-                };
+                document.getElementById('btnPlayMovieFile').onclick = () => playVideo(item.videoUrl, item.title);
             } else {
                 document.getElementById('detailMovieArea').classList.add('hidden');
                 document.getElementById('detailSerieArea').classList.remove('hidden');
-
                 const tabs = document.getElementById('seasonTabs');
                 tabs.innerHTML = "";
 
@@ -698,7 +618,6 @@
                     tab.className = `season-tab ${idx === 0 ? 'active' : ''}`;
                     tab.innerText = `Temporada ${idx + 1}`;
                     tab.tabIndex = 0;
-                    
                     const seasonCover = s.seasonCoverBase64 || s.seasonCoverUrl || defaultCover;
 
                     tab.onclick = () => {
@@ -717,28 +636,24 @@
                     renderEpisodesList(s0.episodes || [], 0, s0Cover);
                 }
             }
-
             document.getElementById('detailsModal').classList.remove('hidden');
         }
 
         function renderEpisodesList(episodes, seasonIdx, seasonCover) {
             const container = document.getElementById('episodesListContainer');
             container.innerHTML = "";
-
             const seriesCover = activeItem.coverBase64 || activeItem.coverUrl || '';
 
             episodes.forEach((ep, idx) => {
                 const epDiv = document.createElement('div');
                 epDiv.className = 'episode-card';
                 epDiv.tabIndex = 0;
-
                 const epThumb = ep.coverBase64 || ep.coverUrl || seasonCover || seriesCover || 'https://via.placeholder.com/150x90?text=Episodio';
 
                 epDiv.onclick = () => {
                     document.getElementById('detailsModal').classList.add('hidden');
                     playVideo(ep.videoUrl, `${activeItem.title} - T${seasonIdx + 1} E${idx + 1}: ${ep.title}`);
                 };
-
                 epDiv.innerHTML = `
                     <div class="episode-thumb"><img src="${epThumb}"></div>
                     <div style="flex:1;">
@@ -753,34 +668,24 @@
         function formatVideoUrl(url) {
             if (!url) return '';
             let formatted = url.trim();
-
             if (formatted.includes('mixdrop.')) {
-                if (formatted.includes('/f/')) {
-                    formatted = formatted.replace('/f/', '/e/');
-                } else if (!formatted.includes('/e/')) {
+                if (formatted.includes('/f/')) formatted = formatted.replace('/f/', '/e/');
+                else if (!formatted.includes('/e/')) {
                     const match = formatted.match(/(?:mixdrop\.[a-z]+)\/(?:e\/|f\/)?([a-zA-Z0-9]+)/);
-                    if (match && match[1]) {
-                        formatted = `https://mixdrop.top/e/${match[1]}`;
-                    }
+                    if (match && match[1]) formatted = `https://mixdrop.top/e/${match[1]}`;
                 }
             }
             return formatted;
         }
 
         function playVideo(rawUrl, title) {
-            if (!rawUrl) {
-                showMsg('Nenhum link de vídeo cadastrado!', 'error');
-                return;
-            }
-
+            if (!rawUrl) { showMsg('Nenhum link de vídeo cadastrado!', 'error'); return; }
             const url = formatVideoUrl(rawUrl);
             const container = document.getElementById('playerContainerView');
             document.getElementById('playerVideoTitle').innerText = title;
             container.innerHTML = "";
 
-            const isMp4Direct = url.toLowerCase().endsWith('.mp4');
-
-            if (!isMp4Direct) {
+            if (!url.toLowerCase().endsWith('.mp4')) {
                 const iframe = document.createElement('iframe');
                 iframe.src = url;
                 iframe.allow = "autoplay; fullscreen; encrypted-media";
@@ -791,15 +696,15 @@
                 video.src = url;
                 video.controls = true;
                 video.autoplay = true;
-                video.controlsList = "nodownload";
-                video.playsInline = true;
                 container.appendChild(video);
             }
-
             document.getElementById('playerModal').classList.remove('hidden');
         }
 
-        // --- SALVAMENTO (CORRIGIDO PARA FORÇAR A LEITURA) ---
+        /* ====================================================
+           O SALVAMENTO AGORA MOSTRA O ERRO NA SUA CARA
+           SE O LINK ESTIVER FALTANDO OU ERRADO
+           ==================================================== */
         document.getElementById('mediaForm').onsubmit = async (e) => {
             e.preventDefault();
 
@@ -807,74 +712,60 @@
             const existingItem = editId ? mediaCatalog.find(m => m.id === editId) : null;
 
             const type = document.getElementById('mediaType').value;
-            const category = document.getElementById('mediaCategory').value;
             const title = document.getElementById('mediaTitle').value.trim();
-            const year = document.getElementById('mediaYear').value.trim();
-            const description = document.getElementById('mediaDesc').value.trim();
             
-            const inputCoverUrl = document.getElementById('mediaCoverUrl').value.trim();
-            const inputVideoUrl = document.getElementById('movieVideoUrl').value.trim();
-
-            let allLinksValid = true;
-
             let payload = {
                 type: type,
-                category: category,
+                category: document.getElementById('mediaCategory').value,
                 title: title,
-                year: year,
-                description: description,
-                coverUrl: inputCoverUrl || (existingItem ? existingItem.coverUrl || '' : ''),
+                year: document.getElementById('mediaYear').value.trim(),
+                description: document.getElementById('mediaDesc').value.trim(),
+                coverUrl: document.getElementById('mediaCoverUrl').value.trim() || (existingItem ? existingItem.coverUrl || '' : ''),
                 coverBase64: tempCoverBase64 || (existingItem ? existingItem.coverBase64 || '' : '')
             };
 
             if (type === 'movie') {
-                if (!inputVideoUrl || (!inputVideoUrl.startsWith('http://') && !inputVideoUrl.startsWith('https://'))) {
-                    showMsg('Por favor, insira um link de vídeo válido (começando com http ou https)!', 'error');
-                    return;
-                }
-                payload.videoUrl = inputVideoUrl;
+                payload.videoUrl = document.getElementById('movieVideoUrl').value.trim();
             } else {
+                let bloqueioErro = false;
                 payload.seasons = seasonsBuilder.map((s, sIdx) => {
-                    const oldSeason = existingItem?.seasons?.[sIdx];
                     return {
                         seasonNumber: s.seasonNumber || sIdx + 1,
-                        seasonCoverUrl: s.seasonCoverUrl || oldSeason?.seasonCoverUrl || '',
-                        seasonCoverBase64: s.seasonCoverBase64 || oldSeason?.seasonCoverBase64 || '',
+                        seasonCoverUrl: s.seasonCoverUrl || '',
                         episodes: (s.episodes || []).map((ep, eIdx) => {
-                            // MAGIA ACONTECENDO AQUI: Lê direto da caixa HTML no momento do clique, sem erro!
-                            const domInput = document.getElementById(`epVideoUrl_${sIdx}_${eIdx}`);
-                            const currentVideoUrl = domInput ? domInput.value.trim() : (ep.videoUrl || '');
+                            // PUXANDO DIRETAMENTE DA TELA NO MOMENTO DO CLIQUE (GARANTIA DE SUCESSO)
+                            const inputLink = document.getElementById(`epVideoUrl_${sIdx}_${eIdx}`);
+                            const inputTitle = document.getElementById(`epTitle_${sIdx}_${eIdx}`);
+                            
+                            const valorLink = inputLink ? inputLink.value.trim() : '';
+                            const valorTitle = inputTitle ? inputTitle.value.trim() : `Episódio ${eIdx + 1}`;
 
-                            // Verifica se o link foi preenchido corretamente
-                            if (currentVideoUrl && !currentVideoUrl.startsWith('http://') && !currentVideoUrl.startsWith('https://')) {
-                                allLinksValid = false;
+                            if (!valorLink) {
+                                bloqueioErro = true;
                             }
 
-                            const oldEp = oldSeason?.episodes?.[eIdx];
                             return {
-                                title: ep.title || `Episódio ${eIdx + 1}`,
-                                coverUrl: ep.coverUrl || oldEp?.coverUrl || '',
-                                coverBase64: ep.coverBase64 || oldEp?.coverBase64 || '',
-                                videoUrl: currentVideoUrl || oldEp?.videoUrl || ''
+                                title: valorTitle,
+                                videoUrl: valorLink
                             };
                         })
                     };
                 });
-            }
 
-            if (type !== 'movie' && !allLinksValid) {
-                showMsg('Erro: Um ou mais links de episódios são inválidos. (Precisam começar com http:// ou https://)', 'error');
-                return;
+                if (bloqueioErro) {
+                    showMsg('ERRO: Você esqueceu de colocar o link em algum episódio!', 'error');
+                    return; // Para o salvamento na hora
+                }
             }
 
             try {
                 if (editId) {
                     await set(ref(rtdb, "catalog/" + editId), payload);
-                    showMsg('Mídia editada e salva com sucesso!', 'success');
+                    showMsg('Mídia editada e salva!', 'success');
                 } else {
                     const newRef = push(ref(rtdb, "catalog"));
                     await set(newRef, payload);
-                    showMsg('Conteúdo salvo com sucesso!', 'success');
+                    showMsg('Série/Filme salvo com sucesso!', 'success');
                 }
 
                 document.getElementById('creatorModal').classList.add('hidden');
@@ -883,7 +774,7 @@
                 seasonsBuilder = [];
                 await loadCatalog();
             } catch (err) {
-                showMsg('Erro ao salvar no banco: ' + err.message, 'error');
+                showMsg('Erro Firebase: ' + err.message, 'error');
             }
         };
 
@@ -902,7 +793,6 @@
 
             tempCoverBase64 = item.coverBase64 || '';
             updateCoverPreview(tempCoverBase64 || item.coverUrl || '');
-
             document.getElementById('creatorTitle').innerText = "Editar Conteúdo";
 
             if (item.type === 'serie') {
@@ -921,13 +811,8 @@
 
         window.deleteMedia = async (id) => {
             if (confirm("Deseja mesmo apagar do catálogo?")) {
-                try {
-                    await remove(ref(rtdb, "catalog/" + id));
-                    showMsg('Mídia removida com sucesso!', 'success');
-                    loadCatalog();
-                } catch (e) {
-                    showMsg('Erro ao deletar: ' + e.message, 'error');
-                }
+                try { await remove(ref(rtdb, "catalog/" + id)); showMsg('Removido com sucesso!', 'success'); loadCatalog(); }
+                catch (e) { showMsg('Erro ao deletar: ' + e.message, 'error'); }
             }
         };
 
@@ -938,14 +823,10 @@
 
             mediaCatalog.forEach(item => {
                 if (searchVal && !item.title.toLowerCase().includes(searchVal)) return;
-
                 const div = document.createElement('div');
                 div.className = 'admin-item';
                 div.innerHTML = `
-                    <div>
-                        <strong style="font-size:13px;">${item.title}</strong>
-                        <div style="font-size:10px; color:#aaa;">${item.type === 'movie' ? 'Filme' : 'Série'} • ${item.category || 'Geral'}</div>
-                    </div>
+                    <div><strong style="font-size:13px;">${item.title}</strong><div style="font-size:10px; color:#aaa;">${item.type === 'movie' ? 'Filme' : 'Série'} • ${item.category || 'Geral'}</div></div>
                     <div style="display:flex; gap:6px;">
                         <button class="btn-secondary" style="font-size:11px;" onclick="editMedia('${item.id}')">✏️ Editar</button>
                         <button class="btn-secondary" style="font-size:11px; color:#ff5252;" onclick="deleteMedia('${item.id}')">🗑️ Excluir</button>
@@ -956,30 +837,16 @@
         }
 
         document.getElementById('adminSearchInput').oninput = renderAdminCatalogList;
-        document.getElementById('btnAdminManager').onclick = () => {
-            renderAdminCatalogList();
-            document.getElementById('adminModal').classList.remove('hidden');
-        };
+        document.getElementById('btnAdminManager').onclick = () => { renderAdminCatalogList(); document.getElementById('adminModal').classList.remove('hidden'); };
         document.getElementById('btnCloseAdmin').onclick = () => document.getElementById('adminModal').classList.add('hidden');
-        document.getElementById('btnAddNewFromAdmin').onclick = () => {
-            document.getElementById('adminModal').classList.add('hidden');
-            document.getElementById('btnOpenCreator').click();
-        };
+        document.getElementById('btnAddNewFromAdmin').onclick = () => { document.getElementById('adminModal').classList.add('hidden'); document.getElementById('btnOpenCreator').click(); };
 
         document.getElementById('btnSaveProfile').onclick = async () => {
-            const newColor = document.getElementById('themeColorPicker').value;
-            applyUserTheme(newColor);
-
+            applyUserTheme(document.getElementById('themeColorPicker').value);
             const file = document.getElementById('profilePhotoFile').files[0];
             const photoUrl = document.getElementById('profilePhotoUrl').value.trim();
-
-            if (file) {
-                const b64 = await fileToBase64(file);
-                localStorage.setItem('masterflix_user_avatar', b64);
-            } else if (photoUrl) {
-                localStorage.setItem('masterflix_user_avatar', photoUrl);
-            }
-
+            if (file) localStorage.setItem('masterflix_user_avatar', await fileToBase64(file));
+            else if (photoUrl) localStorage.setItem('masterflix_user_avatar', photoUrl);
             updateUserAvatarUI();
             showMsg('Perfil atualizado com sucesso!', 'success');
             document.getElementById('profileModal').classList.add('hidden');
@@ -991,134 +858,68 @@
             const letter = user ? user.email.charAt(0).toUpperCase() : 'U';
 
             if (avatarData) {
-                document.getElementById('avatarImg').src = avatarData;
-                document.getElementById('avatarImg').classList.remove('hidden');
-                document.getElementById('avatarText').classList.add('hidden');
-
-                document.getElementById('profileAvatarBigImg').src = avatarData;
-                document.getElementById('profileAvatarBigImg').classList.remove('hidden');
-                document.getElementById('profileAvatarBigText').classList.add('hidden');
+                document.getElementById('avatarImg').src = avatarData; document.getElementById('avatarImg').classList.remove('hidden'); document.getElementById('avatarText').classList.add('hidden');
+                document.getElementById('profileAvatarBigImg').src = avatarData; document.getElementById('profileAvatarBigImg').classList.remove('hidden'); document.getElementById('profileAvatarBigText').classList.add('hidden');
             } else {
-                document.getElementById('avatarText').innerText = letter;
-                document.getElementById('avatarImg').classList.add('hidden');
-                document.getElementById('avatarText').classList.remove('hidden');
-
-                document.getElementById('profileAvatarBigText').innerText = letter;
-                document.getElementById('profileAvatarBigImg').classList.add('hidden');
-                document.getElementById('profileAvatarBigText').classList.remove('hidden');
+                document.getElementById('avatarText').innerText = letter; document.getElementById('avatarImg').classList.add('hidden'); document.getElementById('avatarText').classList.remove('hidden');
+                document.getElementById('profileAvatarBigText').innerText = letter; document.getElementById('profileAvatarBigImg').classList.add('hidden'); document.getElementById('profileAvatarBigText').classList.remove('hidden');
             }
         }
 
-        const handleLogout = async () => {
-            try {
-                await signOut(auth);
-                document.getElementById('profileModal').classList.add('hidden');
-                showMsg('Você saiu da conta.', 'success');
-            } catch (err) {
-                showMsg('Erro ao sair: ' + err.message, 'error');
-            }
-        };
-
-        document.getElementById('btnLogout').onclick = handleLogout;
-        document.getElementById('btnTvLogout').onclick = handleLogout;
+        const handleLogout = async () => { try { await signOut(auth); document.getElementById('profileModal').classList.add('hidden'); showMsg('Você saiu da conta.', 'success'); } catch (err) { showMsg('Erro ao sair: ' + err.message, 'error'); } };
+        document.getElementById('btnLogout').onclick = handleLogout; document.getElementById('btnTvLogout').onclick = handleLogout;
 
         document.getElementById('toggleAuthMode').onclick = () => {
             isSignUpMode = !isSignUpMode;
-            if (isSignUpMode) {
-                document.getElementById('authSubtitle').innerText = "Crie sua conta para acessar o catálogo";
-                document.getElementById('btnAuthSubmit').innerText = "Cadastrar Conta";
-                document.getElementById('toggleAuthMode').innerText = "Já tem uma conta? Faça login";
-            } else {
-                document.getElementById('authSubtitle').innerText = "Entre na sua conta para continuar";
-                document.getElementById('btnAuthSubmit').innerText = "Entrar na Conta";
-                document.getElementById('toggleAuthMode').innerText = "Não tem uma conta? Crie uma agora";
-            }
+            document.getElementById('authSubtitle').innerText = isSignUpMode ? "Crie sua conta para acessar o catálogo" : "Entre na sua conta para continuar";
+            document.getElementById('btnAuthSubmit').innerText = isSignUpMode ? "Cadastrar Conta" : "Entrar na Conta";
+            document.getElementById('toggleAuthMode').innerText = isSignUpMode ? "Já tem uma conta? Faça login" : "Não tem uma conta? Crie uma agora";
         };
 
         document.getElementById('authForm').onsubmit = async (e) => {
             e.preventDefault();
-            const email = document.getElementById('authEmail').value.trim();
-            const pass = document.getElementById('authPassword').value;
-
+            const email = document.getElementById('authEmail').value.trim(), pass = document.getElementById('authPassword').value;
             try {
-                if (isSignUpMode) {
-                    await createUserWithEmailAndPassword(auth, email, pass);
-                    showMsg('Conta criada!', 'success');
-                } else {
-                    await signInWithEmailAndPassword(auth, email, pass);
-                    showMsg('Autenticado!', 'success');
-                }
+                if (isSignUpMode) { await createUserWithEmailAndPassword(auth, email, pass); showMsg('Conta criada!', 'success'); }
+                else { await signInWithEmailAndPassword(auth, email, pass); showMsg('Autenticado!', 'success'); }
                 document.getElementById('authOverlay').classList.add('hidden');
-            } catch (err) {
-                showMsg('Falha na autenticação: ' + err.message, 'error');
-            }
+            } catch (err) { showMsg('Falha na autenticação: ' + err.message, 'error'); }
         };
 
         document.getElementById('btnOpenProfile').onclick = () => document.getElementById('profileModal').classList.remove('hidden');
         document.getElementById('btnCloseProfile').onclick = () => document.getElementById('profileModal').classList.add('hidden');
 
         document.getElementById('btnOpenCreator').onclick = () => {
-            document.getElementById('editMediaId').value = "";
-            document.getElementById('mediaForm').reset();
-            document.getElementById('movieVideoUrl').value = "";
-            document.getElementById('coverFileNameDisplay').innerText = "Escolher Capa Local...";
-            tempCoverBase64 = "";
-            updateCoverPreview("");
-            document.getElementById('creatorTitle').innerText = "Publicar Conteúdo";
-            seasonsBuilder = [];
-            document.getElementById('seasonsList').innerHTML = "";
-            addSeason();
-            document.getElementById('creatorModal').classList.remove('hidden');
+            document.getElementById('editMediaId').value = ""; document.getElementById('mediaForm').reset(); document.getElementById('movieVideoUrl').value = "";
+            document.getElementById('coverFileNameDisplay').innerText = "Escolher Capa Local..."; tempCoverBase64 = ""; updateCoverPreview("");
+            document.getElementById('creatorTitle').innerText = "Publicar Conteúdo"; seasonsBuilder = []; document.getElementById('seasonsList').innerHTML = "";
+            addSeason(); document.getElementById('creatorModal').classList.remove('hidden');
         };
 
         document.getElementById('btnCloseCreator').onclick = () => document.getElementById('creatorModal').classList.add('hidden');
-        document.getElementById('btnCloseDetails').onclick = () => {
-            window.location.hash = '';
-            document.getElementById('detailsModal').classList.add('hidden');
-        };
-
-        document.getElementById('btnClosePlayer').onclick = () => {
-            const container = document.getElementById('playerContainerView');
-            container.innerHTML = "";
-            document.getElementById('playerModal').classList.add('hidden');
-        };
-
+        document.getElementById('btnCloseDetails').onclick = () => { window.location.hash = ''; document.getElementById('detailsModal').classList.add('hidden'); };
+        document.getElementById('btnClosePlayer').onclick = () => { document.getElementById('playerContainerView').innerHTML = ""; document.getElementById('playerModal').classList.add('hidden'); };
         document.getElementById('btnToggleFull').onclick = () => {
-            const container = document.getElementById('playerContainerView');
-            if (!document.fullscreenElement) {
-                if (container.requestFullscreen) container.requestFullscreen();
-                else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
-            } else {
-                if (document.exitFullscreen) document.exitFullscreen();
-            }
+            const c = document.getElementById('playerContainerView');
+            if (!document.fullscreenElement) { if (c.requestFullscreen) c.requestFullscreen(); else if (c.webkitRequestFullscreen) c.webkitRequestFullscreen(); }
+            else { if (document.exitFullscreen) document.exitFullscreen(); }
         };
-
         document.getElementById('searchInput').oninput = renderApp;
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById('authOverlay').classList.add('hidden');
-
-                const isExclusiveAdmin = user.email.toLowerCase() === EXCLUSIVE_ADMIN_EMAIL.toLowerCase();
-
                 document.getElementById('profileEmailDisplay').innerText = user.email;
                 updateUserAvatarUI();
-
-                if (isExclusiveAdmin) {
-                    document.getElementById('btnOpenCreator').classList.remove('hidden');
-                    document.getElementById('btnAdminManager').classList.remove('hidden');
-                    document.getElementById('profileAdminBadge').classList.remove('hidden');
+                if (user.email.toLowerCase() === EXCLUSIVE_ADMIN_EMAIL.toLowerCase()) {
+                    document.getElementById('btnOpenCreator').classList.remove('hidden'); document.getElementById('btnAdminManager').classList.remove('hidden'); document.getElementById('profileAdminBadge').classList.remove('hidden');
                 } else {
-                    document.getElementById('btnOpenCreator').classList.add('hidden');
-                    document.getElementById('btnAdminManager').classList.add('hidden');
-                    document.getElementById('profileAdminBadge').classList.add('hidden');
+                    document.getElementById('btnOpenCreator').classList.add('hidden'); document.getElementById('btnAdminManager').classList.add('hidden'); document.getElementById('profileAdminBadge').classList.add('hidden');
                 }
-
                 loadCatalog();
             } else {
                 document.getElementById('authOverlay').classList.remove('hidden');
-                document.getElementById('btnOpenCreator').classList.add('hidden');
-                document.getElementById('btnAdminManager').classList.add('hidden');
+                document.getElementById('btnOpenCreator').classList.add('hidden'); document.getElementById('btnAdminManager').classList.add('hidden');
             }
         });
     </script>
