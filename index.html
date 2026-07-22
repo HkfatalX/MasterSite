@@ -284,7 +284,7 @@
 
                 <div id="movieFileArea" class="input-group">
                     <label>Link do Vídeo (Mixdrop / Embed / MP4 Direct)</label>
-                    <input type="text" id="movieVideoUrl" placeholder="Ex: https://mixdrop.top/e/8l4374qzunqml0">
+                    <input type="url" id="movieVideoUrl" placeholder="Ex: https://mixdrop.top/e/8l4374qzunqml0">
                 </div>
 
                 <div id="seriesBuilderArea" class="hidden">
@@ -473,6 +473,7 @@
             }
         };
 
+        // --- RENDERIZADOR DE EPISÓDIOS (CORRIGIDO) ---
         function renderSeasonsBuilder() {
             const container = document.getElementById('seasonsList');
             container.innerHTML = "";
@@ -519,7 +520,7 @@
                         <strong style="font-size:11px; color:#aaa;">EPISÓDIO ${eIdx + 1}</strong>
                         <div class="input-group" style="margin-top:4px;">
                             <label>Título do Episódio</label>
-                            <input type="text" value="${ep.title || ''}" onchange="seasonsBuilder[${sIdx}].episodes[${eIdx}].title = this.value" placeholder="Ex: Episódio ${eIdx + 1}" required>
+                            <input type="text" value="${ep.title || ''}" oninput="seasonsBuilder[${sIdx}].episodes[${eIdx}].title = this.value" placeholder="Ex: Episódio ${eIdx + 1}" required>
                         </div>
 
                         <div class="input-group">
@@ -529,7 +530,7 @@
                                 <span class="custom-file-btn">Upload</span>
                                 <input type="file" accept="image/*" onchange="storeEpCoverFile(event, ${sIdx}, ${eIdx})">
                             </label>
-                            <input type="url" value="${ep.coverUrl || ''}" placeholder="Ou cole URL da foto" onchange="seasonsBuilder[${sIdx}].episodes[${eIdx}].coverUrl = this.value" style="margin-top:4px;">
+                            <input type="url" value="${ep.coverUrl || ''}" placeholder="Ou cole URL da foto" oninput="seasonsBuilder[${sIdx}].episodes[${eIdx}].coverUrl = this.value" style="margin-top:4px;">
                             
                             <div class="preview-box" style="height:60px;" id="epPreviewBox_${sIdx}_${eIdx}">
                                 <img src="${epCover}" class="${epCover ? '' : 'hidden'}" id="epPreviewImg_${sIdx}_${eIdx}">
@@ -539,7 +540,7 @@
 
                         <div class="input-group">
                             <label>Link do Vídeo (Mixdrop / Embed / MP4)</label>
-                            <input type="text" value="${ep.videoUrl || ''}" placeholder="Ex: https://mixdrop.top/e/xxxx ou link .mp4" onchange="seasonsBuilder[${sIdx}].episodes[${eIdx}].videoUrl = this.value" required>
+                            <input type="url" id="epVideoUrl_${sIdx}_${eIdx}" value="${ep.videoUrl || ''}" placeholder="Ex: https://mixdrop.top/e/xxxx" oninput="seasonsBuilder[${sIdx}].episodes[${eIdx}].videoUrl = this.value" required>
                         </div>
                     `;
                     epListDiv.appendChild(epDiv);
@@ -798,6 +799,7 @@
             document.getElementById('playerModal').classList.remove('hidden');
         }
 
+        // --- SALVAMENTO (CORRIGIDO PARA FORÇAR A LEITURA) ---
         document.getElementById('mediaForm').onsubmit = async (e) => {
             e.preventDefault();
 
@@ -813,10 +815,7 @@
             const inputCoverUrl = document.getElementById('mediaCoverUrl').value.trim();
             const inputVideoUrl = document.getElementById('movieVideoUrl').value.trim();
 
-            if (type === 'movie' && !inputVideoUrl) {
-                showMsg('Por favor, insira o link do vídeo do filme!', 'error');
-                return;
-            }
+            let allLinksValid = true;
 
             let payload = {
                 type: type,
@@ -829,6 +828,10 @@
             };
 
             if (type === 'movie') {
+                if (!inputVideoUrl || (!inputVideoUrl.startsWith('http://') && !inputVideoUrl.startsWith('https://'))) {
+                    showMsg('Por favor, insira um link de vídeo válido (começando com http ou https)!', 'error');
+                    return;
+                }
                 payload.videoUrl = inputVideoUrl;
             } else {
                 payload.seasons = seasonsBuilder.map((s, sIdx) => {
@@ -838,16 +841,30 @@
                         seasonCoverUrl: s.seasonCoverUrl || oldSeason?.seasonCoverUrl || '',
                         seasonCoverBase64: s.seasonCoverBase64 || oldSeason?.seasonCoverBase64 || '',
                         episodes: (s.episodes || []).map((ep, eIdx) => {
+                            // MAGIA ACONTECENDO AQUI: Lê direto da caixa HTML no momento do clique, sem erro!
+                            const domInput = document.getElementById(`epVideoUrl_${sIdx}_${eIdx}`);
+                            const currentVideoUrl = domInput ? domInput.value.trim() : (ep.videoUrl || '');
+
+                            // Verifica se o link foi preenchido corretamente
+                            if (currentVideoUrl && !currentVideoUrl.startsWith('http://') && !currentVideoUrl.startsWith('https://')) {
+                                allLinksValid = false;
+                            }
+
                             const oldEp = oldSeason?.episodes?.[eIdx];
                             return {
                                 title: ep.title || `Episódio ${eIdx + 1}`,
                                 coverUrl: ep.coverUrl || oldEp?.coverUrl || '',
                                 coverBase64: ep.coverBase64 || oldEp?.coverBase64 || '',
-                                videoUrl: ep.videoUrl || oldEp?.videoUrl || ''
+                                videoUrl: currentVideoUrl || oldEp?.videoUrl || ''
                             };
                         })
                     };
                 });
+            }
+
+            if (type !== 'movie' && !allLinksValid) {
+                showMsg('Erro: Um ou mais links de episódios são inválidos. (Precisam começar com http:// ou https://)', 'error');
+                return;
             }
 
             try {
