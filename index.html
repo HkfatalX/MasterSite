@@ -286,7 +286,7 @@
 
                 <div id="movieFileArea" class="input-group">
                     <label>Link do Vídeo (Mixdrop / Embed / MP4 Direct)</label>
-                    <input type="url" id="movieVideoUrl" placeholder="Ex: https://mixdrop.ag/e/xxxx ou https://site.com/video.mp4">
+                    <input type="text" id="movieVideoUrl" placeholder="Ex: https://mixdrop.top/e/xxxx ou link .mp4">
                 </div>
 
                 <div id="seriesBuilderArea" class="hidden">
@@ -325,8 +325,7 @@
         <div class="player-wrapper">
             <button class="modal-close" id="btnClosePlayer" style="z-index: 30;">&times;</button>
 
-            <div class="player-container-view" id="playerContainerView">
-                </div>
+            <div class="player-container-view" id="playerContainerView"></div>
 
             <div style="padding: 12px 16px; background: #111; display: flex; justify-content: space-between; align-items: center;">
                 <span id="playerVideoTitle" style="font-size: 13px; font-weight: 700; max-width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></span>
@@ -542,7 +541,7 @@
 
                         <div class="input-group">
                             <label>Link do Vídeo (Mixdrop / Embed / MP4)</label>
-                            <input type="url" value="${ep.videoUrl || ''}" placeholder="Ex: https://mixdrop.ag/e/xxxx ou link .mp4" onchange="seasonsBuilder[${sIdx}].episodes[${eIdx}].videoUrl = this.value" required>
+                            <input type="text" value="${ep.videoUrl || ''}" placeholder="Ex: https://mixdrop.top/e/xxxx ou link .mp4" onchange="seasonsBuilder[${sIdx}].episodes[${eIdx}].videoUrl = this.value" required>
                         </div>
                     `;
                     epListDiv.appendChild(epDiv);
@@ -752,20 +751,21 @@
             });
         }
 
-        /* FORMATADOR E REPRODUTOR UNIVERSAL (MIXDROP + MP4 + EMBEDS) */
+        /* FORMATADOR E REPRODUTOR UNIVERSAL (MIXDROP DE QUALQUER EXTENSÃO + EMBEDS + MP4) */
         function formatVideoUrl(url) {
             if (!url) return '';
             let formatted = url.trim();
 
-            // Formatação do Mixdrop
+            // Suporte completo a domínios Mixdrop (.top, .ag, .co, .is, .ch, etc)
             if (formatted.includes('mixdrop.')) {
                 if (formatted.includes('/f/')) {
                     formatted = formatted.replace('/f/', '/e/');
-                }
-                if (!formatted.includes('/e/')) {
+                } else if (!formatted.includes('/e/')) {
                     const parts = formatted.split('/');
-                    const id = parts[parts.length - 1] || parts[parts.length - 2];
-                    formatted = `https://mixdrop.co/e/${id}`;
+                    const id = parts.pop() || parts.pop();
+                    const domainMatch = formatted.match(/https?:\/\/[^\/]+/);
+                    const domain = domainMatch ? domainMatch[0] : 'https://mixdrop.top';
+                    formatted = `${domain}/e/${id}`;
                 }
             }
             return formatted;
@@ -782,8 +782,7 @@
             document.getElementById('playerVideoTitle').innerText = title;
             container.innerHTML = "";
 
-            // Verifica se é Embed/Iframe (Mixdrop, Doodstream, Streamtape) ou MP4 direto
-            const isEmbed = url.includes('mixdrop') || url.includes('/e/') || url.includes('/embed/') || !url.endsWith('.mp4');
+            const isEmbed = url.includes('mixdrop.') || url.includes('/e/') || url.includes('/embed/') || !url.endsWith('.mp4');
 
             if (isEmbed) {
                 const iframe = document.createElement('iframe');
@@ -830,7 +829,7 @@
             };
 
             if (type === 'movie') {
-                payload.videoUrl = inputVideoUrl || (existingItem ? existingItem.videoUrl || '' : '');
+                payload.videoUrl = inputVideoUrl;
             } else {
                 payload.seasons = seasonsBuilder.map((s, sIdx) => {
                     const oldSeason = existingItem?.seasons?.[sIdx];
