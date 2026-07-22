@@ -21,9 +21,9 @@
         header { position: fixed; top: 0; left: 0; width: 100%; height: 65px; background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: space-between; padding: 0 4%; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.08); }
         .brand { font-size: 22px; font-weight: 900; color: var(--primary-color); letter-spacing: -1px; cursor: pointer; }
         
-        .nav-actions { display: flex; align-items: center; gap: 10px; }
+        .nav-actions { display: flex; align-items: center; gap: 8px; }
         
-        .user-avatar-btn { width: 38px; height: 38px; border-radius: 50%; background: var(--primary-color); display: flex; align-items: center; justify-content: center; font-weight: 800; cursor: pointer; border: 2px solid #fff; overflow: hidden; font-size: 14px; }
+        .user-avatar-btn { width: 38px; height: 38px; border-radius: 50%; background: var(--primary-color); display: flex; align-items: center; justify-content: center; font-weight: 800; cursor: pointer; border: 2px solid #fff; overflow: hidden; font-size: 14px; flex-shrink: 0; }
         .user-avatar-btn img { width: 100%; height: 100%; object-fit: cover; }
 
         button, input, select, textarea { outline: none; }
@@ -73,9 +73,10 @@
         .preview-box img { width: 100%; height: 100%; object-fit: cover; }
         .preview-placeholder { font-size: 11px; color: #666; font-weight: 600; }
 
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.88); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
-        .modal-body { background: #181818; border: 1px solid #2a2a2a; border-radius: 14px; width: 100%; max-width: 620px; max-height: 88vh; overflow-y: auto; padding: 20px; position: relative; }
-        .modal-close { position: absolute; top: 12px; right: 12px; background: #2a2a2a; color: #fff; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 16px; font-weight: bold; display: flex; align-items: center; justify-content: center; }
+        /* MODAL FIX PARA MOBILE */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.88); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 12px; }
+        .modal-body { background: #181818; border: 1px solid #2a2a2a; border-radius: 14px; width: 100%; max-width: 95vw; max-height: 90vh; overflow-y: auto; padding: 20px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .modal-close { position: absolute; top: 12px; right: 12px; background: #2a2a2a; color: #fff; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 16px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 10; }
 
         .hidden { display: none !important; }
         #msg { position: fixed; bottom: 15px; right: 15px; padding: 10px 16px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 2000; }
@@ -91,8 +92,9 @@
         .episode-thumb { width: 85px; height: 50px; border-radius: 6px; overflow: hidden; background: #000; flex-shrink: 0; }
         .episode-thumb img { width: 100%; height: 100%; object-fit: cover; }
         
-        .player-wrapper { width: 100%; max-width: 950px; background: #000; border-radius: 12px; overflow: hidden; position: relative; }
-        video { width: 100%; max-height: 70vh; background: #000; display: block; }
+        /* PLAYER AJUSTADO */
+        .player-wrapper { width: 100%; max-width: 900px; background: #000; border-radius: 12px; overflow: hidden; position: relative; }
+        video { width: 100%; max-height: 75vh; background: #000; display: block; }
         .admin-item { display: flex; align-items: center; justify-content: space-between; background: #222; border: 1px solid #333; padding: 10px; border-radius: 8px; margin-bottom: 8px; }
 
         /* MODO SMART TV */
@@ -108,9 +110,9 @@
         <div class="brand" onclick="window.location.hash = ''">🎬 MASTERFLIX</div>
         
         <div class="nav-actions">
-            <input type="text" id="searchInput" placeholder="Pesquisar..." style="padding: 6px 12px; border-radius: 16px; border: 1px solid #333; background: #000; color: #fff; font-size: 11px; width: 110px;">
+            <input type="text" id="searchInput" placeholder="Pesquisar..." style="padding: 6px 12px; border-radius: 16px; border: 1px solid #333; background: #000; color: #fff; font-size: 11px; width: 100px;">
             <button class="btn-primary hidden" id="btnAdminManager" style="padding: 6px 10px; font-size: 11px;">⚙️ Gerenciar</button>
-            <button class="btn-primary hidden" id="btnOpenCreator" style="padding: 6px 10px; font-size: 11px;">➕ Publicar/Criar</button>
+            <button class="btn-primary hidden" id="btnOpenCreator" style="padding: 6px 10px; font-size: 11px;">➕ Publicar</button>
             
             <button class="btn-secondary hidden" id="btnTvLogout" style="font-size: 11px; padding: 6px 10px; border-color: #c62828; color: #ff5252;">🚪 Sair</button>
 
@@ -143,7 +145,7 @@
     </div>
 
     <div id="adminModal" class="modal-overlay hidden">
-        <div class="modal-body">
+        <div class="modal-body" style="max-width: 550px;">
             <button class="modal-close" id="btnCloseAdmin">&times;</button>
             <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 15px;">⚙️ Gerenciar Catálogo</h2>
             
@@ -157,37 +159,37 @@
     </div>
 
     <div id="profileModal" class="modal-overlay hidden">
-        <div class="modal-body" style="max-width: 450px;">
+        <div class="modal-body" style="max-width: 400px;">
             <button class="modal-close" id="btnCloseProfile">&times;</button>
-            <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 15px;">👤 Meu Perfil</h2>
+            <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 15px; text-align: center;">👤 Meu Perfil</h2>
 
-            <div style="text-align: center; margin-bottom: 20px;">
-                <div style="width: 90px; height: 90px; border-radius: 50%; background: var(--primary-color); margin: 0 auto 10px auto; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 900; border: 3px solid #fff; overflow:hidden;" id="profileAvatarBigBox">
+            <div style="text-align: center; margin-bottom: 15px;">
+                <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--primary-color); margin: 0 auto 10px auto; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 900; border: 3px solid #fff; overflow:hidden;" id="profileAvatarBigBox">
                     <span id="profileAvatarBigText">U</span>
                     <img id="profileAvatarBigImg" class="hidden" src="" style="width:100%; height:100%; object-fit:cover;">
                 </div>
-                <p id="profileEmailDisplay" style="font-size: 13px; color: #aaa;"></p>
+                <p id="profileEmailDisplay" style="font-size: 12px; color: #aaa; word-break: break-all;"></p>
                 <span id="profileAdminBadge" class="hidden" style="background: var(--primary-color); font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 800; text-transform: uppercase; margin-top: 5px; display: inline-block;">Administrador Exclusivo</span>
             </div>
 
             <div class="input-group">
                 <label>Foto de Perfil</label>
                 <label class="custom-file-upload">
-                    <span class="custom-file-name" id="profileFileNameDisplay">Escolher Foto Local...</span>
-                    <span class="custom-file-btn">Selecionar Imagem</span>
+                    <span class="custom-file-name" id="profileFileNameDisplay">Escolher Imagem...</span>
+                    <span class="custom-file-btn">Selecionar</span>
                     <input type="file" id="profilePhotoFile" accept="image/*">
                 </label>
-                <input type="url" id="profilePhotoUrl" placeholder="Ou cole a URL da imagem aqui" style="margin-top: 8px;">
+                <input type="url" id="profilePhotoUrl" placeholder="Ou cole a URL da foto" style="margin-top: 6px;">
             </div>
 
             <div class="input-group">
-                <label>Cor de Destaque do Site</label>
-                <input type="color" id="themeColorPicker" value="#e50914" style="height: 40px; padding: 2px; cursor: pointer;">
+                <label>Cor do Tema</label>
+                <input type="color" id="themeColorPicker" value="#e50914" style="height: 38px; padding: 2px; cursor: pointer;">
             </div>
 
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button class="btn-primary" id="btnSaveProfile" style="flex: 1;">Salvar Alterações</button>
-                <button class="btn-secondary" id="btnLogout" style="flex: 1; border-color: #c62828; color: #ff5252;">Sair da Conta</button>
+            <div style="display: flex; gap: 8px; margin-top: 15px;">
+                <button class="btn-primary" id="btnSaveProfile" style="flex: 1;">Salvar</button>
+                <button class="btn-secondary" id="btnLogout" style="flex: 1; border-color: #c62828; color: #ff5252;">Sair</button>
             </div>
         </div>
     </div>
@@ -197,7 +199,7 @@
         <div class="hero-banner" id="heroBanner">
             <span style="font-size: 10px; font-weight: 800; color: var(--primary-color); text-transform: uppercase;">Destaque</span>
             <h1 class="hero-title" id="heroTitle">Bem-vindo ao MasterFlix</h1>
-            <p class="hero-desc" id="heroDesc">Assista aos melhores filmes e séries diretamente do seu navegador.</p>
+            <p class="hero-desc" id="heroDesc">Os melhores filmes e séries diretamente no seu dispositivo.</p>
             <div>
                 <button class="btn-primary" id="heroPlayBtn">▶ Assistir Agora</button>
             </div>
@@ -212,30 +214,29 @@
             <div class="category-chip" data-cat="Drama" tabindex="0">Drama</div>
             <div class="category-chip" data-cat="Terror" tabindex="0">Terror</div>
             <div class="category-chip" data-cat="Animação" tabindex="0">Animação</div>
-            <div class="category-chip" data-cat="Sci-Fi" tabindex="0">Sci-Fi</div>
         </div>
 
         <div class="section-row" id="moviesRow">
-            <div class="section-title"><span>🎬 Filmes Online</span></div>
+            <div class="section-title"><span>🎬 Filmes</span></div>
             <div class="carousel-container" id="moviesCarousel"></div>
         </div>
 
         <div class="section-row" id="seriesRow">
-            <div class="section-title"><span>📺 Séries Online</span></div>
+            <div class="section-title"><span>📺 Séries</span></div>
             <div class="carousel-container" id="seriesCarousel"></div>
         </div>
 
     </main>
 
     <div id="creatorModal" class="modal-overlay hidden">
-        <div class="modal-body">
+        <div class="modal-body" style="max-width: 600px;">
             <button class="modal-close" id="btnCloseCreator">&times;</button>
             <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 12px;" id="creatorTitle">Publicar Conteúdo</h2>
 
             <form id="mediaForm">
                 <input type="hidden" id="editMediaId">
 
-                <div style="display: flex; gap: 10px;">
+                <div style="display: flex; gap: 8px;">
                     <div class="input-group" style="flex:1;">
                         <label>Tipo</label>
                         <select id="mediaType">
@@ -251,7 +252,6 @@
                             <option value="Drama">Drama</option>
                             <option value="Terror">Terror</option>
                             <option value="Animação">Animação</option>
-                            <option value="Sci-Fi">Sci-Fi</option>
                         </select>
                     </div>
                     <div class="input-group" style="flex:1;">
@@ -262,27 +262,27 @@
 
                 <div class="input-group">
                     <label>Título</label>
-                    <input type="text" id="mediaTitle" placeholder="Ex: Nome do Filme ou Série" required>
+                    <input type="text" id="mediaTitle" placeholder="Ex: Nome da Série/Filme" required>
                 </div>
 
                 <div class="input-group">
-                    <label>Capa Principal da Série/Filme</label>
+                    <label>Capa Principal</label>
                     <label class="custom-file-upload">
                         <span class="custom-file-name" id="coverFileNameDisplay">Escolher Capa Local...</span>
                         <span class="custom-file-btn">Upload Capa</span>
                         <input type="file" id="mediaCoverFile" accept="image/*">
                     </label>
-                    <input type="url" id="mediaCoverUrl" placeholder="Ou cole a URL da imagem da capa" style="margin-top: 6px;">
+                    <input type="url" id="mediaCoverUrl" placeholder="Ou cole a URL da capa" style="margin-top: 6px;">
                     
                     <div class="preview-box" id="coverPreviewBox">
-                        <span class="preview-placeholder" id="coverPreviewText">Pré-visualização da Capa Principal</span>
+                        <span class="preview-placeholder" id="coverPreviewText">Preview Capa Principal</span>
                         <img id="coverPreviewImg" class="hidden" src="">
                     </div>
                 </div>
 
                 <div class="input-group">
                     <label>Sinopse</label>
-                    <textarea id="mediaDesc" rows="3" placeholder="Descrição completa..." required></textarea>
+                    <textarea id="mediaDesc" rows="3" placeholder="Descrição da mídia..." required></textarea>
                 </div>
 
                 <div id="movieFileArea" class="input-group">
@@ -303,18 +303,18 @@
                     <div id="seasonsList"></div>
                 </div>
 
-                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 15px;">Publicar Conteúdo</button>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 15px;">Salvar Conteúdo</button>
             </form>
         </div>
     </div>
 
     <div id="detailsModal" class="modal-overlay hidden">
-        <div class="modal-body" style="max-width: 550px;">
+        <div class="modal-body" style="max-width: 500px;">
             <button class="modal-close" id="btnCloseDetails">&times;</button>
-            <img id="detailCover" src="" style="width: 100%; height: 220px; object-fit: cover; border-radius: 10px; margin-bottom: 12px;">
-            <h2 id="detailTitle" style="font-size: 22px; font-weight: 800;"></h2>
+            <img id="detailCover" src="" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 12px;">
+            <h2 id="detailTitle" style="font-size: 20px; font-weight: 800;"></h2>
             <div style="font-size: 11px; color: var(--primary-color); font-weight: 700; margin: 4px 0 10px 0;" id="detailMeta"></div>
-            <p id="detailDesc" style="font-size: 12px; color: #aaa; line-height: 1.4; margin-bottom: 16px;"></p>
+            <p id="detailDesc" style="font-size: 12px; color: #aaa; line-height: 1.4; margin-bottom: 15px;"></p>
 
             <div id="detailMovieArea" class="hidden">
                 <button class="btn-primary" id="btnPlayMovieFile" style="width: 100%;">▶ Iniciar Filme</button>
@@ -331,8 +331,8 @@
         <div class="player-wrapper">
             <button class="modal-close" id="btnClosePlayer" style="z-index: 30;">&times;</button>
             <video id="mainVideoPlayer" controls controlsList="nodownload" playsinline></video>
-            <div style="padding: 10px; background: #111; display: flex; justify-content: space-between; align-items: center;">
-                <span id="playerVideoTitle" style="font-size: 12px; font-weight: 700;"></span>
+            <div style="padding: 10px 14px; background: #111; display: flex; justify-content: space-between; align-items: center;">
+                <span id="playerVideoTitle" style="font-size: 12px; font-weight: 700; max-width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></span>
                 <button class="btn-secondary" id="btnToggleFull">🖥️ Tela Cheia</button>
             </div>
         </div>
@@ -368,7 +368,6 @@
         let isSignUpMode = false;
         let tempCoverBase64 = "";
 
-        // DETECÇÃO DE SMART TV
         const isSmartTV = /SmartTV|Tizen|WebOS|NetCast|Opera TV|Android TV|AppleTV|HbbTV|LG NetCast/i.test(navigator.userAgent);
         if (isSmartTV) {
             document.body.classList.add('is-smart-tv');
@@ -400,7 +399,6 @@
         const savedColor = localStorage.getItem('masterflix_theme_color');
         if (savedColor) applyUserTheme(savedColor);
 
-        // PREVIEW DE FOTO DE PERFIL
         function updateProfilePreview(src) {
             if (src) {
                 document.getElementById('profileAvatarBigImg').src = src;
@@ -422,7 +420,6 @@
             if (e.target.value.trim()) updateProfilePreview(e.target.value.trim());
         };
 
-        // PREVIEW DE CAPA PRINCIPAL
         function updateCoverPreview(src) {
             if (src) {
                 document.getElementById('coverPreviewImg').src = src;
@@ -453,7 +450,6 @@
             if (file) document.getElementById('movieFileNameDisplay').innerText = file.name;
         };
 
-        // CATEGORIAS
         document.querySelectorAll('.category-chip').forEach(chip => {
             chip.onclick = () => {
                 document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
@@ -463,7 +459,6 @@
             };
         });
 
-        // ROTAS HASH
         function handleHashRouting() {
             const hash = window.location.hash;
             if (hash.startsWith('#/midia/')) {
@@ -504,12 +499,12 @@
                         <label>Capa da Temporada (Opcional)</label>
                         <label class="custom-file-upload">
                             <span class="custom-file-name" id="sCoverName_${sIdx}">Escolher Capa...</span>
-                            <span class="custom-file-btn">Upload Capa</span>
+                            <span class="custom-file-btn">Upload</span>
                             <input type="file" accept="image/*" onchange="storeSeasonCoverFile(event, ${sIdx})">
                         </label>
                         <input type="url" value="${season.seasonCoverUrl || ''}" placeholder="Ou cole URL da capa" onchange="seasonsBuilder[${sIdx}].seasonCoverUrl = this.value" style="margin-top:4px;">
                         
-                        <div class="preview-box" style="height:80px;" id="sPreviewBox_${sIdx}">
+                        <div class="preview-box" style="height:70px;" id="sPreviewBox_${sIdx}">
                             <img src="${sCover}" class="${sCover ? '' : 'hidden'}" id="sPreviewImg_${sIdx}">
                             <span class="preview-placeholder ${sCover ? 'hidden' : ''}" id="sPreviewTxt_${sIdx}">Preview Capa Temporada</span>
                         </div>
@@ -535,15 +530,15 @@
                         </div>
 
                         <div class="input-group">
-                            <label>Foto do Episódio (Se vazio, usará a da série/temporada)</label>
+                            <label>Foto do Episódio (Se vazio, usa da temporada/série)</label>
                             <label class="custom-file-upload">
-                                <span class="custom-file-name" id="epCoverName_${sIdx}_${eIdx}">Escolher Foto do Ep...</span>
-                                <span class="custom-file-btn">Upload Foto</span>
+                                <span class="custom-file-name" id="epCoverName_${sIdx}_${eIdx}">Escolher Foto...</span>
+                                <span class="custom-file-btn">Upload</span>
                                 <input type="file" accept="image/*" onchange="storeEpCoverFile(event, ${sIdx}, ${eIdx})">
                             </label>
-                            <input type="url" value="${ep.coverUrl || ''}" placeholder="Ou cole URL da foto do episódio" onchange="seasonsBuilder[${sIdx}].episodes[${eIdx}].coverUrl = this.value" style="margin-top:4px;">
+                            <input type="url" value="${ep.coverUrl || ''}" placeholder="Ou cole URL da foto" onchange="seasonsBuilder[${sIdx}].episodes[${eIdx}].coverUrl = this.value" style="margin-top:4px;">
                             
-                            <div class="preview-box" style="height:70px;" id="epPreviewBox_${sIdx}_${eIdx}">
+                            <div class="preview-box" style="height:60px;" id="epPreviewBox_${sIdx}_${eIdx}">
                                 <img src="${epCover}" class="${epCover ? '' : 'hidden'}" id="epPreviewImg_${sIdx}_${eIdx}">
                                 <span class="preview-placeholder ${epCover ? 'hidden' : ''}" id="epPreviewTxt_${sIdx}_${eIdx}">Preview Foto Episódio</span>
                             </div>
@@ -552,11 +547,11 @@
                         <div class="input-group">
                             <label>Vídeo do Episódio</label>
                             <label class="custom-file-upload">
-                                <span class="custom-file-name" id="epFileName_${sIdx}_${eIdx}">Escolher Vídeo do Ep...</span>
+                                <span class="custom-file-name" id="epFileName_${sIdx}_${eIdx}">Escolher Vídeo...</span>
                                 <span class="custom-file-btn">Upload Vídeo</span>
                                 <input type="file" accept="video/*" onchange="storeEpVideoFile(event, ${sIdx}, ${eIdx})">
                             </label>
-                            <input type="url" value="${ep.videoUrl || ''}" placeholder="Ou cole a URL do vídeo (.mp4)" onchange="seasonsBuilder[${sIdx}].episodes[${eIdx}].videoUrl = this.value" style="margin-top:4px;">
+                            <input type="url" value="${ep.videoUrl || ''}" placeholder="Ou cole URL do vídeo (.mp4)" onchange="seasonsBuilder[${sIdx}].episodes[${eIdx}].videoUrl = this.value" style="margin-top:4px;">
                         </div>
                     `;
                     epListDiv.appendChild(epDiv);
@@ -759,7 +754,7 @@
 
                 const epVideoSrc = ep.videoBase64 || ep.videoUrl;
 
-                // FALLBACK DE CAPA
+                // FALLBACK AUTOMÁTICO DE CAPA
                 const epThumb = ep.coverBase64 || ep.coverUrl || seasonCover || seriesCover || 'https://via.placeholder.com/150x90?text=Episodio';
 
                 epDiv.onclick = () => {
@@ -791,7 +786,7 @@
             player.play().catch(() => {});
         }
 
-        // SALVAR MÍDIA (CORRIGIDO PARA SEMPRE MANTER O EPISÓDIO 1 E ARQUIVOS)
+        // PRESERVAÇÃO DE EPISÓDIOS E MÍDIAS
         document.getElementById('mediaForm').onsubmit = async (e) => {
             e.preventDefault();
 
@@ -899,10 +894,10 @@
         };
 
         window.deleteMedia = async (id) => {
-            if (confirm("Tem certeza que deseja excluir esta mídia do catálogo?")) {
+            if (confirm("Deseja mesmo apagar do catálogo?")) {
                 try {
                     await remove(ref(rtdb, "catalog/" + id));
-                    showMsg('Mídia removida!', 'success');
+                    showMsg('Mídia removida com sucesso!', 'success');
                     loadCatalog();
                 } catch (e) {
                     showMsg('Erro ao deletar: ' + e.message, 'error');
@@ -945,7 +940,6 @@
             document.getElementById('btnOpenCreator').click();
         };
 
-        // SALVAR PERFIL
         document.getElementById('btnSaveProfile').onclick = async () => {
             const newColor = document.getElementById('themeColorPicker').value;
             applyUserTheme(newColor);
@@ -961,7 +955,7 @@
             }
 
             updateUserAvatarUI();
-            showMsg('Perfil salvo com sucesso!', 'success');
+            showMsg('Perfil atualizado com sucesso!', 'success');
             document.getElementById('profileModal').classList.add('hidden');
         };
 
@@ -989,7 +983,6 @@
             }
         }
 
-        // LOGOUT
         const handleLogout = async () => {
             try {
                 await signOut(auth);
@@ -1024,10 +1017,10 @@
             try {
                 if (isSignUpMode) {
                     await createUserWithEmailAndPassword(auth, email, pass);
-                    showMsg('Conta criada com sucesso!', 'success');
+                    showMsg('Conta criada!', 'success');
                 } else {
                     await signInWithEmailAndPassword(auth, email, pass);
-                    showMsg('Autenticado com sucesso!', 'success');
+                    showMsg('Autenticado!', 'success');
                 }
                 document.getElementById('authOverlay').classList.add('hidden');
             } catch (err) {
@@ -1073,7 +1066,6 @@
 
         document.getElementById('searchInput').oninput = renderApp;
 
-        // AUTH & PERMISSÕES
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById('authOverlay').classList.add('hidden');
