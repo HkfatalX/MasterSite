@@ -32,7 +32,7 @@
         .app-container { padding-top: 80px; padding-bottom: 60px; width: 100%; max-width: 100vw; }
 
         /* HERO BANNER */
-        .hero-banner { width: 92%; margin: 0 auto 25px auto; min-height: 280px; border-radius: 16px; background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, var(--bg-color) 100%), #222 center/cover no-repeat; display: flex; flex-direction: column; justify-content: flex-end; padding: 25px; border: 1px solid rgba(255,255,255,0.08); }
+        .hero-banner { width: 92%; margin: 0 auto 25px auto; min-height: 300px; border-radius: 16px; background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, var(--bg-color) 100%), #222 center/cover no-repeat; display: flex; flex-direction: column; justify-content: flex-end; padding: 25px; border: 1px solid rgba(255,255,255,0.08); }
         .hero-title { font-size: clamp(22px, 5vw, 38px); font-weight: 900; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(0,0,0,0.9); }
         .hero-desc { max-width: 600px; color: #ccc; font-size: clamp(12px, 2vw, 14px); line-height: 1.4; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
@@ -62,7 +62,6 @@
         .input-group label { display: block; font-size: 11px; font-weight: 700; color: #aaa; margin-bottom: 4px; text-transform: uppercase; }
         .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #333; background: #181818; color: #fff; font-size: 13px; }
 
-        /* UPLOAD MODERNO */
         .custom-file-upload { display: flex; align-items: center; justify-content: space-between; background: #181818; border: 1px dashed #444; border-radius: 8px; padding: 10px 12px; cursor: pointer; transition: border-color 0.2s; }
         .custom-file-upload:hover { border-color: var(--primary-color); }
         .custom-file-upload input[type="file"] { display: none; }
@@ -73,13 +72,12 @@
         .preview-box img { width: 100%; height: 100%; object-fit: cover; }
         .preview-placeholder { font-size: 11px; color: #666; font-weight: 600; }
 
-        /* MODAL FIX PARA MOBILE */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.88); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 12px; }
         .modal-body { background: #181818; border: 1px solid #2a2a2a; border-radius: 14px; width: 100%; max-width: 95vw; max-height: 90vh; overflow-y: auto; padding: 20px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
         .modal-close { position: absolute; top: 12px; right: 12px; background: #2a2a2a; color: #fff; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 16px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 10; }
 
         .hidden { display: none !important; }
-        #msg { position: fixed; bottom: 15px; right: 15px; padding: 10px 16px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 2000; }
+        #msg { position: fixed; bottom: 15px; right: 15px; padding: 10px 16px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 2000; max-width: 90vw; word-break: break-word; }
         .msg-success { background: #2e7d32; color: #fff; }
         .msg-error { background: #c62828; color: #fff; }
 
@@ -92,9 +90,10 @@
         .episode-thumb { width: 85px; height: 50px; border-radius: 6px; overflow: hidden; background: #000; flex-shrink: 0; }
         .episode-thumb img { width: 100%; height: 100%; object-fit: cover; }
         
-        /* PLAYER AJUSTADO */
-        .player-wrapper { width: 100%; max-width: 900px; background: #000; border-radius: 12px; overflow: hidden; position: relative; }
-        video { width: 100%; max-height: 75vh; background: #000; display: block; }
+        /* PLAYER MIXDROP / HÍBRIDO */
+        .player-wrapper { width: 100%; max-width: 960px; background: #000; border-radius: 12px; overflow: hidden; position: relative; border: 1px solid #333; }
+        .player-container-view { width: 100%; height: 60vh; max-height: 540px; background: #000; position: relative; }
+        .player-container-view iframe, .player-container-view video { width: 100%; height: 100%; border: none; display: block; }
         .admin-item { display: flex; align-items: center; justify-content: space-between; background: #222; border: 1px solid #333; padding: 10px; border-radius: 8px; margin-bottom: 8px; }
 
         /* MODO SMART TV */
@@ -286,13 +285,8 @@
                 </div>
 
                 <div id="movieFileArea" class="input-group">
-                    <label>Vídeo do Filme</label>
-                    <label class="custom-file-upload">
-                        <span class="custom-file-name" id="movieFileNameDisplay">Escolher Arquivo de Vídeo...</span>
-                        <span class="custom-file-btn">Upload Vídeo</span>
-                        <input type="file" id="movieVideoFile" accept="video/*">
-                    </label>
-                    <input type="url" id="movieVideoUrl" placeholder="Ou cole a URL do vídeo (.mp4)" style="margin-top: 6px;">
+                    <label>Link do Vídeo (Mixdrop / Embed / MP4 Direct)</label>
+                    <input type="url" id="movieVideoUrl" placeholder="Ex: https://mixdrop.ag/e/xxxx ou https://site.com/video.mp4">
                 </div>
 
                 <div id="seriesBuilderArea" class="hidden">
@@ -330,9 +324,12 @@
     <div id="playerModal" class="modal-overlay hidden">
         <div class="player-wrapper">
             <button class="modal-close" id="btnClosePlayer" style="z-index: 30;">&times;</button>
-            <video id="mainVideoPlayer" controls controlsList="nodownload" playsinline></video>
-            <div style="padding: 10px 14px; background: #111; display: flex; justify-content: space-between; align-items: center;">
-                <span id="playerVideoTitle" style="font-size: 12px; font-weight: 700; max-width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></span>
+
+            <div class="player-container-view" id="playerContainerView">
+                </div>
+
+            <div style="padding: 12px 16px; background: #111; display: flex; justify-content: space-between; align-items: center;">
+                <span id="playerVideoTitle" style="font-size: 13px; font-weight: 700; max-width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></span>
                 <button class="btn-secondary" id="btnToggleFull">🖥️ Tela Cheia</button>
             </div>
         </div>
@@ -379,7 +376,7 @@
             msg.innerText = text;
             msg.className = type === 'success' ? 'msg-success' : 'msg-error';
             msg.classList.remove('hidden');
-            setTimeout(() => msg.classList.add('hidden'), 3500);
+            setTimeout(() => msg.classList.add('hidden'), 4500);
         }
 
         function fileToBase64(file) {
@@ -434,6 +431,10 @@
         document.getElementById('mediaCoverFile').onchange = async (e) => {
             const file = e.target.files[0];
             if (file) {
+                if(file.size > 2 * 1024 * 1024) {
+                    showMsg('Capa muito grande! Escolha uma foto menor que 2MB.', 'error');
+                    return;
+                }
                 document.getElementById('coverFileNameDisplay').innerText = file.name;
                 tempCoverBase64 = await fileToBase64(file);
                 updateCoverPreview(tempCoverBase64);
@@ -443,11 +444,6 @@
         document.getElementById('mediaCoverUrl').oninput = (e) => {
             if (e.target.value.trim()) updateCoverPreview(e.target.value.trim());
             else if (!tempCoverBase64) updateCoverPreview("");
-        };
-
-        document.getElementById('movieVideoFile').onchange = (e) => {
-            const file = e.target.files[0];
-            if (file) document.getElementById('movieFileNameDisplay').innerText = file.name;
         };
 
         document.querySelectorAll('.category-chip').forEach(chip => {
@@ -530,7 +526,7 @@
                         </div>
 
                         <div class="input-group">
-                            <label>Foto do Episódio (Se vazio, usa da temporada/série)</label>
+                            <label>Foto do Episódio</label>
                             <label class="custom-file-upload">
                                 <span class="custom-file-name" id="epCoverName_${sIdx}_${eIdx}">Escolher Foto...</span>
                                 <span class="custom-file-btn">Upload</span>
@@ -545,13 +541,8 @@
                         </div>
 
                         <div class="input-group">
-                            <label>Vídeo do Episódio</label>
-                            <label class="custom-file-upload">
-                                <span class="custom-file-name" id="epFileName_${sIdx}_${eIdx}">Escolher Vídeo...</span>
-                                <span class="custom-file-btn">Upload Vídeo</span>
-                                <input type="file" accept="video/*" onchange="storeEpVideoFile(event, ${sIdx}, ${eIdx})">
-                            </label>
-                            <input type="url" value="${ep.videoUrl || ''}" placeholder="Ou cole URL do vídeo (.mp4)" onchange="seasonsBuilder[${sIdx}].episodes[${eIdx}].videoUrl = this.value" style="margin-top:4px;">
+                            <label>Link do Vídeo (Mixdrop / Embed / MP4)</label>
+                            <input type="url" value="${ep.videoUrl || ''}" placeholder="Ex: https://mixdrop.ag/e/xxxx ou link .mp4" onchange="seasonsBuilder[${sIdx}].episodes[${eIdx}].videoUrl = this.value" required>
                         </div>
                     `;
                     epListDiv.appendChild(epDiv);
@@ -584,14 +575,6 @@
                 img.src = b64;
                 img.classList.remove('hidden');
                 txt.classList.add('hidden');
-            }
-        };
-
-        window.storeEpVideoFile = async (e, sIdx, eIdx) => {
-            const file = e.target.files[0];
-            if (file) {
-                document.getElementById(`epFileName_${sIdx}_${eIdx}`).innerText = file.name;
-                seasonsBuilder[sIdx].episodes[eIdx].videoBase64 = await fileToBase64(file);
             }
         };
 
@@ -703,8 +686,7 @@
                 document.getElementById('detailMovieArea').classList.remove('hidden');
                 document.getElementById('detailSerieArea').classList.add('hidden');
                 document.getElementById('btnPlayMovieFile').onclick = () => {
-                    const videoSrc = item.videoBase64 || item.videoUrl;
-                    playVideo(videoSrc, item.title);
+                    playVideo(item.videoUrl, item.title);
                 };
             } else {
                 document.getElementById('detailMovieArea').classList.add('hidden');
@@ -752,14 +734,11 @@
                 epDiv.className = 'episode-card';
                 epDiv.tabIndex = 0;
 
-                const epVideoSrc = ep.videoBase64 || ep.videoUrl;
-
-                // FALLBACK AUTOMÁTICO DE CAPA
                 const epThumb = ep.coverBase64 || ep.coverUrl || seasonCover || seriesCover || 'https://via.placeholder.com/150x90?text=Episodio';
 
                 epDiv.onclick = () => {
                     document.getElementById('detailsModal').classList.add('hidden');
-                    playVideo(epVideoSrc, `${activeItem.title} - T${seasonIdx + 1} E${idx + 1}: ${ep.title}`);
+                    playVideo(ep.videoUrl, `${activeItem.title} - T${seasonIdx + 1} E${idx + 1}: ${ep.title}`);
                 };
 
                 epDiv.innerHTML = `
@@ -773,20 +752,58 @@
             });
         }
 
-        function playVideo(src, title) {
-            if (!src) {
-                showMsg('Nenhum vídeo disponível para esta mídia!', 'error');
+        /* FORMATADOR E REPRODUTOR UNIVERSAL (MIXDROP + MP4 + EMBEDS) */
+        function formatVideoUrl(url) {
+            if (!url) return '';
+            let formatted = url.trim();
+
+            // Formatação do Mixdrop
+            if (formatted.includes('mixdrop.')) {
+                if (formatted.includes('/f/')) {
+                    formatted = formatted.replace('/f/', '/e/');
+                }
+                if (!formatted.includes('/e/')) {
+                    const parts = formatted.split('/');
+                    const id = parts[parts.length - 1] || parts[parts.length - 2];
+                    formatted = `https://mixdrop.co/e/${id}`;
+                }
+            }
+            return formatted;
+        }
+
+        function playVideo(rawUrl, title) {
+            if (!rawUrl) {
+                showMsg('Nenhum link de vídeo fornecido!', 'error');
                 return;
             }
 
-            const player = document.getElementById('mainVideoPlayer');
+            const url = formatVideoUrl(rawUrl);
+            const container = document.getElementById('playerContainerView');
             document.getElementById('playerVideoTitle').innerText = title;
-            player.src = src;
+            container.innerHTML = "";
+
+            // Verifica se é Embed/Iframe (Mixdrop, Doodstream, Streamtape) ou MP4 direto
+            const isEmbed = url.includes('mixdrop') || url.includes('/e/') || url.includes('/embed/') || !url.endsWith('.mp4');
+
+            if (isEmbed) {
+                const iframe = document.createElement('iframe');
+                iframe.src = url;
+                iframe.allow = "autoplay; fullscreen; encrypted-media";
+                iframe.allowFullscreen = true;
+                container.appendChild(iframe);
+            } else {
+                const video = document.createElement('video');
+                video.src = url;
+                video.controls = true;
+                video.autoplay = true;
+                video.controlsList = "nodownload";
+                video.playsInline = true;
+                container.appendChild(video);
+            }
+
             document.getElementById('playerModal').classList.remove('hidden');
-            player.play().catch(() => {});
         }
 
-        // PRESERVAÇÃO DE EPISÓDIOS E MÍDIAS
         document.getElementById('mediaForm').onsubmit = async (e) => {
             e.preventDefault();
 
@@ -814,12 +831,6 @@
 
             if (type === 'movie') {
                 payload.videoUrl = inputVideoUrl || (existingItem ? existingItem.videoUrl || '' : '');
-                payload.videoBase64 = existingItem ? existingItem.videoBase64 || '' : '';
-
-                const videoFile = document.getElementById('movieVideoFile').files[0];
-                if (videoFile) {
-                    payload.videoBase64 = await fileToBase64(videoFile);
-                }
             } else {
                 payload.seasons = seasonsBuilder.map((s, sIdx) => {
                     const oldSeason = existingItem?.seasons?.[sIdx];
@@ -833,8 +844,7 @@
                                 title: ep.title || `Episódio ${eIdx + 1}`,
                                 coverUrl: ep.coverUrl || oldEp?.coverUrl || '',
                                 coverBase64: ep.coverBase64 || oldEp?.coverBase64 || '',
-                                videoUrl: ep.videoUrl || oldEp?.videoUrl || '',
-                                videoBase64: ep.videoBase64 || oldEp?.videoBase64 || ''
+                                videoUrl: ep.videoUrl || oldEp?.videoUrl || ''
                             };
                         })
                     };
@@ -857,7 +867,7 @@
                 seasonsBuilder = [];
                 loadCatalog();
             } catch (err) {
-                showMsg('Erro ao salvar no banco de dados: ' + err.message, 'error');
+                showMsg('Erro no banco: ' + err.message, 'error');
             }
         };
 
@@ -1035,7 +1045,6 @@
             document.getElementById('editMediaId').value = "";
             document.getElementById('mediaForm').reset();
             document.getElementById('coverFileNameDisplay').innerText = "Escolher Capa Local...";
-            document.getElementById('movieFileNameDisplay').innerText = "Escolher Arquivo de Vídeo...";
             tempCoverBase64 = "";
             updateCoverPreview("");
             document.getElementById('creatorTitle').innerText = "Publicar Conteúdo";
@@ -1052,16 +1061,19 @@
         };
 
         document.getElementById('btnClosePlayer').onclick = () => {
-            const player = document.getElementById('mainVideoPlayer');
-            player.pause();
-            player.src = "";
+            const container = document.getElementById('playerContainerView');
+            container.innerHTML = "";
             document.getElementById('playerModal').classList.add('hidden');
         };
 
         document.getElementById('btnToggleFull').onclick = () => {
-            const player = document.getElementById('mainVideoPlayer');
-            if (!document.fullscreenElement) player.requestFullscreen();
-            else document.exitFullscreen();
+            const container = document.getElementById('playerContainerView');
+            if (!document.fullscreenElement) {
+                if (container.requestFullscreen) container.requestFullscreen();
+                else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
         };
 
         document.getElementById('searchInput').oninput = renderApp;
