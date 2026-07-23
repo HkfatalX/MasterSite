@@ -1,10 +1,10 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getDatabase, ref, get, set, push, remove, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, fetchSignInMethodsForEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getDatabase, ref, get, set, push, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 const EXCLUSIVE_ADMIN_EMAIL = "raiyuri.freefire@gmail.com";
 const AVAILABLE_GENRES = ["Ação","Aventura","Comédia","Drama","Terror","Suspense","Romance","Ficção Científica","Fantasia","Animação","Documentário","Musical","Guerra","Mistério","Crime","Família","Histórico","Faroeste"];
-const FIREBASE_RTDB_FREE_LIMIT_BYTES = 1073741824; // 1 GB
+const FIREBASE_RTDB_FREE_LIMIT_BYTES = 1073741824;
 
 const firebaseConfig = {
     apiKey: "AIzaSyCGD9DZDFp0w9baW8jiqgGGfkasAvqreY0",
@@ -38,6 +38,7 @@ let isAdmin = false;
 let suggestionsSelectMode = false;
 let selectedSuggestionIds = new Set();
 let allSuggestions = [];
+let authProcessing = false; // Flag pra evitar duplo disparo
 
 const playerBox = document.getElementById('playerModalBox');
 const playerControls = document.getElementById('playerControlsTop');
@@ -61,6 +62,24 @@ function applyUserTheme(c) { if (!c || isTVDevice()) return; document.documentEl
 function formatVideoUrl(u) { if (!u) return ''; let f = u.trim(); if (f.includes('mixdrop.')) { if (f.includes('/f/')) f = f.replace('/f/','/e/'); else if (!f.includes('/e/')) { const m = f.match(/(?:mixdrop\.[a-z]+)\/(?:e\/|f\/)?([a-zA-Z0-9]+)/); if (m && m[1]) f = `https://mixdrop.top/e/${m[1]}`; } } return f; }
 function formatBytes(b) { if (b === 0) return '0 B'; const k = 1024; const s = ['B','KB','MB','GB']; const i = Math.floor(Math.log(b) / Math.log(k)); return parseFloat((b / Math.pow(k, i)).toFixed(2)) + ' ' + s[i]; }
 function estimateJsonBytes(obj) { try { return new Blob([JSON.stringify(obj)]).size; } catch(e) { return JSON.stringify(obj).length * 2; } }
+
+// Traduz erros do Firebase pra português
+function translateAuthError(errorCode) {
+    const errors = {
+        'auth/email-already-in-use': 'Este e-mail já está cadastrado! Faça login.',
+        'auth/invalid-email': 'E-mail inválido. Verifique o formato.',
+        'auth/weak-password': 'Senha muito fraca. Use no mínimo 6 caracteres.',
+        'auth/user-not-found': 'Conta não encontrada. Verifique o e-mail ou cadastre-se.',
+        'auth/wrong-password': 'Senha incorreta. Tente novamente.',
+        'auth/invalid-credential': 'E-mail ou senha incorretos. Tente novamente.',
+        'auth/too-many-requests': 'Muitas tentativas. Aguarde um momento e tente novamente.',
+        'auth/network-request-failed': 'Sem conexão com a internet.',
+        'auth/operation-not-allowed': 'Operação não permitida. Contate o administrador.',
+        'auth/user-disabled': 'Esta conta foi desativada.',
+        'auth/requires-recent-login': 'Faça login novamente para continuar.'
+    };
+    return errors[errorCode] || `Erro de autenticação: ${errorCode}`;
+}
 
 if (!isTVDevice()) { const sc = localStorage.getItem('masterflix_theme_color'); if (sc) applyUserTheme(sc); }
 
@@ -249,18 +268,15 @@ function renderContinueWatching() {
     cc.innerHTML = "";
     try {
         let list = JSON.parse(localStorage.getItem('masterflix_continue_watching')||'[]');
-        // Filtra pela categoria selecionada
         if (selectedCategory === "Filmes") list = list.filter(i => i.type === 'movie');
         else if (selectedCategory === "Séries") list = list.filter(i => i.type === 'serie');
         else if (selectedCategory !== "Todos") {
-            // Filtra por gênero usando o catálogo original
             list = list.filter(i => {
                 const original = mediaCatalog.find(m => m.id === i.id);
                 if (!original) return false;
                 return getItemGenres(original).includes(selectedCategory);
             });
         }
-
         if (list.length === 0) { cr.classList.add('hidden'); return; }
         cr.classList.remove('hidden');
         list.forEach(item => {
@@ -573,13 +589,9 @@ async function loadStorageInfo() {
         let barColor = '#4caf50';
         if (pct > 70) barColor = '#ff9800';
         if (pct > 90) barColor = '#f44336';
-
         container.innerHTML = `
-            <div style="margin-bottom: 18px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                    <span style="font-size:13px;font-weight:800;">Uso Total</span>
-                    <span style="font-size:13px;font-weight:800;color:${barColor};">${pct.toFixed(2)}%</span>
-                </div>
+            <div style="margin-bottom:18px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span style="font-size:13px;font-weight:800;">Uso Total</span><span style="font-size:13px;font-weight:800;color:${barColor};">${pct.toFixed(2)}%</span></div>
                 <div class="storage-bar-outer"><div class="storage-bar-inner" style="width:${pct}%;background:${barColor};"></div></div>
                 <div class="storage-info"><span>${formatBytes(totalBytes)} usado</span><span>${formatBytes(FIREBASE_RTDB_FREE_LIMIT_BYTES)} limite</span></div>
             </div>
@@ -589,11 +601,9 @@ async function loadStorageInfo() {
             <div class="storage-detail-item"><span class="storage-label">💡 Sugestões (${suggestionsCount})</span><span class="storage-value">${formatBytes(suggestionsBytes)}</span></div>
             <div class="storage-detail-item"><span class="storage-label">📁 Outros</span><span class="storage-value">${formatBytes(otherBytes)}</span></div>
             <div class="storage-detail-item" style="border-top:1px solid rgba(255,255,255,0.1);padding-top:10px;"><span class="storage-label" style="font-weight:800;color:#fff;">TOTAL</span><span class="storage-value" style="color:${barColor};">${formatBytes(totalBytes)}</span></div>
-            <div class="info-tip" style="margin-top:14px;">💡 Firebase RTDB (Spark/Free) permite até 1 GB de armazenamento. Imagens em Base64 ocupam bastante espaço. Considere usar URLs externas.</div>
+            <div class="info-tip" style="margin-top:14px;">💡 Firebase RTDB (Spark/Free) permite até 1 GB. Imagens Base64 ocupam bastante. Use URLs externas quando possível.</div>
         `;
-    } catch(e) {
-        container.innerHTML = `<p style="text-align:center;color:#ff5252;">❌ Erro ao calcular: ${e.message}</p>`;
-    }
+    } catch(e) { container.innerHTML = `<p style="text-align:center;color:#ff5252;">❌ Erro: ${e.message}</p>`; }
 }
 
 // ========== PROFILE ==========
@@ -635,17 +645,132 @@ function updateUserAvatarUI(data={}) {
     }
 }
 
-async function handleLogout() { try{await signOut(auth);document.getElementById('profileModal').classList.add('hidden');closeSidebar();showMsg('Saiu!','success');}catch(e){showMsg('Erro: '+e.message,'error');} }
+async function handleLogout() {
+    try {
+        await signOut(auth);
+        // Limpa dados locais do perfil ao sair
+        localStorage.removeItem('masterflix_user_name');
+        localStorage.removeItem('masterflix_user_bio');
+        localStorage.removeItem('masterflix_user_fav_genre');
+        localStorage.removeItem('masterflix_user_avatar');
+        localStorage.removeItem('masterflix_user_banner');
+        document.getElementById('profileModal').classList.add('hidden');
+        closeSidebar();
+        // Reseta UI
+        activeItem = null;
+        mediaCatalog = [];
+        isAdmin = false;
+        showMsg('Você saiu da conta.','success');
+    } catch(e) { showMsg('Erro: '+e.message,'error'); }
+}
 document.getElementById('btnLogout').onclick = handleLogout;
 
-// ========== AUTH ==========
-document.getElementById('toggleAuthMode').onclick = () => { isSignUpMode=!isSignUpMode; document.getElementById('authSubtitle').innerText=isSignUpMode?'Crie sua conta':'Entre na sua conta'; document.getElementById('btnAuthSubmit').innerText=isSignUpMode?'Cadastrar':'Entrar'; document.getElementById('toggleAuthMode').innerText=isSignUpMode?'Já tem conta? Entrar':'Não tem conta? Criar'; };
+// ====================================================================
+// ========== AUTH — SISTEMA DE LOGIN/CADASTRO CORRIGIDO ==============
+// ====================================================================
+document.getElementById('toggleAuthMode').onclick = () => {
+    isSignUpMode = !isSignUpMode;
+    document.getElementById('authSubtitle').innerText = isSignUpMode ? 'Crie sua conta para continuar' : 'Entre na sua conta para continuar';
+    document.getElementById('btnAuthSubmit').innerText = isSignUpMode ? 'Criar Conta' : 'Entrar na Conta';
+    document.getElementById('toggleAuthMode').innerText = isSignUpMode ? 'Já tem uma conta? Entrar' : 'Não tem uma conta? Crie agora';
+    // Limpa campos ao trocar modo
+    document.getElementById('authEmail').value = '';
+    document.getElementById('authPassword').value = '';
+};
 
 document.getElementById('authForm').onsubmit = async (e) => {
-    e.preventDefault(); const email=document.getElementById('authEmail').value.trim(), pass=document.getElementById('authPassword').value;
-    try { if(isSignUpMode){await createUserWithEmailAndPassword(auth,email,pass);showMsg('Conta criada!','success');}else{await signInWithEmailAndPassword(auth,email,pass);showMsg('Bem-vindo!','success');} document.getElementById('authOverlay').classList.add('hidden'); }
-    catch(err) { showMsg('Erro: '+err.message,'error'); }
+    e.preventDefault();
+
+    // Previne duplo clique
+    if (authProcessing) return;
+    authProcessing = true;
+
+    const submitBtn = document.getElementById('btnAuthSubmit');
+    const originalText = submitBtn.innerText;
+    submitBtn.innerText = '⏳ Aguarde...';
+    submitBtn.disabled = true;
+
+    const email = document.getElementById('authEmail').value.trim().toLowerCase();
+    const pass = document.getElementById('authPassword').value;
+
+    // Validações básicas
+    if (!email || !pass) {
+        showMsg('Preencha todos os campos!', 'error');
+        resetAuthBtn(submitBtn, originalText);
+        return;
+    }
+
+    // Validar formato de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        showMsg('Formato de e-mail inválido!', 'error');
+        resetAuthBtn(submitBtn, originalText);
+        return;
+    }
+
+    if (pass.length < 6) {
+        showMsg('A senha precisa ter no mínimo 6 caracteres!', 'error');
+        resetAuthBtn(submitBtn, originalText);
+        return;
+    }
+
+    try {
+        if (isSignUpMode) {
+            // ========== CADASTRO ==========
+            // Verifica se o email já existe ANTES de tentar criar
+            try {
+                const methods = await fetchSignInMethodsForEmail(auth, email);
+                if (methods && methods.length > 0) {
+                    showMsg('Este e-mail já está cadastrado! Use "Entrar" ao invés de "Criar Conta".', 'error');
+                    resetAuthBtn(submitBtn, originalText);
+                    return;
+                }
+            } catch (checkErr) {
+                // Se der erro na verificação, continua tentando criar
+                // (alguns erros de rede podem causar isso)
+                console.log('Verificação prévia falhou, tentando criar...', checkErr.code);
+            }
+
+            // Cria a conta
+            const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+            const newUser = userCredential.user;
+
+            // Salva dados iniciais do usuário no banco
+            const defaultName = email.split('@')[0];
+            await set(ref(rtdb, "users/" + newUser.uid), {
+                name: defaultName,
+                bio: '',
+                favGenre: 'Ação',
+                photo: '',
+                banner: '',
+                createdAt: Date.now()
+            });
+
+            localStorage.setItem('masterflix_user_name', defaultName);
+
+            showMsg('✅ Conta criada com sucesso! Bem-vindo(a)!', 'success');
+            document.getElementById('authOverlay').classList.add('hidden');
+
+        } else {
+            // ========== LOGIN ==========
+            await signInWithEmailAndPassword(auth, email, pass);
+            showMsg('✅ Bem-vindo(a) de volta!', 'success');
+            document.getElementById('authOverlay').classList.add('hidden');
+        }
+    } catch (err) {
+        const errorMsg = translateAuthError(err.code);
+        showMsg(errorMsg, 'error');
+        console.error('Auth Error:', err.code, err.message);
+    }
+
+    resetAuthBtn(submitBtn, originalText);
 };
+
+function resetAuthBtn(btn, text) {
+    authProcessing = false;
+    btn.innerText = text;
+    btn.disabled = false;
+}
 
 // ========== MODAL BUTTONS ==========
 document.getElementById('btnOpenProfile').onclick = () => document.getElementById('profileModal').classList.remove('hidden');
@@ -661,7 +786,9 @@ onAuthStateChanged(auth, (user) => {
         document.getElementById('authOverlay').classList.add('hidden');
         document.getElementById('profileEmailDisplay').innerText = user.email;
         loadUserProfile(user);
+
         isAdmin = user.email.toLowerCase() === EXCLUSIVE_ADMIN_EMAIL.toLowerCase();
+
         if (isAdmin) {
             document.getElementById('profileAdminBadge').classList.remove('hidden');
             document.getElementById('sidebarAdminItem').classList.remove('hidden');
@@ -675,13 +802,29 @@ onAuthStateChanged(auth, (user) => {
             document.getElementById('sidebarSuggestionsAdminItem').classList.add('hidden');
             document.getElementById('sidebarStorageItem').classList.add('hidden');
         }
+
         loadCatalog();
     } else {
+        // Usuário deslogou ou não está logado
         document.getElementById('authOverlay').classList.remove('hidden');
         isAdmin = false;
         document.getElementById('sidebarAdminItem').classList.add('hidden');
         document.getElementById('sidebarCreatorItem').classList.add('hidden');
         document.getElementById('sidebarSuggestionsAdminItem').classList.add('hidden');
         document.getElementById('sidebarStorageItem').classList.add('hidden');
+        document.getElementById('profileAdminBadge').classList.add('hidden');
+
+        // Reseta a UI do avatar
+        document.getElementById('avatarText').innerText = 'U';
+        document.getElementById('avatarImg').classList.add('hidden');
+        document.getElementById('avatarText').classList.remove('hidden');
+
+        // Reseta formulário de auth
+        document.getElementById('authEmail').value = '';
+        document.getElementById('authPassword').value = '';
+        isSignUpMode = false;
+        document.getElementById('authSubtitle').innerText = 'Entre na sua conta para continuar';
+        document.getElementById('btnAuthSubmit').innerText = 'Entrar na Conta';
+        document.getElementById('toggleAuthMode').innerText = 'Não tem uma conta? Crie agora';
     }
 });
