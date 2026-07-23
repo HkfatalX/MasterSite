@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, fetchSignInMethodsForEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getDatabase, ref, get, set, push, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 const EXCLUSIVE_ADMIN_EMAIL = "raiyuri.freefire@gmail.com";
@@ -38,6 +38,14 @@ let selectedSuggestionIds = new Set();
 let allSuggestions = [];
 let authProcessing = false;
 let currentUserUid = null;
+
+// Player Vars
+let currentVideoUrl = '';
+let currentVideoTitle = '';
+let currentVideoSub = '';
+let adBlockCount = 0;
+let adBlockerInterval = null;
+let originalWinOpen = null;
 
 // ========== HELPERS DE MODAL ==========
 function openModal(id) {
@@ -89,7 +97,6 @@ function getUserCacheKey(key) { if (!currentUserUid) return null; return `mfx_${
 function setUserCache(key, value) { const k = getUserCacheKey(key); if (k && value) localStorage.setItem(k, value); }
 function getUserCache(key) { const k = getUserCacheKey(key); if (!k) return null; return localStorage.getItem(k); }
 function clearLegacyCache() { ['masterflix_user_name', 'masterflix_user_bio', 'masterflix_user_fav_genre', 'masterflix_user_avatar', 'masterflix_user_banner'].forEach(k => localStorage.removeItem(k)); }
-
 function applyUserTheme(c) { if (!c || isTVDevice()) return; document.documentElement.style.setProperty('--primary-color', c); localStorage.setItem('masterflix_theme_color', c); if (currentUserUid) setUserCache('theme_color', c); }
 
 if (!isTVDevice()) { const sc = localStorage.getItem('masterflix_theme_color'); if (sc) document.documentElement.style.setProperty('--primary-color', sc); }
@@ -498,7 +505,6 @@ function openDetails(item) {
     }
 }
 
-// HIERARQUIA DE FALLBACK: EP -> Temporada -> Série
 function renderEpisodesList(eps, si, sd, ser, resumeEpIdx) {
     const c = document.getElementById('episodesListContainer');
     c.innerHTML = "";
@@ -534,7 +540,7 @@ function renderEpisodesList(eps, si, sd, ser, resumeEpIdx) {
 
 document.getElementById('btnCloseDetails').onclick = () => { window.location.hash = ''; closeModal('detailsModal'); };
 
-// ========== PLAYER ==========
+// ========== PLAYER PRO ==========
 const playerBox = document.getElementById('playerModalBox');
 const playerControls = document.getElementById('playerControlsTop');
 const playerContainer = document.getElementById('playerContainerView');
@@ -569,29 +575,119 @@ document.getElementById('btnToggleFullscreen').onclick = (e) => {
     showPlayerControls();
 };
 
+document.getElementById('btnToggleStretch').onclick = (e) => {
+    e.stopPropagation();
+    playerContainer.classList.toggle('stretch-mode');
+    if (playerContainer.classList.contains('stretch-mode')) {
+        showMsg('📐 Modo Esticado', 'success');
+    } else {
+        showMsg('🖼️ Modo Normal', 'success');
+    }
+    showPlayerControls();
+};
+
+document.getElementById('btnReloadPlayer').onclick = (e) => {
+    e.stopPropagation();
+    if (!currentVideoUrl) return;
+    const iframe = playerContainer.querySelector('iframe');
+    if (iframe) { const src = iframe.src; iframe.src = ''; setTimeout(() => { iframe.src = src; }, 100); }
+    playerLoading.classList.remove('hidden');
+    setTimeout(() => playerLoading.classList.add('hidden'), 2000);
+    showMsg('Recarregando...', 'success');
+};
+
 function playVideo(rawUrl, mainTitle, subTitle) {
     if (!rawUrl) { showMsg('Sem link de vídeo!', 'error'); return; }
     const url = formatVideoUrl(rawUrl);
+    currentVideoUrl = url;
+    currentVideoTitle = mainTitle;
+    currentVideoSub = subTitle;
+    adBlockCount = 0;
+    
     document.getElementById('playerTitleDisplay').innerText = mainTitle || 'Assistindo';
     document.getElementById('playerSubDisplay').innerText = subTitle || 'MasterFlix';
+    
     const old = playerContainer.querySelector('iframe');
     if (old) old.remove();
+    playerContainer.classList.remove('stretch-mode');
     playerLoading.classList.remove('hidden');
     
     const iframe = document.createElement('iframe');
     iframe.src = url;
-    // SANDBOX: bloqueia redirecionamentos e popups de anúncios
-    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation allow-forms');
+    // SANDBOX BLINDADO: sem allow-popups, sem allow-top-navigation
+    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation allow-forms allow-orientation-lock');
     iframe.setAttribute('allowfullscreen', 'true');
     iframe.setAttribute('webkitallowfullscreen', 'true');
-    iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture; encrypted-media');
+    iframe.setAttribute('mozallowfullscreen', 'true');
+    iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope');
     iframe.setAttribute('referrerpolicy', 'no-referrer');
+    iframe.setAttribute('scrolling', 'no');
     iframe.onload = () => setTimeout(() => playerLoading.classList.add('hidden'), 500);
     playerContainer.appendChild(iframe);
     
     openModal('playerModal');
+    enableAdBlockerPro();
     showPlayerControls();
+    
+    // Dica após 3 segundos
+    setTimeout(() => {
+        const tip = document.getElementById('playerTip');
+        if (tip && isPlayerOpen()) {
+            tip.classList.add('show');
+            setTimeout(() => tip.classList.remove('show'), 4000);
+        }
+    }, 3000);
+    
     setTimeout(() => playerLoading.classList.add('hidden'), 5000);
+}
+
+function enableAdBlockerPro() {
+    if (!originalWinOpen) {
+        originalWinOpen = window.open;
+        window.open = function(...args) {
+            adBlockCount++;
+            showAdBlockedBadge();
+            console.log('[AdBlocker] Popup bloqueado:', args[0]);
+            return null;
+        };
+    }
+    window.addEventListener('beforeunload', preventNavigation);
+    
+    if (adBlockerInterval) clearInterval(adBlockerInterval);
+    adBlockerInterval = setInterval(() => {
+        if (!isPlayerOpen()) return;
+        const iframes = playerContainer.querySelectorAll('iframe');
+        if (iframes.length > 1) {
+            for (let i = 1; i < iframes.length; i++) iframes[i].remove();
+            adBlockCount++;
+            showAdBlockedBadge();
+        }
+    }, 1000);
+}
+
+function preventNavigation(e) {
+    if (isPlayerOpen() && adBlockCount > 0) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+}
+
+function disableAdBlockerPro() {
+    if (originalWinOpen) {
+        window.open = originalWinOpen;
+        originalWinOpen = null;
+    }
+    window.removeEventListener('beforeunload', preventNavigation);
+    if (adBlockerInterval) { clearInterval(adBlockerInterval); adBlockerInterval = null; }
+}
+
+function showAdBlockedBadge() {
+    const badge = document.getElementById('adShield');
+    if (!badge) return;
+    badge.innerText = `🛡️ ${adBlockCount} Anúncio(s) Bloqueado(s)`;
+    badge.classList.add('show');
+    clearTimeout(badge._hideTimer);
+    badge._hideTimer = setTimeout(() => badge.classList.remove('show'), 3000);
 }
 
 function closePlayer() {
@@ -600,10 +696,13 @@ function closePlayer() {
     if (isInFullscreen()) { try { document.exitFullscreen(); } catch (e) { } }
     const iframe = playerContainer.querySelector('iframe');
     if (iframe) iframe.remove();
+    playerContainer.classList.remove('stretch-mode');
     playerLoading.classList.remove('hidden');
     closeModal('playerModal');
     playerBox.classList.remove('cursor-hidden');
     playerControls.classList.remove('is-hidden');
+    disableAdBlockerPro();
+    currentVideoUrl = '';
     renderContinueWatching();
 }
 document.getElementById('btnClosePlayer').onclick = (e) => { e.stopPropagation(); closePlayer(); };
@@ -763,22 +862,69 @@ document.getElementById('btnSelectAllSuggestions').onclick = () => { if (selecte
 document.getElementById('btnDeleteSelectedSuggestions').onclick = async () => { if (selectedSuggestionIds.size === 0) return; if (!confirm(`Apagar ${selectedSuggestionIds.size}?`)) return; try { for (let id of selectedSuggestionIds) await remove(ref(rtdb, "suggestions/" + id)); showMsg('OK!', 'success'); exitSelectMode(); loadSuggestionsAdmin(); } catch (e) { showMsg('Erro', 'error'); } };
 window.deleteSingleSuggestion = async (id) => { if (!confirm('Apagar?')) return; try { await remove(ref(rtdb, "suggestions/" + id)); loadSuggestionsAdmin(); } catch (e) { } };
 
-// ========== STORAGE ==========
+// ========== STORAGE (Corrigido) ==========
 document.getElementById('btnCloseStorage').onclick = () => closeModal('storageModal');
 async function loadStorageInfo() {
     const c = document.getElementById('storageContent');
-    c.innerHTML = '<p style="text-align:center;color:#aaa;">Calculando...</p>';
+    c.innerHTML = '<p style="text-align:center;color:#aaa;">⏳ Calculando...</p>';
     try {
-        const snap = await get(ref(rtdb));
-        const rd = snap.exists() ? snap.val() : {};
-        const tb = estimateJsonBytes(rd);
-        const cb = rd.catalog ? estimateJsonBytes(rd.catalog) : 0;
-        const ub = rd.users ? estimateJsonBytes(rd.users) : 0;
-        const sb = rd.suggestions ? estimateJsonBytes(rd.suggestions) : 0;
+        const [catalogSnap, usersSnap, suggestionsSnap] = await Promise.all([
+            get(ref(rtdb, "catalog")).catch(() => null),
+            get(ref(rtdb, "users")).catch(() => null),
+            get(ref(rtdb, "suggestions")).catch(() => null)
+        ]);
+        
+        const catalogData = catalogSnap && catalogSnap.exists() ? catalogSnap.val() : {};
+        const usersData = usersSnap && usersSnap.exists() ? usersSnap.val() : {};
+        const suggestionsData = suggestionsSnap && suggestionsSnap.exists() ? suggestionsSnap.val() : {};
+        
+        const cb = estimateJsonBytes(catalogData);
+        const ub = estimateJsonBytes(usersData);
+        const sb = estimateJsonBytes(suggestionsData);
+        const tb = cb + ub + sb;
+        
+        const cc = Object.keys(catalogData).length;
+        const uc = Object.keys(usersData).length;
+        const scc = Object.keys(suggestionsData).length;
+        
         const pct = Math.min(100, (tb / FIREBASE_RTDB_FREE_LIMIT_BYTES) * 100);
-        let bc = '#4caf50'; if (pct > 70) bc = '#ff9800'; if (pct > 90) bc = '#f44336';
-        c.innerHTML = `<div style="margin-bottom:18px;"><div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="font-weight:800;">Uso Total</span><span style="color:${bc};font-weight:800;">${pct.toFixed(2)}%</span></div><div class="storage-bar-outer"><div class="storage-bar-inner" style="width:${pct}%;background:${bc};"></div></div><div class="storage-info"><span>${formatBytes(tb)}</span><span>${formatBytes(FIREBASE_RTDB_FREE_LIMIT_BYTES)}</span></div></div><div class="storage-detail-item"><span class="storage-label">🎬 Catálogo</span><span class="storage-value">${formatBytes(cb)}</span></div><div class="storage-detail-item"><span class="storage-label">👤 Usuários</span><span class="storage-value">${formatBytes(ub)}</span></div><div class="storage-detail-item"><span class="storage-label">💡 Sugestões</span><span class="storage-value">${formatBytes(sb)}</span></div>`;
-    } catch (e) { c.innerHTML = `<p style="color:#ff5252;">❌ ${e.message}</p>`; }
+        let bc = '#4caf50';
+        if (pct > 70) bc = '#ff9800';
+        if (pct > 90) bc = '#f44336';
+        
+        c.innerHTML = `
+            <div style="margin-bottom:18px;">
+                <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+                    <span style="font-weight:800;">Uso Total</span>
+                    <span style="color:${bc};font-weight:800;">${pct.toFixed(2)}%</span>
+                </div>
+                <div class="storage-bar-outer">
+                    <div class="storage-bar-inner" style="width:${pct}%;background:${bc};"></div>
+                </div>
+                <div class="storage-info">
+                    <span>${formatBytes(tb)} usado</span>
+                    <span>${formatBytes(FIREBASE_RTDB_FREE_LIMIT_BYTES)} limite</span>
+                </div>
+            </div>
+            <h4 style="font-size:12px;font-weight:800;margin-bottom:10px;color:var(--primary-color);">📊 Detalhamento</h4>
+            <div class="storage-detail-item"><span class="storage-label">🎬 Catálogo (${cc})</span><span class="storage-value">${formatBytes(cb)}</span></div>
+            <div class="storage-detail-item"><span class="storage-label">👤 Usuários (${uc})</span><span class="storage-value">${formatBytes(ub)}</span></div>
+            <div class="storage-detail-item"><span class="storage-label">💡 Sugestões (${scc})</span><span class="storage-value">${formatBytes(sb)}</span></div>
+            <div class="storage-detail-item" style="border-top:1px solid rgba(255,255,255,0.1);padding-top:10px;margin-top:6px;">
+                <span class="storage-label" style="font-weight:800;color:#fff;">TOTAL</span>
+                <span class="storage-value" style="color:${bc};">${formatBytes(tb)}</span>
+            </div>
+            <p style="font-size:10px;color:#aaa;text-align:center;margin-top:14px;">✅ Firebase RTDB Plano Grátis</p>
+        `;
+    } catch (e) {
+        c.innerHTML = `
+            <div style="text-align:center;padding:20px;">
+                <p style="color:#ff5252;font-size:14px;margin-bottom:10px;">❌ Erro ao carregar</p>
+                <p style="color:#aaa;font-size:11px;">${e.message}</p>
+                <p style="color:#ffb74d;font-size:11px;margin-top:10px;">💡 Verifique as regras do Realtime Database</p>
+            </div>
+        `;
+    }
 }
 
 // ========== PROFILE ==========

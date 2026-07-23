@@ -25,8 +25,6 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-
-        /* Foco para TV */
         *:focus-visible { outline: 3px solid var(--primary-color) !important; outline-offset: 2px !important; z-index: 100; }
 
         html, body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; overflow-x: hidden; width: 100%; font-size: 14px; touch-action: manipulation; scroll-behavior: smooth; }
@@ -169,23 +167,38 @@
         .msg-success { background: #2e7d32; color: #fff; }
         .msg-error { background: #c62828; color: #fff; }
 
-        /* PLAYER FIX - Tela cheia absoluta + Sem bloquear cliques */
+        /* ========== PLAYER PRO ========== */
         #playerModal { padding: 0 !important; background: #000 !important; backdrop-filter: none; }
         .player-modal-box { width: 100vw !important; max-width: 100vw !important; height: 100vh !important; max-height: 100vh !important; background: #000; border-radius: 0 !important; position: relative; border: none !important; margin: 0 !important; }
         .player-modal-box.cursor-hidden { cursor: none; }
+        .player-modal-box.cursor-hidden * { cursor: none !important; }
+        
         .player-controls-top { position: absolute; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(180deg, rgba(0,0,0,0.98) 0%, transparent 100%); padding: 14px 18px 28px 18px; z-index: 50; transition: opacity 0.35s ease; pointer-events: none; }
         .player-controls-top > * { pointer-events: auto; }
         .player-controls-top.is-hidden { opacity: 0; }
-        .player-back-btn, .player-btn-round { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 38px; height: 38px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+        
+        .player-back-btn, .player-btn-round { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); color: #fff; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; transition: all 0.2s; }
+        .player-back-btn:hover, .player-btn-round:hover, .player-back-btn:focus, .player-btn-round:focus { background: var(--primary-color); transform: scale(1.08); }
+        
         .player-title-area { flex: 1; min-width: 0; margin: 0 12px; }
-        .player-title-main { font-size: 14px; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .player-title-sub { font-size: 10px; color: #bbb; text-transform: uppercase; }
+        .player-title-main { font-size: 15px; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 2px 8px rgba(0,0,0,0.9); }
+        .player-title-sub { font-size: 10px; color: #ddd; text-transform: uppercase; font-weight: 600; }
+        .player-actions-right { display: flex; gap: 8px; }
+        
         .player-container-view { width: 100vw; height: 100vh; background: #000; position: absolute; top: 0; left: 0; overflow: hidden; }
-        .player-container-view iframe { width: 100%; height: 100%; border: none; display: block; position: absolute; top: 0; left: 0; }
+        .player-container-view iframe { width: 100% !important; height: 100% !important; border: none !important; display: block !important; position: absolute !important; top: 0 !important; left: 0 !important; background: #000; }
+        .player-container-view.stretch-mode iframe { transform: scale(1.18); transform-origin: center center; }
+        
         .player-loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: #000; z-index: 5; flex-direction: column; gap: 16px; }
         .player-loading.hidden { display: none; }
-        .player-spinner { width: 50px; height: 50px; border: 3px solid rgba(255,255,255,0.15); border-top-color: var(--primary-color); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        .player-spinner { width: 60px; height: 60px; border: 4px solid rgba(255,255,255,0.15); border-top-color: var(--primary-color); border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .player-tip-bottom { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.85); color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 700; z-index: 60; opacity: 0; transition: opacity 0.4s; pointer-events: none; border: 1px solid rgba(255,255,255,0.1); }
+        .player-tip-bottom.show { opacity: 1; }
+        
+        .player-ad-shield { position: absolute; top: 70px; right: 20px; background: rgba(76,175,80,0.9); color: #fff; padding: 6px 12px; border-radius: 20px; font-size: 10px; font-weight: 800; z-index: 55; display: flex; align-items: center; gap: 6px; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+        .player-ad-shield.show { opacity: 1; }
 
         .season-tab-container { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 16px; padding-bottom: 4px; }
         .season-tab { padding: 8px 16px; border-radius: 20px; background: #1e1e1e; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; border: 1px solid #333; }
@@ -198,7 +211,6 @@
         
         .admin-item { display: flex; align-items: center; justify-content: space-between; background: #1a1a1a; border: 1px solid #2a2a2a; padding: 12px 16px; border-radius: 8px; margin-bottom: 8px; }
 
-        /* PROFILE FIX - Sem cortar mais */
         .profile-card-header { position: relative; border-radius: 12px; background: #222; height: 140px; margin-bottom: 50px; border: 1px solid rgba(255,255,255,0.1); }
         .profile-banner-bg { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; display: block; }
         .profile-avatar-overlay { position: absolute; bottom: -35px; left: 50%; transform: translateX(-50%); width: 80px; height: 80px; border-radius: 50%; background: var(--primary-color); border: 4px solid var(--modal-bg); overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 900; z-index: 2; }
@@ -239,7 +251,6 @@
             .continue-card { flex: 0 0 200px; height: 130px; }
         }
 
-        /* TV: Cards maiores e melhor foco */
         @media(min-width: 1200px) {
             .media-card { flex: 0 0 180px; height: 260px; }
         }
@@ -277,7 +288,7 @@
             <div class="sidebar-divider"></div>
             <div class="sidebar-item" id="sidebarLogoutItem" data-nav="logout" tabindex="0" style="color: #ff5252;"><span class="icon">🚪</span> Sair da Conta</div>
         </nav>
-        <div class="sidebar-footer">MasterFlix © 2025<br>Versão 5.2</div>
+        <div class="sidebar-footer">MasterFlix © 2025<br>Versão 5.3 Pro</div>
     </aside>
 
     <header id="mainHeader">
@@ -526,12 +537,16 @@
     <div id="playerModal" class="modal-overlay hidden">
         <div class="player-modal-box" id="playerModalBox">
             <div class="player-controls-top" id="playerControlsTop">
-                <button class="player-back-btn" id="btnClosePlayer" tabindex="0">←</button>
+                <button class="player-back-btn" id="btnClosePlayer" tabindex="0" title="Voltar">←</button>
                 <div class="player-title-area">
                     <div class="player-title-main" id="playerTitleDisplay">Carregando...</div>
                     <div class="player-title-sub" id="playerSubDisplay">MasterFlix</div>
                 </div>
-                <button class="player-btn-round" id="btnToggleFullscreen" tabindex="0">⛶</button>
+                <div class="player-actions-right">
+                    <button class="player-btn-round" id="btnToggleStretch" tabindex="0" title="Esticar Vídeo">⇱</button>
+                    <button class="player-btn-round" id="btnReloadPlayer" tabindex="0" title="Recarregar">↻</button>
+                    <button class="player-btn-round" id="btnToggleFullscreen" tabindex="0" title="Tela Cheia">⛶</button>
+                </div>
             </div>
             <div class="player-container-view" id="playerContainerView">
                 <div class="player-loading" id="playerLoading">
@@ -539,6 +554,8 @@
                     <div style="font-size:12px;color:#999;font-weight:700;">Carregando vídeo...</div>
                 </div>
             </div>
+            <div class="player-ad-shield" id="adShield">🛡️ Anúncio Bloqueado</div>
+            <div class="player-tip-bottom" id="playerTip">💡 Toque no ⇱ para esticar o vídeo</div>
         </div>
     </div>
 
