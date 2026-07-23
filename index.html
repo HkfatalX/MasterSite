@@ -2,520 +2,1020 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MasterFlix - Filmes e Séries</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23141414'/%3E%3Cpath d='M20 78 L20 22 L35 22 L50 55 L65 22 L80 22 L80 78 L68 78 L68 42 L56 68 L44 68 L32 42 L32 78 Z' fill='%23e50914'/%3E%3C/svg%3E">
-    <meta name="theme-color" content="#e50914">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MasterFlix</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
         :root {
             --primary-color: #e50914;
-            --primary-hover: #f40612;
-            --primary-glow: rgba(229, 9, 20, 0.4);
-            --bg-color: #0a0a0a;
-            --bg-secondary: #141414;
-            --card-bg: #1a1a1a;
-            --modal-bg: #181818;
+            --bg-color: #141414;
+            --card-bg: #181818;
             --text-color: #ffffff;
-            --text-muted: #999999;
-            --border-color: rgba(255, 255, 255, 0.08);
+            --text-secondary: #aaaaaa;
         }
 
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
-        html, body {
+        body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            min-height: 100vh;
-            width: 100%;
             overflow-x: hidden;
-            font-size: 14px;
+            width: 100%;
+            min-height: 100vh;
         }
 
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #0a0a0a; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--primary-color); }
+        /* Utilidades gerais */
+        .hidden { display: none !important; }
 
-        /* HEADER */
-        header {
+        /* Mensagens de Notificação */
+        #msg {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 99999;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+        .msg-success { background: #2e7d32; color: #fff; }
+        .msg-error { background: #c62828; color: #fff; }
+
+        /* Header Principal */
+        header.main-header {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 64px;
-            background: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%);
-            backdrop-filter: blur(10px);
+            z-index: 1000;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
-            z-index: 100;
+            padding: 15px 4%;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+            transition: background 0.3s ease;
+        }
+        header.main-header.scrolled {
+            background: #141414;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.8);
         }
 
-        .header-left { display: flex; align-items: center; gap: 14px; }
-        
-        .menu-toggle-btn {
-            width: 40px;
-            height: 40px;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
+        .header-left, .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+
+        .menu-btn, .icon-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 20px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-direction: column;
-            gap: 4px;
-            padding: 10px 9px;
+            padding: 5px;
         }
 
-        .menu-toggle-btn .bar {
-            width: 100%;
-            height: 2px;
-            background: #fff;
-            border-radius: 2px;
-            transition: all 0.3s ease;
-        }
-
-        .brand {
-            font-size: 20px;
-            font-weight: 900;
-            color: var(--primary-color);
-            text-transform: uppercase;
-            cursor: pointer;
-            letter-spacing: -0.5px;
-        }
-
-        .nav-actions { display: flex; align-items: center; gap: 12px; }
-
-        .search-wrapper { position: relative; }
-        .search-box {
-            display: flex;
-            align-items: center;
-            background: rgba(0,0,0,0.75);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 8px;
-            width: 40px;
-            height: 38px;
-            overflow: hidden;
-            transition: width 0.3s ease;
-        }
-
-        .search-box.active { width: 220px; background: rgba(0,0,0,0.9); }
-
-        .search-icon-btn {
-            width: 38px;
-            height: 38px;
-            background: transparent;
-            border: none;
-            color: #fff;
-            cursor: pointer;
-            flex-shrink: 0;
-            font-size: 16px;
-        }
-
-        .search-input-field {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: #fff;
-            padding-right: 10px;
-            font-size: 13px;
-            outline: none;
-            opacity: 0;
-            transition: opacity 0.2s ease 0.1s;
-        }
-
-        .search-box.active .search-input-field { opacity: 1; }
-
-        .user-avatar-btn {
-            width: 38px;
-            height: 38px;
+        /* Avatar do Usuário no Header */
+        .header-avatar {
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
             background: var(--primary-color);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 800;
+            font-weight: bold;
+            overflow: hidden;
             cursor: pointer;
-            overflow: hidden;
-            border: 2px solid rgba(255,255,255,0.2);
+            border: 2px solid transparent;
+        }
+        .header-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .user-avatar-btn img { width: 100%; height: 100%; object-fit: cover; }
-
-        /* CONTAINER PRINCIPAL */
-        .app-container { padding-top: 74px; padding-bottom: 40px; }
-
-        .hero-banner {
+        /* Busca Avançada */
+        .search-wrapper {
             position: relative;
-            width: 95%;
-            max-width: 1400px;
-            margin: 0 auto 30px auto;
-            height: 50vh;
-            min-height: 380px;
-            max-height: 550px;
-            border-radius: 16px;
+        }
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 4px 10px;
+            transition: all 0.3s ease;
+            width: 36px;
             overflow: hidden;
-            background: #1a1a1a center/cover no-repeat;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
         }
-
-        .hero-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg, rgba(10,10,10,0.1) 0%, rgba(10,10,10,0.9) 100%);
+        .search-box.active {
+            width: 220px;
+            background: #000;
+            border-color: var(--primary-color);
         }
-
-        .hero-content {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 24px;
-            z-index: 2;
-        }
-
-        .hero-title { font-size: 32px; font-weight: 900; margin-bottom: 8px; }
-        .hero-desc { font-size: 13px; color: #ccc; max-width: 500px; margin-bottom: 16px; line-height: 1.5; }
-
-        .btn-primary {
-            padding: 10px 20px;
+        .search-input {
+            background: none;
             border: none;
-            border-radius: 6px;
+            outline: none;
+            color: #fff;
+            font-size: 13px;
+            margin-left: 8px;
+            width: 100%;
+            display: none;
+        }
+        .search-box.active .search-input {
+            display: block;
+        }
+        .search-dropdown {
+            position: absolute;
+            top: 45px;
+            right: 0;
+            width: 300px;
+            max-height: 400px;
+            background: #181818;
+            border: 1px solid #333;
+            border-radius: 8px;
+            overflow-y: auto;
+            z-index: 1001;
+            display: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+        }
+        .search-dropdown.visible { display: block; }
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #222;
+            cursor: pointer;
+        }
+        .search-result-item:hover, .search-result-item:focus {
+            background: #252525;
+            outline: none;
+        }
+        .search-result-thumb {
+            width: 45px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .search-result-info {
+            flex: 1;
+            overflow: hidden;
+        }
+        .search-result-title {
+            font-size: 13px;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .search-result-title mark {
             background: var(--primary-color);
             color: #fff;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background 0.2s;
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+        .search-result-meta {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 2px;
         }
 
-        .btn-primary:hover { background: var(--primary-hover); }
+        /* Sidebar / Menu Lateral */
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1002;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .sidebar-overlay.active { opacity: 1; pointer-events: auto; }
+        .sidebar-menu {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background: #111;
+            z-index: 1003;
+            transition: left 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        .sidebar-menu.active { left: 0; }
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #222;
+            margin-bottom: 20px;
+        }
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .sidebar-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            overflow: hidden;
+        }
+        .sidebar-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .sidebar-user-name { font-size: 14px; font-weight: bold; }
+        .sidebar-user-email { font-size: 11px; color: var(--text-secondary); }
 
-        /* SEÇÕES & CAROUSEL */
-        .section-row { margin-bottom: 30px; padding-left: 2.5%; }
+        .sidebar-items { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            color: #ccc;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+        .sidebar-item:hover, .sidebar-item.active {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* Chips de Categorias */
+        .category-bar {
+            display: flex;
+            gap: 10px;
+            padding: 80px 4% 10px 4%;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .category-bar::-webkit-scrollbar { display: none; }
+        .category-chip {
+            padding: 6px 16px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 20px;
+            font-size: 12px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .category-chip.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* Hero Banner */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 60vh;
+            min-height: 400px;
+            max-height: 600px;
+            display: flex;
+            align-items: flex-end;
+            padding: 0 4% 40px 4%;
+        }
+        .hero-backdrop {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center top;
+            z-index: 1;
+        }
+        .hero-backdrop::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, var(--bg-color) 0%, rgba(20,20,20,0.4) 50%, rgba(0,0,0,0.7) 100%);
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+        }
+        .hero-title { font-size: 32px; font-weight: 900; margin-bottom: 8px; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
+        .hero-meta { font-size: 12px; color: #ddd; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .hero-desc { font-size: 13px; color: #ccc; margin-bottom: 20px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .hero-btns { display: flex; gap: 12px; }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Carrosséis e Seções */
+        .section-row { padding: 20px 0 20px 4%; }
         .section-title { font-size: 18px; font-weight: 800; margin-bottom: 12px; }
-
-        .carousel-container {
+        .carousel {
             display: flex;
             gap: 12px;
             overflow-x: auto;
-            padding-right: 2.5%;
+            padding-right: 4%;
             scrollbar-width: none;
         }
+        .carousel::-webkit-scrollbar { display: none; }
 
+        /* Cards de Mídia */
         .media-card {
-            flex: 0 0 140px;
-            height: 210px;
+            flex: 0 0 130px;
+            aspect-ratio: 2/3;
+            background: var(--card-bg);
             border-radius: 8px;
             overflow: hidden;
-            background: var(--card-bg);
-            cursor: pointer;
             position: relative;
-            transition: transform 0.2s;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        @media (min-width: 768px) { .media-card { flex: 0 0 160px; } }
+        .media-card:hover { transform: scale(1.05); }
+        .media-card-poster { width: 100%; height: 100%; object-fit: cover; }
+        .media-card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 60%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 8px;
+        }
+        .media-card-title { font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .media-card-tag { font-size: 9px; color: var(--primary-color); font-weight: 800; text-transform: uppercase; }
+
+        /* Card Continuar Assistindo */
+        .continue-card {
+            flex: 0 0 220px;
+            aspect-ratio: 16/9;
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+        }
+        .continue-card img { width: 100%; height: 100%; object-fit: cover; }
+        .continue-info {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 70%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 10px;
+        }
+        .continue-remove-btn {
+            position: absolute;
+            top: 6px; right: 6px;
+            background: rgba(0,0,0,0.6);
+            border: none; color: #fff;
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
         }
 
-        .media-card:hover { transform: scale(1.05); }
-        .media-card img { width: 100%; height: 100%; object-fit: cover; }
-
-        /* MODAIS GENERALIZADOS */
+        /* MODAIS GERAIS */
         .modal-overlay {
             position: fixed;
             inset: 0;
             background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(8px);
+            z-index: 2000;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
-            padding: 16px;
+            padding: 20px;
+            backdrop-filter: blur(5px);
         }
-
-        .modal-body {
-            background: var(--modal-bg);
-            border: 1px solid var(--border-color);
+        .modal-box {
+            background: #181818;
+            border: 1px solid #2a2a2a;
             border-radius: 12px;
             width: 100%;
-            max-width: 500px;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
             padding: 20px;
             position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.9);
         }
-
         .modal-close {
             position: absolute;
-            top: 12px;
-            right: 12px;
+            top: 15px; right: 15px;
             background: rgba(255,255,255,0.1);
-            color: #fff;
-            border: none;
-            width: 32px;
-            height: 32px;
+            border: none; color: #fff;
+            width: 32px; height: 32px;
             border-radius: 50%;
+            font-size: 16px;
             cursor: pointer;
-            font-size: 18px;
+            z-index: 10;
         }
 
-        /* PERFIL CORRIGIDO E RESPONSIVO */
-        .profile-card-header {
+        /* Estilo do Perfil (Corrigido para Celulares) */
+        .profile-banner-area {
             position: relative;
-            border-radius: 10px;
+            width: 100%;
+            height: 140px;
+            border-radius: 8px;
             overflow: hidden;
-            background: #111;
-            height: 130px;
-            margin-bottom: 45px;
-            border: 1px solid rgba(255,255,255,0.1);
+            background: #252525;
+            margin-bottom: 50px;
         }
-
-        .profile-banner-bg { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-        .profile-avatar-overlay {
+        .profile-banner-area img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-avatar-wrapper {
             position: absolute;
-            bottom: -32px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 72px;
-            height: 72px;
+            bottom: -35px;
+            left: 20px;
+            width: 75px;
+            height: 75px;
             border-radius: 50%;
+            border: 3px solid #181818;
             background: var(--primary-color);
-            border: 3px solid var(--modal-bg);
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            font-weight: 800;
-            z-index: 2;
+            font-size: 28px;
+            font-weight: bold;
         }
+        .profile-avatar-wrapper img { width: 100%; height: 100%; object-fit: cover; }
 
-        .profile-avatar-overlay img { width: 100%; height: 100%; object-fit: cover; }
-
-        .input-group { margin-bottom: 12px; }
-        .input-group label { display: block; font-size: 11px; font-weight: 700; color: #aaa; margin-bottom: 4px; text-transform: uppercase; }
-        .input-group input, .input-group select {
-            width: 100%;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #333;
-            background: #0f0f0f;
-            color: #fff;
-            font-size: 13px;
-        }
-
-        /* --- PLAYER DE VÍDEO CORRIGIDO --- */
-        #playerModal { padding: 0; background: #000; }
-        
-        .player-modal-box {
+        /* PLAYER DE VÍDEO COMPLETAMENTE REFORMULADO E CORRIGIDO */
+        #playerModal {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 99999;
             width: 100vw;
             height: 100vh;
+            overflow: hidden;
+        }
+        .player-modal-box {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
             background: #000;
-            position: relative;
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .player-modal-box.cursor-hidden { cursor: none; }
+
+        /* Contêiner do Iframe ocupando 100% real */
+        .player-container-view {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: #000;
+        }
+        .player-container-view iframe {
+            width: 100% !important;
+            height: 100% !important;
+            border: none !important;
+            display: block;
         }
 
-        /* Barra superior de controles do player */
+        /* Controles do Player com pointer-events otimizado */
         .player-controls-top {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 15px 20px;
             background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
-            padding: 16px 20px;
-            z-index: 50;
-            transition: opacity 0.3s ease;
-            pointer-events: none; /* CLIQUES PASSAM DIRETO PARA O VÍDEO SE CLICAR FORA DOS BOTÕES */
-        }
-
-        .player-controls-top * { pointer-events: auto; } /* BOTÕES CONTINUAM CLICÁVEIS */
-
-        .player-controls-top.is-hidden { opacity: 0; }
-        .player-controls-top.is-hidden * { pointer-events: none !important; }
-
-        .player-back-btn {
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: #fff;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 18px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
+            z-index: 10;
+            transition: opacity 0.3s ease;
+            pointer-events: none; /* Deixa cliques passarem em áreas vazias para o player */
         }
+        .player-controls-top.is-hidden { opacity: 0; }
+        .player-controls-top * { pointer-events: auto; } /* Reativa cliques nos botões e textos */
 
-        .player-title-main { font-size: 14px; font-weight: 800; color: #fff; }
-        .player-title-sub { font-size: 11px; color: #aaa; }
-
-        .player-container-view {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            flex: 1;
-            background: #000;
-        }
-
-        .player-container-view iframe {
-            width: 100% !important;
-            height: 100% !important;
-            border: none;
-            display: block;
-        }
+        .player-info-text { display: flex; flex-direction: column; }
+        .player-title { font-size: 16px; font-weight: bold; }
+        .player-subtitle { font-size: 12px; color: var(--text-secondary); }
 
         .player-loading {
             position: absolute;
-            inset: 0;
+            z-index: 2;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #000;
-            z-index: 5;
             flex-direction: column;
-            gap: 12px;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            font-size: 14px;
         }
-
-        .player-loading.hidden { display: none; }
-        .player-spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(255,255,255,0.2);
+        .spinner {
+            width: 40px; height: 40px;
+            border: 4px solid rgba(255,255,255,0.2);
             border-top-color: var(--primary-color);
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+            animation: spin 1s linear infinite;
         }
-
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        /* Formulários e Entradas */
+        .input-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px; }
+        .input-group label { font-size: 12px; color: #ccc; font-weight: 600; }
+        .input-control {
+            background: #222;
+            border: 1px solid #333;
+            padding: 10px 12px;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 13px;
+            outline: none;
+        }
+        .input-control:focus { border-color: var(--primary-color); }
+
+        /* Lista de Episódios na Janela de Detalhes */
+        .episodes-container { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
         .episode-card {
             display: flex;
             align-items: center;
             gap: 12px;
-            background: #1e1e1e;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 8px;
+            background: #222;
+            padding: 8px;
+            border-radius: 6px;
             cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .episode-card:hover { background: #2c2c2c; }
+        .episode-thumb {
+            width: 100px;
+            aspect-ratio: 16/9;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #111;
+            flex-shrink: 0;
+        }
+        .episode-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .ep-resume-badge {
+            font-size: 10px;
+            color: #ffca28;
+            font-weight: bold;
+            margin-top: 2px;
         }
 
-        .episode-thumb { width: 100px; height: 60px; border-radius: 4px; overflow: hidden; background: #000; flex-shrink: 0; }
-        .episode-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        /* Seletor de Gêneros */
+        .genre-tags-container { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+        .genre-tag {
+            font-size: 11px;
+            padding: 4px 10px;
+            background: #2a2a2a;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        .genre-tag.selected { background: var(--primary-color); color: #fff; font-weight: bold; }
 
-        .hidden { display: none !important; }
+        /* Modal Autenticação Overlay */
+        .auth-overlay {
+            position: fixed;
+            inset: 0;
+            background: #141414;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .auth-card {
+            background: #181818;
+            border: 1px solid #282828;
+            border-radius: 12px;
+            padding: 30px 25px;
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
-    <header id="mainHeader">
+    <div id="msg" class="hidden"></div>
+
+    <header class="main-header" id="mainHeader">
         <div class="header-left">
-            <button class="menu-toggle-btn" id="menuToggle">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </button>
-            <div class="brand">MasterFlix</div>
+            <button class="menu-btn" id="menuToggleBtn">☰</button>
+            <div class="logo" onclick="window.location.reload()">MasterFlix</div>
         </div>
-        <div class="nav-actions">
-            <div class="search-wrapper">
+        <div class="header-right">
+            <div class="search-wrapper" id="searchWrapper">
                 <div class="search-box" id="searchBox">
-                    <button class="search-icon-btn" id="searchBtn">🔍</button>
-                    <input type="text" class="search-input-field" id="searchInput" placeholder="Buscar filmes, séries...">
+                    <button class="icon-btn" id="searchIconBtn">🔍</button>
+                    <input type="text" id="searchInput" class="search-input" placeholder="Buscar filmes, séries...">
+                    <button class="icon-btn hidden" id="searchClearBtn" style="font-size: 12px;">✕</button>
                 </div>
+                <div class="search-dropdown" id="searchResultsDropdown"></div>
             </div>
-            <div class="user-avatar-btn" id="profileBtn">
-                <img id="headerAvatar" src="https://via.placeholder.com/150" alt="Avatar">
+            <div class="header-avatar" id="btnOpenProfile">
+                <span id="avatarText">U</span>
+                <img id="avatarImg" class="hidden" alt="Avatar">
             </div>
         </div>
     </header>
 
-    <main class="app-container">
-        <section class="hero-banner" id="heroBanner">
-            <div class="hero-overlay"></div>
-            <div class="hero-content">
-                <h1 class="hero-title" id="heroTitle">Título em Destaque</h1>
-                <p class="hero-desc" id="heroDesc">Descrição do filme ou série em destaque na plataforma.</p>
-                <button class="btn-primary" id="heroPlayBtn">▶ Assistir Agora</button>
-            </div>
-        </section>
-
-        <section class="section-row">
-            <h2 class="section-title">Em Alta</h2>
-            <div class="carousel-container" id="mediaCarousel">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="sidebar-menu" id="sidebarMenu">
+        <div class="sidebar-header">
+            <div class="sidebar-user">
+                <div class="sidebar-avatar" id="sidebarAvatar"><span>U</span></div>
+                <div>
+                    <div class="sidebar-user-name" id="sidebarUserName">Usuário</div>
+                    <div class="sidebar-user-email" id="sidebarUserEmail">email@exemplo.com</div>
                 </div>
-        </section>
-    </main>
+            </div>
+            <button class="menu-btn" id="sidebarCloseBtn">✕</button>
+        </div>
+        <div class="sidebar-items">
+            <div class="sidebar-item active" data-nav="home">🏠 Início</div>
+            <div class="sidebar-item" data-nav="movies">🎬 Filmes</div>
+            <div class="sidebar-item" data-nav="series">📺 Séries</div>
+            <div class="sidebar-item" data-nav="continue">⏳ Continuar Assistindo</div>
+            <div class="sidebar-item" data-nav="suggestions">💡 Sugestões / Bugs</div>
+            <div class="sidebar-item" data-nav="profile">👤 Meu Perfil</div>
+            <div class="sidebar-item hidden" id="sidebarAdminItem" data-nav="admin">🛠️ Gerenciar Catálogo</div>
+            <div class="sidebar-item hidden" id="sidebarCreatorItem" data-nav="creator">➕ Publicar Mídia</div>
+            <div class="sidebar-item hidden" id="sidebarSuggestionsAdminItem" data-nav="suggestionsAdmin">📩 Ver Sugestões</div>
+            <div class="sidebar-item hidden" id="sidebarStorageItem" data-nav="storage">💾 Armazenamento</div>
+            <div class="sidebar-item" data-nav="logout" style="color: #ff5252; margin-top: auto;">🚪 Sair</div>
+        </div>
+    </div>
 
-    <div class="modal-overlay hidden" id="profileModal">
-        <div class="modal-body">
-            <button class="modal-close" onclick="closeModal('profileModal')">&times;</button>
+    <div class="category-bar">
+        <div class="category-chip active" data-cat="Todos">Todos</div>
+        <div class="category-chip" data-cat="Filmes">Filmes</div>
+        <div class="category-chip" data-cat="Séries">Séries</div>
+        <div class="category-chip" data-cat="Ação">Ação</div>
+        <div class="category-chip" data-cat="Aventura">Aventura</div>
+        <div class="category-chip" data-cat="Comédia">Comédia</div>
+        <div class="category-chip" data-cat="Drama">Drama</div>
+        <div class="category-chip" data-cat="Terror">Terror</div>
+        <div class="category-chip" data-cat="Ficção Científica">Ficção Científica</div>
+    </div>
+
+    <section class="hero" id="heroSection">
+        <div class="hero-backdrop" id="heroBackdrop"></div>
+        <div class="hero-content">
+            <h1 class="hero-title" id="heroTitle">Carregando...</h1>
+            <div class="hero-meta" id="heroMeta">--</div>
+            <p class="hero-desc" id="heroDesc">Aguarde o carregamento do conteúdo...</p>
+            <div class="hero-btns">
+                <button class="btn-primary" id="heroPlayBtn">▶ Assistir</button>
+                <button class="btn-secondary" id="heroInfoBtn">ℹ Detalhes</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-row hidden" id="continueRow">
+        <h2 class="section-title">⏳ Continuar Assistindo</h2>
+        <div class="carousel" id="continueCarousel"></div>
+    </section>
+
+    <section class="section-row" id="moviesRow">
+        <h2 class="section-title">🎬 Filmes</h2>
+        <div class="carousel" id="moviesCarousel"></div>
+    </section>
+
+    <section class="section-row" id="seriesRow">
+        <h2 class="section-title">📺 Séries</h2>
+        <div class="carousel" id="seriesCarousel"></div>
+    </section>
+
+    <div id="playerModal" class="hidden">
+        <div class="player-modal-box" id="playerModalBox">
+            <div class="player-controls-top" id="playerControlsTop">
+                <div class="player-info-text">
+                    <span class="player-title" id="playerTitleDisplay">Título do Vídeo</span>
+                    <span class="player-subtitle" id="playerSubDisplay">MasterFlix</span>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="icon-btn" id="btnToggleFullscreen" title="Tela Cheia">⛶</button>
+                    <button class="icon-btn" id="btnClosePlayer" title="Fechar">✕</button>
+                </div>
+            </div>
             
-            <div class="profile-card-header">
-                <img class="profile-banner-bg" id="profileBanner" src="https://via.placeholder.com/600x200" alt="Banner">
-                <div class="profile-avatar-overlay">
-                    <img id="modalAvatar" src="https://via.placeholder.com/150" alt="Avatar">
+            <div class="player-loading" id="playerLoading">
+                <div class="spinner"></div>
+                <span>Carregando vídeo...</span>
+            </div>
+
+            <div class="player-container-view" id="playerContainerView"></div>
+        </div>
+    </div>
+
+    <div id="detailsModal" class="modal-overlay hidden">
+        <div class="modal-box" style="max-width: 700px; padding: 0; overflow: hidden;">
+            <button class="modal-close" id="btnCloseDetails">✕</button>
+            <div id="detailBackdropArea" style="height: 220px; background-size: cover; background-position: center; position: relative;">
+                <div style="position: absolute; inset: 0; background: linear-gradient(0deg, #181818 0%, transparent 100%);"></div>
+            </div>
+            <div style="padding: 20px; position: relative; margin-top: -60px; display: flex; gap: 15px;">
+                <img id="detailPoster" style="width: 110px; height: 160px; object-fit: cover; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.8);" src="" alt="Poster">
+                <div style="flex: 1; margin-top: 50px;">
+                    <h2 id="detailTitle" style="font-size: 20px; font-weight: 800;">-</h2>
+                    <div id="detailMeta" style="font-size: 11px; color: #aaa; margin: 4px 0;">-</div>
+                    <div id="detailGenres" style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px;"></div>
+                </div>
+            </div>
+            <div style="padding: 0 20px 20px 20px;">
+                <p id="detailDesc" style="font-size: 13px; color: #ccc; line-height: 1.4; margin-bottom: 20px;">-</p>
+                
+                <div id="detailMovieArea" class="hidden">
+                    <button class="btn-primary" id="btnPlayMovieFile" style="width: 100%; justify-content: center;">▶ Assistir Filme</button>
+                </div>
+
+                <div id="detailSerieArea" class="hidden">
+                    <div id="seasonTabs" style="display: flex; gap: 8px; overflow-x: auto; border-bottom: 1px solid #333; padding-bottom: 8px; margin-bottom: 12px;"></div>
+                    <div id="episodesListContainer" class="episodes-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="profileModal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <button class="modal-close" id="btnCloseProfile">✕</button>
+            <h3 style="margin-bottom: 15px; font-size: 16px;">Meu Perfil</h3>
+            
+            <div class="profile-banner-area">
+                <img id="profileBannerImg" src="https://via.placeholder.com/600x200?text=Banner" alt="Banner">
+                <div class="profile-avatar-wrapper">
+                    <span id="profileAvatarBigText">U</span>
+                    <img id="profileAvatarBigImg" class="hidden" alt="Avatar">
                 </div>
             </div>
 
-            <form id="profileForm" style="margin-top: 10px;">
+            <div style="margin-bottom: 15px;">
+                <h4 id="profileNameDisplay" style="font-size: 16px; font-weight: 800;">Usuário</h4>
+                <p id="profileEmailDisplay" style="font-size: 11px; color: #aaa;"></p>
+                <p id="profileBioDisplay" style="font-size: 12px; color: #ccc; font-style: italic; margin-top: 4px;">"Maratonando!"</p>
+                <span id="profileAdminBadge" class="hidden" style="background: var(--primary-color); font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase;">ADMINISTRADOR</span>
+            </div>
+
+            <div class="input-group">
+                <label>Nome / Apelido</label>
+                <input type="text" id="profileNameInput" class="input-control">
+            </div>
+            <div class="input-group">
+                <label>Biografia</label>
+                <input type="text" id="profileBioInput" class="input-control">
+            </div>
+            <div class="input-group">
+                <label>Gênero Favorito</label>
+                <select id="profileFavGenreInput" class="input-control">
+                    <option value="Ação">Ação</option>
+                    <option value="Aventura">Aventura</option>
+                    <option value="Comédia">Comédia</option>
+                    <option value="Drama">Drama</option>
+                    <option value="Terror">Terror</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Cor do Tema</label>
+                <input type="color" id="themeColorPicker" value="#e50914" style="width: 100%; height: 38px; border: none; border-radius: 6px; cursor: pointer; background: #222;">
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button type="button" class="btn-secondary" style="flex: 1;" onclick="triggerCropModal('fileInputAvatar', 'profilePhotoPreview', 1)">📸 Foto Perfil</button>
+                <button type="button" class="btn-secondary" style="flex: 1;" onclick="triggerCropModal('fileInputBanner', 'profileBannerPreview', 3/1)">🖼️ Banner</button>
+            </div>
+
+            <input type="file" id="fileInputAvatar" accept="image/*" class="hidden">
+            <input type="file" id="fileInputBanner" accept="image/*" class="hidden">
+            <img id="profilePhotoPreview" class="hidden">
+            <img id="profileBannerPreview" class="hidden">
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn-primary" id="btnSaveProfile" style="flex: 1; justify-content: center;">Salvar Perfil</button>
+                <button class="btn-secondary" id="btnLogout" style="color: #ff5252;">Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="cropperModal" class="modal-overlay hidden">
+        <div class="modal-box" style="max-width: 500px;">
+            <button class="modal-close" id="btnCloseCropper">✕</button>
+            <h3 style="margin-bottom: 10px;">Ajustar Imagem</h3>
+            <div style="max-height: 300px; overflow: hidden; margin-bottom: 15px; background: #000;">
+                <img id="cropperImage" style="max-width: 100%; display: block;" src="" alt="Cortar">
+            </div>
+            <img id="prevMobile" class="hidden"><img id="prevPC" class="hidden"><img id="prevTV" class="hidden">
+            <button class="btn-primary" id="btnConfirmCrop" style="width: 100%; justify-content: center;">Confirmar Corte</button>
+        </div>
+    </div>
+
+    <div id="creatorModal" class="modal-overlay hidden">
+        <div class="modal-box" style="max-width: 650px;">
+            <button class="modal-close" id="btnCloseCreator">✕</button>
+            <h3 id="creatorTitle" style="margin-bottom: 15px;">Publicar Mídia</h3>
+            
+            <form id="mediaForm">
+                <input type="hidden" id="editMediaId">
+                
                 <div class="input-group">
-                    <label>Nome / Apelido</label>
-                    <input type="text" id="profileNameInput" value="Hkfatal">
-                </div>
-                <div class="input-group">
-                    <label>Biografia</label>
-                    <input type="text" id="profileBioInput" value="Trabalhando no Site">
-                </div>
-                <div class="input-group">
-                    <label>Gênero Favorito</label>
-                    <select id="profileGenreInput">
-                        <option value="Ação">Ação</option>
-                        <option value="Aventura">Aventura</option>
-                        <option value="Comédia">Comédia</option>
-                        <option value="Drama">Drama</option>
-                        <option value="Terror">Terror</option>
+                    <label>Tipo de Mídia</label>
+                    <select id="mediaType" class="input-control">
+                        <option value="movie">Filme</option>
+                        <option value="serie">Série</option>
                     </select>
                 </div>
-                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">Salvar Perfil</button>
+
+                <div class="input-group">
+                    <label>Título</label>
+                    <input type="text" id="mediaTitle" class="input-control" required>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <div class="input-group" style="flex: 1;">
+                        <label>Ano</label>
+                        <input type="text" id="mediaYear" class="input-control" required>
+                    </div>
+                    <div class="input-group" style="flex: 1;">
+                        <label id="mediaDurationLabel">Duração (Ex: 2h 10m)</label>
+                        <input type="text" id="mediaDuration" class="input-control">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Gêneros <span id="genreCounter" style="font-size: 10px; margin-left: 5px;"></span></label>
+                    <div id="genreSelectorContainer" class="genre-tags-container"></div>
+                </div>
+
+                <div class="input-group">
+                    <label>Sinopse</label>
+                    <textarea id="mediaDesc" class="input-control" style="height: 70px; resize: none;" required></textarea>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <button type="button" class="btn-secondary" style="flex: 1;" onclick="triggerCropModal('fileCoverInput', 'mediaCoverPreview', 2/3)">📸 Capa (2:3)</button>
+                    <button type="button" class="btn-secondary" style="flex: 1;" onclick="triggerCropModal('fileBackdropInput', 'mediaBackdropPreview', 16/9)">🖼️ Fundo (16:9)</button>
+                </div>
+
+                <input type="file" id="fileCoverInput" accept="image/*" class="hidden">
+                <input type="file" id="fileBackdropInput" accept="image/*" class="hidden">
+                <img id="mediaCoverPreview" class="hidden" style="max-height: 80px; margin-bottom: 10px;">
+                <img id="mediaBackdropPreview" class="hidden" style="max-height: 80px; margin-bottom: 10px;">
+
+                <div id="movieFileArea" class="input-group">
+                    <label>Link do Vídeo (Embed/Mixdrop)</label>
+                    <input type="text" id="movieVideoUrl" class="input-control" placeholder="https://mixdrop.top/e/...">
+                </div>
+
+                <div id="seriesBuilderArea" class="hidden">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <label style="font-weight: bold; font-size: 13px;">Temporadas e Episódios</label>
+                        <button type="button" class="btn-secondary" id="btnAddSeasonBtn" style="font-size: 11px; padding: 4px 10px;">+ Temporada</button>
+                    </div>
+                    <div id="seasonsList"></div>
+                </div>
+
+                <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 15px;">Salvar Mídia</button>
             </form>
         </div>
     </div>
 
-    <div class="modal-overlay hidden" id="playerModal">
-        <div class="player-modal-box">
-            <div class="player-controls-top" id="playerControlsTop">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <button class="player-back-btn" onclick="closePlayer()">&#8592;</button>
-                    <div>
-                        <div class="player-title-main" id="playerTitleDisplay">Título do Vídeo</div>
-                        <div class="player-title-sub" id="playerSubDisplay">MasterFlix Player</div>
-                    </div>
-                </div>
-            </div>
+    <div id="adminModal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <button class="modal-close" id="btnCloseAdmin">✕</button>
+            <h3 style="margin-bottom: 15px;">Gerenciar Catálogo</h3>
             
-            <div class="player-container-view" id="playerContainerView">
-                <div class="player-loading" id="playerLoading">
-                    <div class="player-spinner"></div>
-                    <span style="font-size: 12px; color: #aaa;">CARREGANDO VÍDEO...</span>
-                </div>
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <input type="text" id="adminSearchInput" class="input-control" style="flex: 1;" placeholder="Buscar no catálogo...">
+                <button class="btn-primary" id="btnAddNewFromAdmin" style="font-size: 12px; padding: 0 12px;">+ Novo</button>
             </div>
+
+            <div id="adminCatalogList" style="display: flex; flex-direction: column; gap: 8px; max-height: 50vh; overflow-y: auto;"></div>
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <div id="suggestionModal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <button class="modal-close" id="btnCloseSuggestion">✕</button>
+            <h3 style="margin-bottom: 15px;">Enviar Sugestão ou Reportar Bug</h3>
+            
+            <div class="input-group">
+                <label>Tipo</label>
+                <select id="suggestionType" class="input-control">
+                    <option value="suggestion">💡 Sugestão</option>
+                    <option value="bug">🐛 Reportar Bug</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Descrição</label>
+                <textarea id="suggestionText" class="input-control" style="height: 100px; resize: none;" placeholder="Escreva aqui detalhadamente..."></textarea>
+            </div>
+
+            <button class="btn-primary" id="btnSendSuggestion" style="width: 100%; justify-content: center;">Enviar</button>
+        </div>
+    </div>
+
+    <div id="suggestionsAdminModal" class="modal-overlay hidden">
+        <div class="modal-box" style="max-width: 650px;">
+            <button class="modal-close" id="btnCloseSuggestionsAdmin">✕</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3>Sugestões Recebidas (<span id="suggestionsCountText">0</span>)</h3>
+                <div style="display: flex; gap: 6px;">
+                    <button class="btn-secondary" id="btnToggleSelectMode" style="font-size: 11px; padding: 4px 8px;">Selecionar</button>
+                    <button class="btn-secondary hidden" id="btnSelectAllSuggestions" style="font-size: 11px; padding: 4px 8px;">Todos</button>
+                    <button class="btn-secondary hidden" id="btnDeleteSelectedSuggestions" style="font-size: 11px; padding: 4px 8px; color: #ff5252;">🗑️ Apagar</button>
+                    <button class="btn-secondary hidden" id="btnCancelSelectMode" style="font-size: 11px; padding: 4px 8px;">Cancelar</button>
+                </div>
+            </div>
+
+            <div id="suggestionsAdminList" style="display: flex; flex-direction: column; gap: 10px; max-height: 50vh; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <div id="storageModal" class="modal-overlay hidden">
+        <div class="modal-box" style="max-width: 450px;">
+            <button class="modal-close" id="btnCloseStorage">✕</button>
+            <h3 style="margin-bottom: 15px;">Uso de Armazenamento Realtime Database</h3>
+            <div id="storageContent"></div>
+        </div>
+    </div>
+
+    <div id="authOverlay" class="auth-overlay hidden">
+        <div class="auth-card">
+            <h2 style="color: var(--primary-color); font-size: 24px; font-weight: 900; margin-bottom: 5px;">MasterFlix</h2>
+            <p id="authSubtitle" style="font-size: 12px; color: #aaa; margin-bottom: 20px;">Entre na sua conta para continuar</p>
+            
+            <form id="authForm">
+                <div class="input-group">
+                    <input type="email" id="authEmail" class="input-control" placeholder="E-mail" required autocomplete="email">
+                </div>
+                <div class="input-group">
+                    <input type="password" id="authPassword" class="input-control" placeholder="Senha" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn-primary" id="btnAuthSubmit" style="width: 100%; justify-content: center; margin-top: 10px;">Entrar na Conta</button>
+            </form>
+
+            <button type="button" id="toggleAuthMode" style="background: none; border: none; color: #aaa; font-size: 12px; margin-top: 15px; cursor: pointer; text-decoration: underline;">Não tem uma conta? Crie agora</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    
+    <script type="module" src="app.js"></script>
 </body>
 </html>
 
