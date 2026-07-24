@@ -634,7 +634,16 @@
                     </label>
                 </div>
                 <div class="input-group"><label for="mediaDesc">Sinopse</label><textarea id="mediaDesc" rows="3" required></textarea></div>
-                <div id="movieFileArea" class="input-group"><label for="movieVideoUrl">Link Vídeo</label><input type="text" id="movieVideoUrl" placeholder="https://mixdrop.ag/e/..."></div>
+                
+                <div id="movieFileArea" class="input-group">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
+                        <label style="margin-bottom:0">🎥 Links de Vídeo / Players</label>
+                        <button type="button" class="btn-secondary" id="btnAddPlayerInput" style="font-size:11px">+ Adicionar Player</button>
+                    </div>
+                    <div id="playersInputsContainer" style="display:flex; flex-direction:column; gap:10px;">
+                        </div>
+                </div>
+
                 <div id="seriesBuilderArea" class="hidden">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px">
                         <span style="font-size:12px;color:var(--primary-color);font-weight:800">Temporadas</span>
@@ -657,9 +666,15 @@
                 <div style="font-size:12px;color:var(--primary-color);font-weight:700;margin-bottom:12px" id="detailMeta"></div>
                 <div id="detailGenres" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px"></div>
                 <p id="detailDesc" style="font-size:14px;color:#bbb;line-height:1.7;margin-bottom:20px"></p>
+                
                 <div id="detailMovieArea" class="hidden">
+                    <div id="playerSelectionGroup" class="hidden" style="margin-bottom:14px;">
+                        <p style="font-size:11px; color:#888; font-weight:700; margin-bottom:8px; text-transform:uppercase;">Escolha o Player:</p>
+                        <div id="playerButtonsContainer" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
+                    </div>
                     <button type="button" class="btn-primary" id="btnPlayMovieFile" tabindex="0" style="width:100%;padding:15px">▶ Assistir Filme</button>
                 </div>
+
                 <div id="detailSerieArea" class="hidden">
                     <div class="season-tab-container" id="seasonTabs"></div>
                     <div class="episodes-scroll-area" id="episodesScrollArea">
