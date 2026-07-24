@@ -1,12 +1,11 @@
-// MasterFlix - App Core com Suporte a Múltiplos Players
+// MasterFlix - Core com Suporte a Múltiplos Players em Filmes e Episódios de Séries
 
-// Gêneros disponíveis
 const ALL_GENRES = [
     "Ação", "Comédia", "Drama", "Terror", "Animação", 
     "Ficção Científica", "Romance", "Aventura", "Fantasia", "Suspense"
 ];
 
-// Dados Iniciais em Memória
+// Dados Iniciais com Exemplo de Séries e Múltiplos Players por Episódio
 let catalog = JSON.parse(localStorage.getItem('masterflix_catalog')) || [
     {
         id: "m1",
@@ -15,30 +14,46 @@ let catalog = JSON.parse(localStorage.getItem('masterflix_catalog')) || [
         year: "2010",
         duration: "2h 28m",
         genres: ["Ação", "Ficção Científica", "Suspense"],
-        desc: "Um ladrão que rouba segredos corporativos por meio do uso da tecnologia de compartilhamento de sonhos é dada a tarefa inversa de plantar uma idéia na mente de um C.E.O.",
+        desc: "Um ladrão que rouba segredos corporativos por meio do uso da tecnologia de compartilhamento de sonhos.",
         cover: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&q=80",
         backdrop: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1200&q=80",
         players: [
-            { name: "MixDrop - Dublado", url: "https://mixdrop.ag/e/example1" },
-            { name: "Streamtape - Legendado", url: "https://streamtape.com/e/example2" }
+            { name: "MixDrop - Dublado", url: "https://mixdrop.top/e/8l4374qzunqml0" },
+            { name: "StreamTape - Legendado", url: "https://streamtape.com/e/example" }
         ]
     },
     {
         id: "s1",
         type: "serie",
-        title: "Stranger Things",
-        year: "2016",
-        duration: "4 Temporadas",
-        genres: ["Drama", "Terror", "Ficção Científica"],
-        desc: "Quando um garoto desaparece, uma pequena cidade descobre um mistério envolvendo experimentos secretos, forças sobrenaturais aterrorizantes e uma garotinha estranha.",
-        cover: "https://images.unsplash.com/photo-1618336753974-aae8e04506aa?w=500&q=80",
+        title: "Breaking Bad",
+        year: "2008",
+        duration: "5 Temporadas",
+        genres: ["Drama", "Suspense"],
+        desc: "Um professor de química do ensino médio diagnosticado com câncer de pulmão inoperável se transforma em um produtor e vendedor de metanfetamina.",
+        cover: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&q=80",
         backdrop: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=1200&q=80",
         seasons: [
             {
                 number: 1,
                 episodes: [
-                    { number: 1, title: "Capítulo Um: O Desaparecimento de Will Byers", url: "https://mixdrop.ag/e/st_s1e1" },
-                    { number: 2, title: "Capítulo Dois: A Esquisita da Rua Maple", url: "https://mixdrop.ag/e/st_s1e2" }
+                    {
+                        number: 1,
+                        title: "Piloto",
+                        duration: "58min",
+                        players: [
+                            { name: "MixDrop", url: "https://mixdrop.top/e/8l4374qzunqml0" },
+                            { name: "DoodStream", url: "https://dood.to/e/example1" }
+                        ]
+                    },
+                    {
+                        number: 2,
+                        title: "O Gato Está na Sacola...",
+                        duration: "48min",
+                        players: [
+                            { name: "MixDrop", url: "https://mixdrop.top/f/7kr3166mc94nee" },
+                            { name: "StreamTape", url: "https://streamtape.com/e/example2" }
+                        ]
+                    }
                 ]
             }
         ]
@@ -46,24 +61,19 @@ let catalog = JSON.parse(localStorage.getItem('masterflix_catalog')) || [
 ];
 
 let currentUser = JSON.parse(localStorage.getItem('masterflix_user')) || {
-    name: "Usuário Pro",
-    email: "usuario@masterflix.com",
-    isAdmin: true,
-    bio: "Maratonando os melhores lançamentos!",
-    avatar: ""
+    name: "Administrador",
+    email: "admin@masterflix.com",
+    isAdmin: true
 };
 
 let selectedGenres = [];
-let currentMoviePlayers = [];
-let selectedPlayerUrl = "";
+let selectedMoviePlayerUrl = "";
 let currentItemDetails = null;
 
-// Salva Catálogo
 function saveCatalog() {
     localStorage.setItem('masterflix_catalog', JSON.stringify(catalog));
 }
 
-// Utilitário de Toast
 function showToast(text, type = 'success') {
     const msg = document.getElementById('msg');
     msg.textContent = text;
@@ -72,41 +82,27 @@ function showToast(text, type = 'success') {
     setTimeout(() => msg.classList.add('hidden'), 3500);
 }
 
-// Modal Helpers
 function openModal(modalId) {
-    const m = document.getElementById(modalId);
-    if (m) {
-        m.classList.remove('hidden');
-        document.body.classList.add('modal-open');
-    }
+    document.getElementById(modalId)?.classList.remove('hidden');
+    document.body.classList.add('modal-open');
 }
 
 function closeModal(modalId) {
-    const m = document.getElementById(modalId);
-    if (m) {
-        m.classList.add('hidden');
-        document.body.classList.remove('modal-open');
-    }
+    document.getElementById(modalId)?.classList.add('hidden');
+    document.body.classList.remove('modal-open');
 }
 
-// Inicialização Geral
+// Inicialização
 document.addEventListener('DOMContentLoaded', () => {
     initHeaderAndSidebar();
     initGenreSelector();
-    initPlayersCreatorArea();
+    initMoviePlayersCreatorArea();
+    initSeriesBuilderArea();
     renderCatalog();
-    updateUserInterface();
     initEventListeners();
 });
 
-// UI Header e Sidebar
 function initHeaderAndSidebar() {
-    const mainHeader = document.getElementById('mainHeader');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 40) mainHeader.classList.add('scrolled');
-        else mainHeader.classList.remove('scrolled');
-    });
-
     const menuToggleBtn = document.getElementById('menuToggleBtn');
     const sidebarMenu = document.getElementById('sidebarMenu');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
@@ -122,43 +118,19 @@ function initHeaderAndSidebar() {
     sidebarOverlay?.addEventListener('click', toggleSidebar);
     sidebarCloseBtn?.addEventListener('click', toggleSidebar);
 
-    // Sidebar Items Navigation
     document.querySelectorAll('.sidebar-item').forEach(item => {
         item.addEventListener('click', () => {
             const nav = item.getAttribute('data-nav');
             if (nav === 'creator') openCreatorModal();
-            else if (nav === 'admin') openModal('adminModal');
-            else if (nav === 'profile') openModal('profileModal');
-            else if (nav === 'suggestions') openModal('suggestionModal');
-            else if (nav === 'suggestionsAdmin') openModal('suggestionsAdminModal');
-            else if (nav === 'storage') openModal('storageModal');
-            else if (nav === 'logout') {
-                showToast("Sessão encerrada!");
-                openModal('authOverlay');
-            }
             toggleSidebar();
         });
     });
-}
-
-// Atualizar Dados do Usuário
-function updateUserInterface() {
-    document.getElementById('sidebarUserName').textContent = currentUser.name;
-    document.getElementById('sidebarUserEmail').textContent = currentUser.email;
-    document.getElementById('profileNameDisplay').textContent = currentUser.name;
-    document.getElementById('profileEmailDisplay').textContent = currentUser.email;
-    document.getElementById('profileBioDisplay').textContent = `"${currentUser.bio}"`;
 
     if (currentUser.isAdmin) {
-        document.getElementById('sidebarAdminItem')?.classList.remove('hidden');
         document.getElementById('sidebarCreatorItem')?.classList.remove('hidden');
-        document.getElementById('sidebarSuggestionsAdminItem')?.classList.remove('hidden');
-        document.getElementById('sidebarStorageItem')?.classList.remove('hidden');
-        document.getElementById('profileAdminBadge')?.classList.remove('hidden');
     }
 }
 
-// Selector de Gêneros
 function initGenreSelector() {
     const container = document.getElementById('genreSelectorContainer');
     if (!container) return;
@@ -184,71 +156,220 @@ function initGenreSelector() {
 }
 
 // ----------------------------------------------------
-// GERENCIAR INPUTS DE PLAYERS NO MÓDULO CRIADOR
+// PLAYERS PARA FILME (NO CRIADOR)
 // ----------------------------------------------------
 const playersInputsContainer = document.getElementById('playersInputsContainer');
 const btnAddPlayerInput = document.getElementById('btnAddPlayerInput');
 
-function initPlayersCreatorArea() {
-    btnAddPlayerInput?.addEventListener('click', () => addPlayerInputRow());
+function initMoviePlayersCreatorArea() {
+    btnAddPlayerInput?.addEventListener('click', () => addMoviePlayerInputRow());
 }
 
-function addPlayerInputRow(name = '', url = '') {
+function addMoviePlayerInputRow(name = '', url = '') {
     if (!playersInputsContainer) return;
     const row = document.createElement('div');
-    row.className = 'player-input-row';
     row.style.cssText = 'display:flex; gap:8px; align-items:center;';
+    row.className = 'movie-player-row';
 
     row.innerHTML = `
-        <input type="text" class="player-name-input" placeholder="Nome Ex: MixDrop" value="${name}" style="flex:1; padding:10px; background:#0f0f0f; border:1.5px solid #2a2a2a; color:#fff; border-radius:8px; font-size:13px;" required>
+        <input type="text" class="player-name-input" placeholder="Servidor (Ex: MixDrop)" value="${name}" style="flex:1; padding:10px; background:#0f0f0f; border:1.5px solid #2a2a2a; color:#fff; border-radius:8px; font-size:13px;" required>
         <input type="url" class="player-url-input" placeholder="https://..." value="${url}" style="flex:2; padding:10px; background:#0f0f0f; border:1.5px solid #2a2a2a; color:#fff; border-radius:8px; font-size:13px;" required>
         <button type="button" class="btn-danger remove-player-btn" style="padding:8px 12px;">✕</button>
     `;
 
     row.querySelector('.remove-player-btn').addEventListener('click', () => {
-        if (playersInputsContainer.children.length > 1) {
-            row.remove();
-        } else {
-            showToast("O filme precisa ter pelo menos 1 player!", "error");
-        }
+        if (playersInputsContainer.children.length > 1) row.remove();
+        else showToast("Mínimo de 1 player necessário!", "error");
     });
 
     playersInputsContainer.appendChild(row);
 }
 
-function resetPlayerInputs(existingPlayers = []) {
+function resetMoviePlayerInputs(existing = []) {
     if (!playersInputsContainer) return;
     playersInputsContainer.innerHTML = '';
-    if (existingPlayers && existingPlayers.length > 0) {
-        existingPlayers.forEach(p => addPlayerInputRow(p.name, p.url));
-    } else {
-        addPlayerInputRow('Principal', '');
-    }
+    if (existing.length > 0) existing.forEach(p => addMoviePlayerInputRow(p.name, p.url));
+    else addMoviePlayerInputRow('MixDrop', '');
 }
 
-function getPlayersFromForm() {
-    if (!playersInputsContainer) return [];
-    const rows = playersInputsContainer.querySelectorAll('.player-input-row');
-    const players = [];
+function getMoviePlayersFromForm() {
+    const rows = playersInputsContainer.querySelectorAll('.movie-player-row');
+    const list = [];
+    rows.forEach(r => {
+        const name = r.querySelector('.player-name-input').value.trim();
+        const url = r.querySelector('.player-url-input').value.trim();
+        if (name && url) list.push({ name, url });
+    });
+    return list;
+}
 
-    rows.forEach(row => {
-        const name = row.querySelector('.player-name-input').value.trim();
-        const url = row.querySelector('.player-url-input').value.trim();
-        if (name && url) {
-            players.push({ name, url });
+// ----------------------------------------------------
+// CONSTRUTOR DE TEMPORADAS E EPISÓDIOS COM MÚLTIPLOS PLAYERS
+// ----------------------------------------------------
+const seasonsListContainer = document.getElementById('seasonsList');
+const btnAddSeasonBtn = document.getElementById('btnAddSeasonBtn');
+
+function initSeriesBuilderArea() {
+    document.getElementById('mediaType')?.addEventListener('change', (e) => {
+        const type = e.target.value;
+        if (type === 'serie') {
+            document.getElementById('seriesBuilderArea').classList.remove('hidden');
+            document.getElementById('movieFileArea').classList.add('hidden');
+        } else {
+            document.getElementById('seriesBuilderArea').classList.add('hidden');
+            document.getElementById('movieFileArea').classList.remove('hidden');
         }
     });
 
-    return players;
+    btnAddSeasonBtn?.addEventListener('click', () => addSeasonBlock());
 }
 
-// Abrir Criador
+function addSeasonBlock(seasonData = null) {
+    const seasonNumber = seasonsListContainer.children.length + 1;
+    const seasonBlock = document.createElement('div');
+    seasonBlock.className = 'season-block';
+    
+    seasonBlock.innerHTML = `
+        <div class="season-block-header">
+            <strong style="color:var(--primary-color)">Temporada ${seasonNumber}</strong>
+            <button type="button" class="btn-danger remove-season-btn">Remover Temporada</button>
+        </div>
+        <div class="episodes-container"></div>
+        <button type="button" class="btn-secondary add-ep-btn" style="width:100%; margin-top:8px">+ Adicionar Episódio</button>
+    `;
+
+    const episodesContainer = seasonBlock.querySelector('.episodes-container');
+    const addEpBtn = seasonBlock.querySelector('.add-ep-btn');
+
+    addEpBtn.addEventListener('click', () => addEpisodeBlock(episodesContainer));
+
+    seasonBlock.querySelector('.remove-season-btn').addEventListener('click', () => seasonBlock.remove());
+
+    seasonsListContainer.appendChild(seasonBlock);
+
+    if (seasonData && seasonData.episodes) {
+        seasonData.episodes.forEach(ep => addEpisodeBlock(episodesContainer, ep));
+    } else {
+        addEpisodeBlock(episodesContainer);
+    }
+}
+
+function addEpisodeBlock(container, epData = null) {
+    const epNumber = container.children.length + 1;
+    const epBlock = document.createElement('div');
+    epBlock.className = 'episode-block';
+
+    epBlock.innerHTML = `
+        <div class="episode-block-header">
+            <span style="font-weight:700; font-size:12px">Episódio ${epNumber}</span>
+            <button type="button" class="btn-danger remove-ep-btn" style="padding:4px 8px; font-size:10px">✕</button>
+        </div>
+        <div style="display:flex; gap:8px; margin-bottom:8px">
+            <input type="text" class="ep-title-input" placeholder="Título do Episódio" value="${epData ? epData.title : ''}" style="flex:2; padding:8px; background:#0f0f0f; border:1px solid #333; color:#fff; border-radius:6px; font-size:12px" required>
+            <input type="text" class="ep-duration-input" placeholder="Duração (Ex: 45min)" value="${epData ? epData.duration || '' : ''}" style="flex:1; padding:8px; background:#0f0f0f; border:1px solid #333; color:#fff; border-radius:6px; font-size:12px">
+        </div>
+        
+        <div style="background:rgba(0,0,0,0.2); padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.05)">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px">
+                <span style="font-size:10px; font-weight:800; color:#aaa; text-transform:uppercase">Links / Players de Vídeo</span>
+                <button type="button" class="btn-secondary add-ep-player-btn" style="padding:4px 8px; font-size:10px">+ Player</button>
+            </div>
+            <div class="ep-players-container" style="display:flex; flex-direction:column; gap:6px"></div>
+        </div>
+    `;
+
+    const epPlayersContainer = epBlock.querySelector('.ep-players-container');
+    const addEpPlayerBtn = epBlock.querySelector('.add-ep-player-btn');
+
+    addEpPlayerBtn.addEventListener('click', () => addEpPlayerRow(epPlayersContainer));
+
+    epBlock.querySelector('.remove-ep-btn').addEventListener('click', () => epBlock.remove());
+
+    container.appendChild(epBlock);
+
+    // Carregar players existentes ou legados
+    if (epData) {
+        if (epData.players && epData.players.length > 0) {
+            epData.players.forEach(p => addEpPlayerRow(epPlayersContainer, p.name, p.url));
+        } else if (epData.url) {
+            addEpPlayerRow(epPlayersContainer, "MixDrop", epData.url);
+        } else {
+            addEpPlayerRow(epPlayersContainer);
+        }
+    } else {
+        addEpPlayerRow(epPlayersContainer, "MixDrop", "");
+    }
+}
+
+function addEpPlayerRow(container, name = '', url = '') {
+    const row = document.createElement('div');
+    row.className = 'ep-player-row';
+    row.style.cssText = 'display:flex; gap:6px; align-items:center;';
+
+    row.innerHTML = `
+        <input type="text" class="ep-player-name" placeholder="Servidor (Ex: MixDrop)" value="${name}" style="flex:1; padding:6px; background:#000; border:1px solid #333; color:#fff; border-radius:4px; font-size:11px" required>
+        <input type="url" class="ep-player-url" placeholder="https://..." value="${url}" style="flex:2; padding:6px; background:#000; border:1px solid #333; color:#fff; border-radius:4px; font-size:11px" required>
+        <button type="button" class="btn-danger remove-ep-player-btn" style="padding:4px 8px; font-size:10px">✕</button>
+    `;
+
+    row.querySelector('.remove-ep-player-btn').addEventListener('click', () => {
+        if (container.children.length > 1) row.remove();
+        else showToast("O episódio precisa de ao menos 1 player!", "error");
+    });
+
+    container.appendChild(row);
+}
+
+function getSeasonsFromForm() {
+    const seasonBlocks = seasonsListContainer.querySelectorAll('.season-block');
+    const seasons = [];
+
+    seasonBlocks.forEach((sb, sIdx) => {
+        const epBlocks = sb.querySelectorAll('.episode-block');
+        const episodes = [];
+
+        epBlocks.forEach((eb, eIdx) => {
+            const title = eb.querySelector('.ep-title-input').value.trim();
+            const duration = eb.querySelector('.ep-duration-input').value.trim();
+            const playerRows = eb.querySelectorAll('.ep-player-row');
+            
+            const players = [];
+            playerRows.forEach(pr => {
+                const pName = pr.querySelector('.ep-player-name').value.trim();
+                const pUrl = pr.querySelector('.ep-player-url').value.trim();
+                if (pName && pUrl) players.push({ name: pName, url: pUrl });
+            });
+
+            if (title && players.length > 0) {
+                episodes.push({
+                    number: eIdx + 1,
+                    title,
+                    duration,
+                    players
+                });
+            }
+        });
+
+        if (episodes.length > 0) {
+            seasons.push({
+                number: sIdx + 1,
+                episodes
+            });
+        }
+    });
+
+    return seasons;
+}
+
+// ----------------------------------------------------
+// ABRIR FORMULÁRIO (CRIAR/EDITAR)
+// ----------------------------------------------------
 function openCreatorModal(itemToEdit = null) {
     const form = document.getElementById('mediaForm');
     form.reset();
     selectedGenres = [];
+    seasonsListContainer.innerHTML = '';
     document.querySelectorAll('.genre-tag').forEach(t => t.classList.remove('selected'));
-    document.getElementById('genreCounter').textContent = 'Nenhum';
 
     if (itemToEdit) {
         document.getElementById('creatorTitle').textContent = 'Editar Mídia';
@@ -257,77 +378,40 @@ function openCreatorModal(itemToEdit = null) {
         document.getElementById('mediaTitle').value = itemToEdit.title;
         document.getElementById('mediaYear').value = itemToEdit.year;
         document.getElementById('mediaDuration').value = itemToEdit.duration || '';
+        document.getElementById('mediaCover').value = itemToEdit.cover;
+        document.getElementById('mediaBackdrop').value = itemToEdit.backdrop || '';
         document.getElementById('mediaDesc').value = itemToEdit.desc;
 
         selectedGenres = itemToEdit.genres || [];
         document.querySelectorAll('.genre-tag').forEach(tag => {
             if (selectedGenres.includes(tag.textContent)) tag.classList.add('selected');
         });
-        document.getElementById('genreCounter').textContent = `${selectedGenres.length} selecionado(s)`;
 
-        resetPlayerInputs(itemToEdit.players || []);
+        if (itemToEdit.type === 'movie') {
+            document.getElementById('seriesBuilderArea').classList.add('hidden');
+            document.getElementById('movieFileArea').classList.remove('hidden');
+            resetMoviePlayerInputs(itemToEdit.players || []);
+        } else {
+            document.getElementById('seriesBuilderArea').classList.remove('hidden');
+            document.getElementById('movieFileArea').classList.add('hidden');
+            if (itemToEdit.seasons) {
+                itemToEdit.seasons.forEach(s => addSeasonBlock(s));
+            }
+        }
     } else {
         document.getElementById('creatorTitle').textContent = 'Publicar Nova Mídia';
         document.getElementById('editMediaId').value = '';
-        resetPlayerInputs();
+        document.getElementById('seriesBuilderArea').classList.add('hidden');
+        document.getElementById('movieFileArea').classList.remove('hidden');
+        resetMoviePlayerInputs();
     }
 
     openModal('creatorModal');
 }
 
 // ----------------------------------------------------
-// EXIBIR E SELECIONAR PLAYERS NO MODAL DE DETALHES
+// MODAL DE DETALHES & SELEÇÃO DE PLAYERS
 // ----------------------------------------------------
-function renderPlayerOptions(players) {
-    const playerSelectionGroup = document.getElementById('playerSelectionGroup');
-    const playerButtonsContainer = document.getElementById('playerButtonsContainer');
-    const btnPlayMovieFile = document.getElementById('btnPlayMovieFile');
-
-    currentMoviePlayers = players || [];
-    playerButtonsContainer.innerHTML = '';
-
-    if (currentMoviePlayers.length === 0) {
-        playerSelectionGroup.classList.add('hidden');
-        selectedPlayerUrl = '';
-        return;
-    }
-
-    // Se tiver apenas 1 player: esconde os botões e seleciona ele direto
-    if (currentMoviePlayers.length < 2) {
-        playerSelectionGroup.classList.add('hidden');
-        selectedPlayerUrl = currentMoviePlayers[0].url;
-    } 
-    // Se tiver 2 ou mais players: exibe a lista de botões
-    else {
-        playerSelectionGroup.classList.remove('hidden');
-        selectedPlayerUrl = currentMoviePlayers[0].url;
-
-        currentMoviePlayers.forEach((player, index) => {
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = index === 0 ? 'category-chip active' : 'category-chip';
-            btn.textContent = player.name;
-            
-            btn.addEventListener('click', () => {
-                playerButtonsContainer.querySelectorAll('button').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                selectedPlayerUrl = player.url;
-            });
-
-            playerButtonsContainer.appendChild(btn);
-        });
-    }
-
-    btnPlayMovieFile.onclick = () => {
-        if (selectedPlayerUrl) {
-            openPlayerModal(currentItemDetails?.title || "Filme", selectedPlayerUrl);
-        } else {
-            showToast('Nenhum player disponível!', 'error');
-        }
-    };
-}
-
-// Abrir Detalhes
 function openDetailsModal(item) {
     currentItemDetails = item;
     document.getElementById('detailTitle').textContent = item.title;
@@ -341,7 +425,6 @@ function openDetailsModal(item) {
     (item.genres || []).forEach(g => {
         const badge = document.createElement('span');
         badge.className = 'type-badge';
-        badge.style.cssText = 'background:rgba(255,255,255,0.08); padding:4px 10px; border-radius:6px; font-size:11px; font-weight:700; color:#ccc;';
         badge.textContent = g;
         genresBox.appendChild(badge);
     });
@@ -349,7 +432,7 @@ function openDetailsModal(item) {
     if (item.type === 'movie') {
         document.getElementById('detailMovieArea').classList.remove('hidden');
         document.getElementById('detailSerieArea').classList.add('hidden');
-        renderPlayerOptions(item.players || []);
+        renderMoviePlayers(item.players || []);
     } else {
         document.getElementById('detailMovieArea').classList.add('hidden');
         document.getElementById('detailSerieArea').classList.remove('hidden');
@@ -359,7 +442,50 @@ function openDetailsModal(item) {
     openModal('detailsModal');
 }
 
-// Renderizar Episódios da Série
+function renderMoviePlayers(players) {
+    const group = document.getElementById('moviePlayerSelectionGroup');
+    const container = document.getElementById('moviePlayerButtonsContainer');
+    const btnPlay = document.getElementById('btnPlayMovieFile');
+
+    container.innerHTML = '';
+
+    if (!players || players.length === 0) {
+        group.classList.add('hidden');
+        selectedMoviePlayerUrl = '';
+        return;
+    }
+
+    // Se tiver só 1 player: esconde os botões e seleciona direto
+    if (players.length < 2) {
+        group.classList.add('hidden');
+        selectedMoviePlayerUrl = players[0].url;
+    } else { // Se tiver 2 ou mais: cria os botões para escolha
+        group.classList.remove('hidden');
+        selectedMoviePlayerUrl = players[0].url;
+
+        players.forEach((p, idx) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = idx === 0 ? 'category-chip active' : 'category-chip';
+            btn.textContent = p.name;
+            btn.addEventListener('click', () => {
+                container.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedMoviePlayerUrl = p.url;
+            });
+            container.appendChild(btn);
+        });
+    }
+
+    btnPlay.onclick = () => {
+        if (selectedMoviePlayerUrl) {
+            openPlayerModal(currentItemDetails.title, selectedMoviePlayerUrl);
+        } else {
+            showToast("Nenhum link de vídeo disponível!", "error");
+        }
+    };
+}
+
 function renderSeriesEpisodes(serie) {
     const seasonTabs = document.getElementById('seasonTabs');
     const container = document.getElementById('episodesListContainer');
@@ -394,23 +520,61 @@ function displayEpisodesList(episodes = []) {
     episodes.forEach(ep => {
         const card = document.createElement('div');
         card.className = 'episode-card';
+
+        // Garante compatibilidade caso o episódio tenha o formato novo (players[]) ou antigo (url)
+        const epPlayers = ep.players || (ep.url ? [{ name: "Principal", url: ep.url }] : []);
+        
+        let playerButtonsHTML = '';
+
+        // Se o episódio tiver MÚLTIPLOS PLAYERS, gera os botões de escolha
+        if (epPlayers.length > 1) {
+            playerButtonsHTML = `
+                <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.06); display:flex; gap:6px; align-items:center; flex-wrap:wrap">
+                    <span style="font-size:10px; color:#888; font-weight:700; text-transform:uppercase">Opções de Player:</span>
+                    ${epPlayers.map((p, i) => `
+                        <button type="button" class="btn-secondary ep-player-btn" data-url="${p.url}" style="padding:4px 10px; font-size:11px">
+                            ▶ ${p.name}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+        }
+
         card.innerHTML = `
-            <div class="episode-thumb">
-                <div class="ep-play-overlay"><span>▶</span></div>
+            <div class="episode-card-header">
+                <span class="episode-card-title">E${ep.number} - ${ep.title}</span>
+                <span class="episode-card-duration">${ep.duration || ''}</span>
             </div>
-            <div style="flex:1;">
-                <div style="font-size:13px; font-weight:700;">E${ep.number} - ${ep.title}</div>
-            </div>
+            ${playerButtonsHTML}
         `;
-        card.addEventListener('click', () => {
-            openPlayerModal(`${currentItemDetails.title} - E${ep.number}`, ep.url);
-        });
+
+        // Se tiver 1 único player: clica no card e abre direto
+        if (epPlayers.length <= 1) {
+            card.style.cursor = 'pointer';
+            card.addEventListener('click', () => {
+                if (epPlayers.length === 1) {
+                    openPlayerModal(`${currentItemDetails.title} - E${ep.number}`, epPlayers[0].url);
+                } else {
+                    showToast("Episódio sem link de vídeo!", "error");
+                }
+            });
+        } else { // Se tiver múltiplos players: clica no botão do player desejado
+            card.querySelectorAll('.ep-player-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const url = btn.getAttribute('data-url');
+                    const name = btn.textContent.trim();
+                    openPlayerModal(`${currentItemDetails.title} - E${ep.number} (${name})`, url);
+                });
+            });
+        }
+
         container.appendChild(card);
     });
 }
 
 // ----------------------------------------------------
-// PLAYER MODAL DE VÍDEO
+// TELA DO PLAYER
 // ----------------------------------------------------
 function openPlayerModal(title, videoUrl) {
     document.getElementById('playerTitleDisplay').textContent = title;
@@ -419,7 +583,6 @@ function openPlayerModal(title, videoUrl) {
 
     loading.classList.remove('hidden');
 
-    // Remove iframe antigo
     const oldIframe = view.querySelector('iframe');
     if (oldIframe) oldIframe.remove();
 
@@ -432,7 +595,7 @@ function openPlayerModal(title, videoUrl) {
     openModal('playerModal');
 }
 
-// Renderizar Catálogo
+// RENDERIZAÇÃO PRINCIPAL
 function renderCatalog() {
     const moviesCarousel = document.getElementById('moviesCarousel');
     const seriesCarousel = document.getElementById('seriesCarousel');
@@ -456,11 +619,10 @@ function renderCatalog() {
         else seriesCarousel.appendChild(card);
     });
 
-    // Hero Banner
     if (catalog.length > 0) {
         const hero = catalog[0];
         document.getElementById('heroTitle').textContent = hero.title;
-        document.getElementById('heroMeta').innerHTML = `<span>${hero.year}</span> <span class="dot">•</span> <span>${hero.duration || ''}</span>`;
+        document.getElementById('heroMeta').innerHTML = `<span>${hero.year}</span> • <span>${hero.duration || ''}</span>`;
         document.getElementById('heroDesc').textContent = hero.desc;
         document.getElementById('heroBackdrop').style.backgroundImage = `url('${hero.backdrop || hero.cover}')`;
         document.getElementById('heroPlayBtn').onclick = () => openDetailsModal(hero);
@@ -468,9 +630,8 @@ function renderCatalog() {
     }
 }
 
-// Eventos Globais e Formulários
+// EVENTOS GLOBAIS
 function initEventListeners() {
-    // Submeter formulário de criar/editar
     document.getElementById('mediaForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
         const id = document.getElementById('editMediaId').value;
@@ -478,39 +639,35 @@ function initEventListeners() {
         const title = document.getElementById('mediaTitle').value;
         const year = document.getElementById('mediaYear').value;
         const duration = document.getElementById('mediaDuration').value;
+        const cover = document.getElementById('mediaCover').value;
+        const backdrop = document.getElementById('mediaBackdrop').value;
         const desc = document.getElementById('mediaDesc').value;
 
-        const players = getPlayersFromForm();
+        let newItem = {
+            id: id || ('m_' + Date.now()),
+            type, title, year, duration, cover, backdrop, desc,
+            genres: selectedGenres
+        };
+
+        if (type === 'movie') {
+            newItem.players = getMoviePlayersFromForm();
+        } else {
+            newItem.seasons = getSeasonsFromForm();
+        }
 
         if (id) {
             const index = catalog.findIndex(x => x.id === id);
-            if (index !== -1) {
-                catalog[index] = {
-                    ...catalog[index],
-                    type, title, year, duration, desc,
-                    genres: selectedGenres,
-                    players
-                };
-            }
+            if (index !== -1) catalog[index] = newItem;
         } else {
-            const newItem = {
-                id: 'm_' + Date.now(),
-                type, title, year, duration, desc,
-                genres: selectedGenres,
-                cover: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&q=80",
-                backdrop: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1200&q=80",
-                players
-            };
             catalog.push(newItem);
         }
 
         saveCatalog();
         renderCatalog();
         closeModal('creatorModal');
-        showToast("Mídia salva com sucesso!");
+        showToast("Salvo com sucesso!");
     });
 
-    // Botão Fechar Modal Generico
     document.querySelectorAll('.modal-close').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const modal = e.target.closest('.modal-overlay');
@@ -518,52 +675,11 @@ function initEventListeners() {
         });
     });
 
-    // Fechar Player Modal
     document.getElementById('btnClosePlayer')?.addEventListener('click', () => {
         const view = document.getElementById('playerContainerView');
         const iframe = view.querySelector('iframe');
         if (iframe) iframe.remove();
         closeModal('playerModal');
-    });
-
-    // Pesquisa
-    const searchInput = document.getElementById('searchInput');
-    searchInput?.addEventListener('input', (e) => {
-        const query = e.target.value.toLowerCase().trim();
-        const dropdown = document.getElementById('searchResultsDropdown');
-        if (!query) {
-            dropdown.classList.remove('visible');
-            return;
-        }
-
-        const filtered = catalog.filter(i => i.title.toLowerCase().includes(query));
-        dropdown.innerHTML = '<div class="search-results-header">Resultados</div>';
-
-        if (filtered.length === 0) {
-            dropdown.innerHTML += '<div class="search-no-results">Nenhum título encontrado.</div>';
-        } else {
-            filtered.forEach(item => {
-                const row = document.createElement('div');
-                row.className = 'search-result-item';
-                row.innerHTML = `
-                    <img class="search-result-thumb" src="${item.cover}">
-                    <div class="search-result-info">
-                        <div class="search-result-title">${item.title}</div>
-                        <div class="search-result-meta"><span class="type-badge">${item.type}</span> ${item.year}</div>
-                    </div>
-                `;
-                row.addEventListener('click', () => {
-                    dropdown.classList.remove('visible');
-                    openDetailsModal(item);
-                });
-                dropdown.appendChild(row);
-            });
-        }
-        dropdown.classList.add('visible');
-    });
-
-    document.getElementById('searchIconBtn')?.addEventListener('click', () => {
-        document.getElementById('searchBox').classList.toggle('active');
     });
 }
 
