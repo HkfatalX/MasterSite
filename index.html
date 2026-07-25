@@ -6,224 +6,219 @@
   <title>Loja Master - Robux & Gamepasses</title>
   <style>
     :root {
-      --bg-main: #0b0f19;
-      --bg-card: #161e2e;
-      --bg-input: #1f293d;
-      --accent: #00ff88;
-      --accent-hover: #00cc6a;
-      --danger: #ff4d4d;
-      --warning: #ffaa00;
-      --text: #ffffff;
-      --text-muted: #9ca3af;
+      --bg-base: #07090e;
+      --bg-surface: #0f172a;
+      --bg-card: #1e293b;
+      --bg-input: #090d16;
+      --accent: #10b981;
+      --accent-hover: #059669;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: var(--bg-main); color: var(--text); display: flex; min-height: 100vh; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', 'Segoe UI', sans-serif; }
+    body { background-color: var(--bg-base); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* Estilos Utilitários */
+    .hidden { display: none !important; }
+    input, button, select { width: 100%; padding: 12px 16px; margin: 8px 0; border-radius: 10px; border: 1px solid var(--border); background: var(--bg-input); color: var(--text); font-size: 0.95rem; outline: none; transition: 0.2s; }
+    input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2); }
+    button { background-color: var(--accent); color: white; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; }
+    button:hover { background-color: var(--accent-hover); }
+    .btn-danger { background-color: var(--danger); }
+    .btn-danger:hover { background-color: #dc2626; }
+    .btn-secondary { background-color: #475569; }
+    .btn-secondary:hover { background-color: #334155; }
+
+    /* --- TELA DE LOGIN / CADASTRO (Centralizada) --- */
+    #authScreen {
+      position: fixed; inset: 0; background: var(--bg-base); z-index: 1000;
+      display: flex; justify-content: center; align-items: center; padding: 20px;
+    }
+    .auth-card {
+      background: var(--bg-surface); border: 1px solid var(--border); border-radius: 20px;
+      padding: 40px; width: 100%; max-width: 440px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
+    }
+    .auth-card h2 { text-align: center; margin-bottom: 24px; color: var(--accent); font-size: 1.8rem; }
+    .tab-switch { display: flex; gap: 10px; margin-bottom: 20px; }
+    .tab-btn { flex: 1; padding: 10px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; color: var(--text-muted); cursor: pointer; font-weight: 650; }
+    .tab-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+    /* --- LAYOUT PRINCIPAL DO SITE (Aparece pós-login) --- */
+    #mainApp { display: flex; flex: 1; min-height: 100vh; }
 
     /* Menu Lateral / Sidebar */
     sidebar {
-      width: 280px;
-      background-color: var(--bg-card);
-      border-right: 1px solid #2a374a;
-      display: flex;
-      flex-direction: column;
-      padding: 20px;
-      position: fixed;
-      height: 100vh;
-      overflow-y: auto;
+      width: 300px; background-color: var(--bg-surface); border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; padding: 24px; position: fixed; height: 100vh; overflow-y: auto;
+      z-index: 10;
     }
-    .brand { font-size: 1.5rem; font-weight: bold; color: var(--accent); margin-bottom: 25px; text-align: center; }
-    .sidebar-section { margin-bottom: 25px; }
-    .sidebar-section h3 { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; }
+    .brand { font-size: 1.4rem; font-weight: 800; color: var(--accent); margin-bottom: 30px; display: flex; align-items: center; gap: 10px; }
+    .sidebar-block { margin-bottom: 24px; }
+    .sidebar-block h4 { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
 
     /* Conteúdo Principal */
-    main {
-      margin-left: 280px;
-      flex: 1;
-      padding: 30px;
-      max-width: 1200px;
-    }
+    content-area { margin-left: 300px; flex: 1; padding: 30px; max-width: 1300px; }
 
-    /* Topo com Pesquisa e Perfil */
+    /* Topo / Header */
     header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-      gap: 20px;
-      background-color: var(--bg-card);
-      padding: 15px 25px;
-      border-radius: 12px;
-      border: 1px solid #2a374a;
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; gap: 20px;
+      background-color: var(--bg-surface); padding: 16px 24px; border-radius: 16px; border: 1px solid var(--border);
     }
-    .search-box {
-      flex: 1;
-      position: relative;
-    }
-    .search-box input {
-      width: 100%;
-      padding: 10px 15px 10px 40px;
-      border-radius: 8px;
-      border: 1px solid #2a374a;
-      background: var(--bg-input);
-      color: var(--text);
-      font-size: 0.95rem;
-    }
-    .search-box::before {
-      content: '🔍';
-      position: absolute;
-      left: 12px;
-      top: 10px;
-    }
-    .user-profile-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .avatar-sm {
-      width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);
-    }
+    .search-container { flex: 1; position: relative; max-width: 500px; }
+    .search-container input { margin: 0; padding-left: 42px; background: var(--bg-input); }
+    .search-icon { position: absolute; left: 14px; top: 14px; color: var(--text-muted); }
+    
+    .status-badge { padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+    .status-open { background: rgba(16, 185, 129, 0.1); color: var(--accent); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .status-closed { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
 
-    /* Elementos de Formulário */
-    input, select, button {
-      width: 100%; padding: 10px 12px; margin: 6px 0 14px 0; border-radius: 8px; border: 1px solid #2a374a; background: var(--bg-input); color: var(--text); font-size: 0.95rem;
-    }
-    button {
-      background-color: var(--accent); color: var(--bg-main); font-weight: bold; cursor: pointer; border: none; transition: 0.2s;
-    }
-    button:hover { background-color: var(--accent-hover); }
-    .btn-danger { background-color: var(--danger); color: white; }
-    .btn-danger:hover { background-color: #cc0000; }
-    .btn-secondary { background-color: #3b82f6; color: white; }
-
-    /* Grades e Cards */
+    /* Cards e Grades */
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
-    .card {
-      background-color: var(--bg-card); border-radius: 12px; padding: 20px; border: 1px solid #2a374a; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: flex; flex-direction: column; justify-content: space-between;
-    }
-    .card h4 { font-size: 1.1rem; margin-bottom: 8px; }
-    .price { color: var(--accent); font-weight: bold; font-size: 1.2rem; margin-bottom: 12px; }
+    .card { background-color: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2); }
+    .card h3 { font-size: 1.1rem; margin-bottom: 8px; }
+    .price-tag { color: var(--accent); font-weight: 700; font-size: 1.25rem; margin-bottom: 14px; }
 
-    /* Alertas e Badges */
-    .badge-admin { background-color: var(--warning); color: black; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
-    .badge-stock-off { background-color: var(--danger); color: white; padding: 4px 10px; border-radius: 6px; text-align: center; font-weight: bold; margin-top: 10px; }
-    .hidden { display: none !important; }
+    /* Painel do Admin */
+    .admin-card { background: linear-gradient(135deg, #1e293b, #0f172a); border: 2px dashed var(--warning); padding: 24px; border-radius: 16px; margin-bottom: 30px; }
+    .admin-title { color: var(--warning); display: flex; align-items: center; gap: 8px; margin-bottom: 15px; font-size: 1.2rem; }
 
-    /* Responsivo para celulares */
-    @media (max-width: 768px) {
+    /* Responsivo Celular */
+    @media (max-width: 900px) {
+      #mainApp { flex-direction: column; }
       sidebar { width: 100%; height: auto; position: relative; }
-      body { flex-direction: column; }
-      main { margin-left: 0; padding: 15px; }
+      content-area { margin-left: 0; padding: 15px; }
       header { flex-direction: column; align-items: stretch; }
     }
   </style>
 </head>
 <body>
 
-  <sidebar>
-    <div class="brand">⚡ Loja Master</div>
-
-    <div id="authSection" class="sidebar-section">
-      <h3>Conta</h3>
-      <div id="loginFormContainer">
-        <input type="email" id="email" placeholder="E-mail">
-        <input type="password" id="password" placeholder="Senha">
-        <button id="btnLogin">Entrar</button>
-        <button id="btnShowRegister" class="btn-secondary">Criar Conta</button>
-      </div>
-
-      <div id="registerFormContainer" class="hidden">
-        <input type="email" id="regEmail" placeholder="Seu E-mail">
-        <input type="password" id="regPassword" placeholder="Sua Senha">
-        <input type="text" id="regDisplayName" placeholder="Nome de Exibição (Único)">
-        <input type="url" id="regPhotoUrl" placeholder="Link da Foto de Perfil (URL)">
-        <button id="btnRegister" style="background-color: #3b82f6;">Finalizar Cadastro</button>
-        <button id="btnBackLogin" class="btn-secondary">Voltar ao Login</button>
-      </div>
-    </div>
-
-    <div id="userProfileSection" class="sidebar-section hidden">
-      <h3>Meu Perfil</h3>
-      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
-        <img id="userAvatar" class="avatar-sm" src="" alt="Avatar">
-        <div>
-          <strong id="userDisplayName"></strong><br>
-          <span id="adminBadge" class="badge-admin hidden">ADMIN MASTER</span>
-        </div>
-      </div>
-      <button id="btnLogout" class="btn-danger">Sair da Conta</button>
-    </div>
-
-    <div class="sidebar-section">
-      <h3>Meus Pedidos</h3>
-      <div id="myOrdersList" style="font-size: 0.85rem; color: var(--text-muted);">
-        Faça login para ver seus pedidos.
-      </div>
-    </div>
-  </sidebar>
-
-  <main>
-    <header>
-      <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Pesquisar gamepass ou produto...">
-      </div>
-      <div class="user-profile-header">
-        <span id="stockStatusBanner" style="font-size: 0.85rem; font-weight: bold; padding: 5px 10px; border-radius: 6px; background: rgba(0,255,136,0.1); color: var(--accent);">Status: Loja Aberta</span>
-      </div>
-    </header>
-
-    <div id="adminPanel" class="card hidden" style="border: 2px dashed var(--warning); margin-bottom: 30px;">
-      <h2>Painel do Dono (Admin) ⚙️</h2>
-      <p style="color: var(--warning); font-size: 0.9rem; margin-bottom: 15px;">Gerencie produtos e o estoque global da loja.</p>
+  <div id="authScreen">
+    <div class="auth-card">
+      <h2>⚡ Loja Master</h2>
       
-      <div style="display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
-        <button id="btnToggleStock" class="btn-danger" style="flex: 1;">Alternar Estoque Global (Ativar/Desligar Vendas)</button>
+      <div class="tab-switch">
+        <button type="button" id="tabLoginBtn" class="tab-btn active" onclick="switchAuthTab('login')">Entrar</button>
+        <button type="button" id="tabRegBtn" class="tab-btn" onclick="switchAuthTab('register')">Criar Conta</button>
       </div>
 
-      <h4 style="margin-top: 15px;">Cadastrar Novo Produto / Gamepass</h4>
-      <form id="productForm">
-        <input type="text" id="prodName" placeholder="Nome da Gamepass ou Item" required>
-        <input type="number" step="0.01" id="prodPrice" placeholder="Preço em R$" required>
-        <input type="url" id="prodImage" placeholder="Link da Imagem do Item (Opcional)">
-        <button type="submit" style="background-color: var(--warning); color: black;">Adicionar à Loja</button>
-      </form>
+      <div id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Seu e-mail">
+        <input type="password" id="loginPassword" placeholder="Sua senha">
+        <button id="btnLogin" style="margin-top: 15px;">Acessar Loja</button>
+      </div>
 
-      <h4 style="margin-top: 20px;">Configurar Preço do Robux Personalizado</h4>
-      <div style="display: flex; gap: 10px;">
-        <input type="number" step="0.001" id="robuxUnitPrice" placeholder="Preço de 1 Robux (Ex: 0.05)" style="margin:0;">
-        <button id="btnSaveRobuxPrice" style="width: 150px; margin:0;">Salvar Preço</button>
+      <div id="registerForm" class="hidden">
+        <input type="email" id="regEmail" placeholder="Seu e-mail">
+        <input type="password" id="regPassword" placeholder="Sua senha (mínimo 6 dígitos)">
+        <input type="text" id="regDisplayName" placeholder="Nome de Exibição Único (Ex: ProGamer)">
+        <input type="url" id="regPhotoUrl" placeholder="Link da Foto de Perfil (URL da imagem)">
+        <button id="btnRegister" style="margin-top: 15px;" class="btn-secondary">Cadastrar Conta</button>
       </div>
     </div>
+  </div>
 
-    <div class="card" style="margin-bottom: 25px; border-left: 5px solid var(--accent);">
-      <h3>💎 Calculadora e Compra de Robux Personalizados</h3>
-      <p style="color: var(--text-muted); font-size: 0.9rem; margin: 5px 0 15px 0;">Compre exatamente quantos Robux você precisa (Mínimo de 40 Robux).</p>
-      <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
-        <div style="flex: 1; min-width: 200px;">
-          <label style="font-size: 0.85rem; color: var(--text-muted);">Quantidade de Robux:</label>
-          <input type="number" id="robuxAmountInput" value="40" min="40" style="margin-top: 4px;">
+  <div id="mainApp" class="hidden">
+    
+    <sidebar>
+      <div class="brand">⚡ Loja Master</div>
+
+      <div class="sidebar-block" style="background: var(--bg-card); padding: 12px; border-radius: 12px; border: 1px solid var(--border);">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+          <img id="userAvatar" src="" alt="Avatar" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
+          <div style="overflow: hidden;">
+            <strong id="userDisplayName" style="display: block; font-size: 0.95rem; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;"></strong>
+            <span id="adminBadge" class="hidden" style="background: var(--warning); color: black; font-size: 0.7rem; font-weight: bold; padding: 2px 6px; border-radius: 4px;">DONO / ADMIN</span>
+          </div>
         </div>
-        <div style="flex: 1; min-width: 200px;">
-          <label style="font-size: 0.85rem; color: var(--text-muted);">Total a Pagar:</label>
-          <div id="robuxTotalPriceDisplay" style="font-size: 1.5rem; font-weight: bold; color: var(--accent); padding: 8px 0;">R$ 2,00</div>
-        </div>
-        <div style="flex: 1; min-width: 150px;">
-          <button id="btnBuyRobux" style="height: 45px; margin-top: 18px;">Comprar Robux</button>
+        <button id="btnLogout" class="btn-danger" style="margin: 0; padding: 8px; font-size: 0.85rem;">Sair da Conta</button>
+      </div>
+
+      <div class="sidebar-block" style="flex: 1;">
+        <h4>📦 Meus Pedidos Recentes</h4>
+        <div id="myOrdersList" style="font-size: 0.85rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 8px;">
+          Carregando pedidos...
         </div>
       </div>
-      <div id="robuxStockAlert" class="badge-stock-off hidden">⚠️ LOJA SEM ESTOQUE DE ROBUX NO MOMENTO</div>
-    </div>
+    </sidebar>
 
-    <h2>Gamepasses e Produtos da Loja</h2>
-    <div id="productList" class="grid" style="margin-top: 15px;">
+    <content-area>
+      
+      <header>
+        <div class="search-container">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Pesquisar gamepasses e itens...">
+        </div>
+        <div id="storeStatusDisplay" class="status-badge status-open">
+          <span>●</span> Loja Aberta
+        </div>
+      </header>
+
+      <div id="adminPanel" class="admin-card hidden">
+        <div class="admin-title">⚙️ Painel de Controle do Dono</div>
+        
+        <div style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
+          <button id="btnToggleStock" class="btn-danger" style="flex: 1; margin: 0;">Alternar Estoque (Ligar/Desligar Vendas)</button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start;">
+          <div>
+            <h4 style="color: var(--warning); margin-bottom: 10px;">Adicionar Gamepass / Produto</h4>
+            <form id="productForm">
+              <input type="text" id="prodName" placeholder="Nome do item" required style="margin: 4px 0 10px 0;">
+              <input type="number" step="0.01" id="prodPrice" placeholder="Preço em R$" required style="margin: 4px 0 10px 0;">
+              <input type="url" id="prodImage" placeholder="Link da imagem (Opcional)" style="margin: 4px 0 10px 0;">
+              <button type="submit" style="background: var(--warning); color: black;">Criar Produto</button>
+            </form>
+          </div>
+          <div>
+            <h4 style="color: var(--warning); margin-bottom: 10px;">Configurar Preço do Robux</h4>
+            <div style="display: flex; gap: 8px;">
+              <input type="number" step="0.001" id="robuxUnitPriceInput" placeholder="Preço de 1 Robux" style="margin:0;">
+              <button id="btnSaveRobuxPrice" style="width: 130px; margin:0;">Salvar</button>
+            </div>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">Ex: Se colocar 0.05, 40 Robux custarão R$ 2,00.</p>
+          </div>
+        </div>
       </div>
-  </main>
+
+      <div class="card" style="margin-bottom: 30px; border-left: 5px solid var(--accent);">
+        <h3>💎 Comprar Robux Personalizados</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; margin-bottom: 16px;">Escolha quantos Robux deseja (Mínimo de 40).</p>
+        
+        <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 200px;">
+            <label style="font-size: 0.8rem; color: var(--text-muted);">Quantidade de Robux</label>
+            <input type="number" id="robuxQtyInput" value="40" min="40" style="margin-top: 4px;">
+          </div>
+          <div style="flex: 1; min-width: 200px;">
+            <label style="font-size: 0.8rem; color: var(--text-muted);">Total Calculado</label>
+            <div id="robuxTotalDisplay" style="font-size: 1.6rem; font-weight: 800; color: var(--accent); padding: 8px 0;">R$ 2,00</div>
+          </div>
+          <div style="flex: 1; min-width: 160px;">
+            <button id="btnBuyRobux" style="height: 48px; margin-top: 18px;">Comprar Agora</button>
+          </div>
+        </div>
+        <div id="stockWarningBanner" class="hidden" style="margin-top: 15px; background: rgba(239,68,68,0.2); color: var(--danger); padding: 10px; border-radius: 8px; text-align: center; font-weight: bold;">
+          ⚠️ LOJA SEM ESTOQUE: As compras estão temporariamente desativadas pelo dono.
+        </div>
+      </div>
+
+      <h2 style="margin-bottom: 15px; font-size: 1.3rem;">Gamepasses & Produtos Disponíveis</h2>
+      <div id="productList" class="grid">
+        </div>
+    </content-area>
+  </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, getDoc, setDoc, updateDoc, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-    // ⚠️ SUBSTITUA COM SUAS CONFIGURAÇÕES REAIS DO FIREBASE ⚠️
+    // ⚠️ COLOQUE SEU FIREBASE CONFIG REAL AQUI ⚠️
     const firebaseConfig = {
       apiKey: "SUA_API_KEY",
       authDomain: "site-ec6fd.firebaseapp.com",
@@ -239,90 +234,94 @@
 
     const ADMIN_EMAIL = "raiyuri.freefire@gmail.com";
 
-    // Alternar formulários de Login/Registro
-    document.getElementById('btnShowRegister').addEventListener('click', () => {
-      document.getElementById('loginFormContainer').classList.add('hidden');
-      document.getElementById('registerFormContainer').classList.remove('hidden');
-    });
-    document.getElementById('btnBackLogin').addEventListener('click', () => {
-      document.getElementById('registerFormContainer').classList.add('hidden');
-      document.getElementById('loginFormContainer').classList.remove('hidden');
-    });
+    // Alternar abas da tela de login
+    window.switchAuthTab = function(tab) {
+      if (tab === 'login') {
+        document.getElementById('loginForm').classList.remove('hidden');
+        document.getElementById('registerForm').classList.add('hidden');
+        document.getElementById('tabLoginBtn').classList.add('active');
+        document.getElementById('tabRegBtn').classList.remove('active');
+      } else {
+        document.getElementById('loginForm').classList.add('hidden');
+        document.getElementById('registerForm').classList.remove('hidden');
+        document.getElementById('tabLoginBtn').classList.remove('active');
+        document.getElementById('tabRegBtn').classList.add('active');
+      }
+    };
 
-    // Cadastro com verificação de nome único
+    // Cadastro de Conta (Com nome único obrigatório)
     document.getElementById('btnRegister').addEventListener('click', async () => {
-      const email = document.getElementById('regEmail').value;
+      const email = document.getElementById('regEmail').value.trim();
       const pass = document.getElementById('regPassword').value;
       const displayName = document.getElementById('regDisplayName').value.trim();
       const photoUrl = document.getElementById('regPhotoUrl').value.trim() || 'https://via.placeholder.com/150';
 
-      if (!displayName) {
-        alert('Digite um nome de exibição!');
+      if (!displayName || !email || !pass) {
+        alert("Preencha todos os campos obrigatórios!");
         return;
       }
 
       try {
-        // Verificar se o nome já existe
-        const userQuery = query(collection(db, "usuarios"), where("displayName", "==", displayName));
-        const querySnapshot = await getDocs(userQuery);
-        if (!querySnapshot.empty) {
+        // Verificar se já existe o nome de exibição no banco
+        const nameQuery = query(collection(db, "usuarios"), where("displayName", "==", displayName));
+        const nameSnap = await getDocs(nameQuery);
+        if (!nameSnap.empty) {
           alert("Este nome de exibição já está em uso por outro usuário. Escolha outro!");
           return;
         }
 
         const cred = await createUserWithEmailAndPassword(auth, email, pass);
-        // Salvar perfil do usuário com nome único e foto
         await setDoc(doc(db, "usuarios", cred.user.uid), {
           uid: cred.user.uid,
-          email: email, // Armazenado no banco, mas oculto para outros usuários na UI
+          email: email, // Ocultado do público na interface
           displayName: displayName,
           photoUrl: photoUrl
         });
 
-        alert("Conta criada com sucesso!");
-      } catch (error) {
-        alert("Erro no cadastro: " + error.message);
+        alert("Conta criada com sucesso! Você já pode navegar na Loja Master.");
+      } catch (err) {
+        alert("Erro no cadastro: " + err.message);
       }
     });
 
     // Login
     document.getElementById('btnLogin').addEventListener('click', async () => {
-      const email = document.getElementById('email').value;
-      const pass = document.getElementById('password').value;
+      const email = document.getElementById('loginEmail').value.trim();
+      const pass = document.getElementById('loginPassword').value;
       try {
         await signInWithEmailAndPassword(auth, email, pass);
-      } catch (error) {
-        alert("Erro ao entrar: " + error.message);
+      } catch (err) {
+        alert("Erro ao entrar: " + err.message);
       }
     });
 
     // Logout
     document.getElementById('btnLogout').addEventListener('click', () => signOut(auth));
 
-    // Estado da Sessão & Perfil
+    // Monitoramento de Sessão (Gerencia o aparecimento das telas)
     let currentUserData = null;
-    let globalStoreConfig = { stockActive: true, robuxPrice: 0.05 };
+    let storeConfig = { stockActive: true, robuxPrice: 0.05 };
 
     onAuthStateChanged(auth, async (user) => {
-      const authSection = document.getElementById('authSection');
-      const userProfileSection = document.getElementById('userProfileSection');
+      const authScreen = document.getElementById('authScreen');
+      const mainApp = document.getElementById('mainApp');
       const adminPanel = document.getElementById('adminPanel');
       const adminBadge = document.getElementById('adminBadge');
 
       if (user) {
-        authSection.classList.add('hidden');
-        userProfileSection.classList.remove('hidden');
+        // Esconde tela de login e mostra o sistema principal
+        authScreen.classList.add('hidden');
+        mainApp.classList.remove('hidden');
 
-        // Buscar dados do usuário no Firestore
-        const userDocRef = doc(db, "usuarios", user.uid);
-        const userDoc = await getDoc(userDocRef);
+        // Buscar perfil do usuário
+        const userDoc = await getDoc(doc(db, "usuarios", user.uid));
         if (userDoc.exists()) {
           currentUserData = userDoc.data();
           document.getElementById('userDisplayName').textContent = currentUserData.displayName;
           document.getElementById('userAvatar').src = currentUserData.photoUrl;
         }
 
-        // Verificar se é o Admin
+        // Verificação estrita do Admin
         if (user.email === ADMIN_EMAIL) {
           adminBadge.classList.remove('hidden');
           adminPanel.classList.remove('hidden');
@@ -333,81 +332,70 @@
 
         loadUserOrders(user.uid);
       } else {
-        authSection.classList.remove('hidden');
-        userProfileSection.classList.add('hidden');
-        adminPanel.classList.add('hidden');
+        // Mostra o login e esconde o sistema principal
+        authScreen.classList.remove('hidden');
+        mainApp.classList.add('hidden');
         currentUserData = null;
-        document.getElementById('myOrdersList').innerHTML = 'Faça login para ver seus pedidos.';
       }
     });
 
-    // --- CONFIGURAÇÃO DA LOJA E ESTOQUE EM TEMPO REAL ---
-    const configDocRef = doc(db, "config", "lojaConfig");
-    onSnapshot(configDocRef, (docSnap) => {
+    // Configurações Globais da Loja (Estoque e Preço do Robux)
+    const storeConfigRef = doc(db, "config", "lojaConfig");
+    onSnapshot(storeConfigRef, (docSnap) => {
       if (docSnap.exists()) {
-        globalStoreConfig = docSnap.data();
+        storeConfig = docSnap.data();
       } else {
-        setDoc(configDocRef, { stockActive: true, robuxPrice: 0.05 });
+        setDoc(storeConfigRef, { stockActive: true, robuxPrice: 0.05 });
       }
-      updateStoreVisuals();
+      refreshStoreStateUI();
     });
 
-    function updateStoreVisuals() {
-      const banner = document.getElementById('stockStatusBanner');
-      const robuxAlert = document.getElementById('robuxStockAlert');
+    function refreshStoreStateUI() {
+      const statusDisplay = document.getElementById('storeStatusDisplay');
+      const warningBanner = document.getElementById('stockWarningBanner');
       const btnBuyRobux = document.getElementById('btnBuyRobux');
 
-      if (globalStoreConfig.stockActive) {
-        banner.textContent = "Status: Loja Aberta 🟢";
-        banner.style.background = "rgba(0,255,136,0.1)";
-        banner.style.color = "var(--accent)";
-        robuxAlert.classList.add('hidden');
+      if (storeConfig.stockActive) {
+        statusDisplay.className = "status-badge status-open";
+        statusDisplay.innerHTML = "<span>●</span> Loja Aberta";
+        warningBanner.classList.add('hidden');
         btnBuyRobux.disabled = false;
         btnBuyRobux.style.opacity = "1";
       } else {
-        banner.textContent = "Status: Sem Estoque / Loja Fechada 🔴";
-        banner.style.background = "rgba(255,77,77,0.1)";
-        banner.style.color = "var(--danger)";
-        robuxAlert.classList.remove('hidden');
+        statusDisplay.className = "status-badge status-closed";
+        statusDisplay.innerHTML = "<span>●</span> Sem Estoque (Fechada)";
+        warningBanner.classList.remove('hidden');
         btnBuyRobux.disabled = true;
         btnBuyRobux.style.opacity = "0.5";
       }
-
-      // Atualizar calculadora de robux com preço atual
-      calculateRobuxPrice();
+      calcRobuxCost();
     }
 
-    // Calculadora Dinâmica de Robux
-    const robuxInput = document.getElementById('robuxAmountInput');
-    const robuxTotalDisplay = document.getElementById('robuxTotalPriceDisplay');
+    // Calculadora de Robux
+    const robuxQtyInput = document.getElementById('robuxQtyInput');
+    const robuxTotalDisplay = document.getElementById('robuxTotalDisplay');
 
-    function calculateRobuxPrice() {
-      let qty = parseInt(robuxInput.value) || 0;
+    function calcRobuxCost() {
+      let qty = parseInt(robuxQtyInput.value) || 40;
       if (qty < 40) qty = 40;
-      const total = qty * (globalStoreConfig.robuxPrice || 0.05);
+      const total = qty * (storeConfig.robuxPrice || 0.05);
       robuxTotalDisplay.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
     }
-    robuxInput.addEventListener('input', calculateRobuxPrice);
+    robuxQtyInput.addEventListener('input', calcRobuxCost);
 
-    // Comprar Robux
+    // Ação de Comprar Robux
     document.getElementById('btnBuyRobux').addEventListener('click', async () => {
-      if (!auth.currentUser) {
-        alert("Você precisa fazer login para realizar um pedido!");
-        return;
-      }
-      if (!globalStoreConfig.stockActive) {
+      if (!storeConfig.stockActive) {
         alert("A loja está sem estoque no momento!");
         return;
       }
-
-      const qty = parseInt(robuxInput.value);
+      const qty = parseInt(robuxQtyInput.value);
       if (qty < 40) {
         alert("A quantidade mínima é de 40 Robux!");
         return;
       }
 
-      const totalValue = qty * globalStoreConfig.robuxPrice;
-
+      const totalValue = qty * storeConfig.robuxPrice;
       try {
         await addDoc(collection(db, "pedidos"), {
           userId: auth.currentUser.uid,
@@ -417,35 +405,34 @@
           data: new Date(),
           status: "Pendente"
         });
-        alert(`Pedido de ${qty} Robux realizado com sucesso! Verifique seu menu lateral de pedidos.`);
+        alert(`Pedido de ${qty} Robux gerado com sucesso! Veja no seu menu lateral.`);
       } catch (err) {
-        alert("Erro ao realizar pedido: " + err.message);
+        alert("Erro ao efetuar pedido: " + err.message);
       }
     });
 
-    // --- ADMIN CONTROLS ---
+    // Funções Administrativas
     document.getElementById('btnToggleStock').addEventListener('click', async () => {
-      const newState = !globalStoreConfig.stockActive;
-      await updateDoc(configDocRef, { stockActive: newState });
-      alert(newState ? "Estoque ativado! Loja aberta." : "Estoque esgotado! Compras desativadas.");
+      const newStatus = !storeConfig.stockActive;
+      await updateDoc(storeConfigRef, { stockActive: newStatus });
+      alert(newStatus ? "Estoque ativado! Compras liberadas." : "Estoque desativado! Compras travadas para todos.");
     });
 
     document.getElementById('btnSaveRobuxPrice').addEventListener('click', async () => {
-      const newPrice = parseFloat(document.getElementById('robuxUnitPrice').value);
-      if (isNaN(newPrice) || newPrice <= 0) {
-        alert("Insira um preço válido!");
+      const val = parseFloat(document.getElementById('robuxUnitPriceInput').value);
+      if (isNaN(val) || val <= 0) {
+        alert("Insira um valor válido!");
         return;
       }
-      await updateDoc(configDocRef, { robuxPrice: newPrice });
-      alert("Preço por 1 Robux atualizado com sucesso!");
+      await updateDoc(storeConfigRef, { robuxPrice: val });
+      alert("Preço por 1 Robux atualizado!");
     });
 
-    // Cadastrar Produto / Gamepass (Admin)
     document.getElementById('productForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const name = document.getElementById('prodName').value;
       const price = document.getElementById('prodPrice').value;
-      const image = document.getElementById('prodImage').value || 'https://via.placeholder.com/250x150?text=Gamepass+Master';
+      const image = document.getElementById('prodImage').value || 'https://via.placeholder.com/300x160?text=Gamepass+Master';
 
       try {
         await addDoc(collection(db, "produtos"), {
@@ -455,54 +442,48 @@
           criadoEm: new Date()
         });
         document.getElementById('productForm').reset();
-        alert("Produto/Gamepass cadastrado com sucesso!");
+        alert("Produto criado com sucesso!");
       } catch (err) {
-        alert("Erro ao cadastrar produto: " + err.message);
+        alert("Erro ao criar produto: " + err.message);
       }
     });
 
-    // --- EXIBIR PRODUTOS E BUSCA ---
-    let allProducts = [];
+    // Vitrine de Produtos e Pesquisa em Tempo Real
+    let masterProductsList = [];
     const productListEl = document.getElementById('productList');
 
-    const qProducts = query(collection(db, "produtos"), orderBy("criadoEm", "desc"));
-    onSnapshot(qProducts, (snapshot) => {
-      allProducts = [];
+    onSnapshot(query(collection(db, "produtos"), orderBy("criadoEm", "desc")), (snapshot) => {
+      masterProductsList = [];
       snapshot.forEach(docSnap => {
-        allProducts.push({ id: docSnap.id, ...docSnap.data() });
+        masterProductsList.push({ id: docSnap.id, ...docSnap.data() });
       });
-      renderProducts(allProducts);
+      renderProducts(masterProductsList);
     });
 
-    function renderProducts(products) {
+    function renderProducts(list) {
       productListEl.innerHTML = '';
-      if (products.length === 0) {
-        productListEl.innerHTML = '<p style="color: var(--text-muted);">Nenhum produto encontrado.</p>';
+      if (list.length === 0) {
+        productListEl.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1;">Nenhum produto cadastrado na loja.</p>';
         return;
       }
 
-      products.forEach(prod => {
+      list.forEach(prod => {
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
           <div>
-            <img src="${prod.imagem}" alt="Produto" style="width: 100%; height: 130px; object-fit: cover; border-radius: 8px; margin-bottom: 12px;">
-            <h4>${prod.nome}</h4>
-            <div class="price">R$ ${parseFloat(prod.preco).toFixed(2).replace('.', ',')}</div>
+            <img src="${prod.imagem}" alt="Item" style="width: 100%; height: 140px; object-fit: cover; border-radius: 10px; margin-bottom: 12px;">
+            <h3>${prod.nome}</h3>
+            <div class="price-tag">R$ ${parseFloat(prod.preco).toFixed(2).replace('.', ',')}</div>
           </div>
-          <button class="btn-buy-prod" data-name="${prod.nome}" data-price="${prod.preco}">Comprar Gamepass</button>
+          <button class="btn-buy-gamepass" data-name="${prod.nome}" data-price="${prod.preco}">Comprar Gamepass</button>
         `;
         productListEl.appendChild(card);
       });
 
-      // Evento de compra para produtos comuns
-      document.querySelectorAll('.btn-buy-prod').forEach(btn => {
+      document.querySelectorAll('.btn-buy-gamepass').forEach(btn => {
         btn.addEventListener('click', async (e) => {
-          if (!auth.currentUser) {
-            alert("Faça login para comprar!");
-            return;
-          }
-          if (!globalStoreConfig.stockActive) {
+          if (!storeConfig.stockActive) {
             alert("A loja está sem estoque no momento!");
             return;
           }
@@ -520,44 +501,43 @@
             });
             alert(`Compra de "${name}" realizada com sucesso!`);
           } catch (err) {
-            alert("Erro ao comprar: " + err.message);
+            alert("Erro ao processar compra: " + err.message);
           }
         });
       });
     }
 
-    // Barra de Pesquisa em Tempo Real
     document.getElementById('searchInput').addEventListener('input', (e) => {
       const term = e.target.value.toLowerCase();
-      const filtered = allProducts.filter(p => p.nome.toLowerCase().includes(term));
+      const filtered = masterProductsList.filter(p => p.nome.toLowerCase().includes(term));
       renderProducts(filtered);
     });
 
-    // --- HISTÓRICO DE PEDIDOS DO USUÁRIO NO MENU LATERAL ---
+    // Histórico de Pedidos no Menu Lateral (Com total privacidade de e-mails)
     function loadUserOrders(uid) {
       const ordersQuery = query(collection(db, "pedidos"), where("userId", "==", uid), orderBy("data", "desc"));
       onSnapshot(ordersQuery, (snapshot) => {
-        const ordersListEl = document.getElementById('myOrdersList');
-        ordersListEl.innerHTML = '';
+        const listEl = document.getElementById('myOrdersList');
+        listEl.innerHTML = '';
 
         if (snapshot.empty) {
-          ordersListEl.innerHTML = '<span style="color: var(--text-muted);">Nenhum pedido recente.</span>';
+          listEl.innerHTML = '<span style="color: var(--text-muted);">Nenhum pedido efetuado.</span>';
           return;
         }
 
         snapshot.forEach(docSnap => {
-          const ord = docSnap.data();
-          const itemDiv = document.createElement('div');
-          itemDiv.style.background = 'var(--bg-input)';
-          itemDiv.style.padding = '8px';
-          itemDiv.style.borderRadius = '6px';
-          itemDiv.style.marginBottom = '8px';
-          itemDiv.innerHTML = `
-            <strong>📦 ${ord.item}</strong><br>
-            <span>R$ ${ord.valor}</span><br>
-            <span style="color: var(--warning); font-size: 0.75rem;">Status: ${ord.status}</span>
+          const order = docSnap.data();
+          const itemBox = document.createElement('div');
+          itemBox.style.background = 'var(--bg-input)';
+          itemBox.style.padding = '10px';
+          itemBox.style.borderRadius = '8px';
+          itemBox.style.border = '1px solid var(--border)';
+          itemBox.innerHTML = `
+            <strong style="color: var(--text);">📦 ${order.item}</strong><br>
+            <span style="color: var(--accent); font-weight: 600;">R$ ${order.valor}</span><br>
+            <span style="color: var(--warning); font-size: 0.75rem;">Status: ${order.status}</span>
           `;
-          ordersListEl.appendChild(itemDiv);
+          listEl.appendChild(itemBox);
         });
       });
     }
