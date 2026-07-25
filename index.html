@@ -3,35 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Loja Master - Roblox & Gamepasses</title>
+  <title>Comunidade Fatal - Loja Oficial Roblox</title>
   <style>
     :root {
-      --bg-base: #060606;
-      --bg-surface: #111111;
-      --bg-card: #181818;
-      --bg-input: #0b0b0b;
+      --bg-base: #050505;
+      --bg-surface: #0f0f0f;
+      --bg-card: #171717;
+      --bg-input: #0a0a0a;
       --accent: #f59e0b;
-      --accent-glow: rgba(245, 158, 11, 0.4);
+      --accent-glow: rgba(245, 158, 11, 0.35);
       --accent-hover: #d97706;
       --danger: #ef4444;
       --success: #22c55e;
       --text: #ffffff;
       --text-muted: #9ca3af;
-      --border: #262626;
+      --border: #222222;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', 'Segoe UI', sans-serif; }
     body { background-color: var(--bg-base); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
 
     /* Utilitários */
     .hidden { display: none !important; }
-    input, button, select { width: 100%; padding: 14px 16px; margin: 8px 0; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-input); color: var(--text); font-size: 0.95rem; outline: none; transition: all 0.3s ease; }
-    input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+    input, button, select, textarea { width: 100%; padding: 14px 16px; margin: 8px 0; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-input); color: var(--text); font-size: 0.95rem; outline: none; transition: all 0.3s ease; }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
     button { background: linear-gradient(135deg, var(--accent), var(--accent-hover)); color: #000; font-weight: 800; cursor: pointer; border: none; box-shadow: 0 4px 15px var(--accent-glow); transition: transform 0.2s, filter 0.2s; }
     button:hover { filter: brightness(1.1); transform: translateY(-2px); }
     button:active { transform: translateY(0); }
     .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
-    .btn-secondary { background: #262626; color: var(--text); box-shadow: none; }
-    .btn-secondary:hover { background: #333333; }
+    .btn-secondary { background: #222222; color: var(--text); box-shadow: none; }
+    .btn-secondary:hover { background: #2a2a2a; }
     .btn-success { background: linear-gradient(135deg, var(--success), #16a34a); color: white; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4); }
 
     @keyframes fadeIn {
@@ -40,24 +40,24 @@
     }
     .animate-fade { animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-    /* --- TELA DE LOGIN / CADASTRO --- */
+    /* --- TELA DE AUTENTICAÇÃO --- */
     #authScreen {
-      position: fixed; inset: 0; background: radial-gradient(circle at center, #1f180a 0%, var(--bg-base) 100%); z-index: 2000;
+      position: fixed; inset: 0; background: radial-gradient(circle at center, #1c1507 0%, var(--bg-base) 100%); z-index: 3000;
       display: flex; justify-content: center; align-items: center; padding: 20px;
     }
     .auth-card {
-      background: rgba(18, 18, 18, 0.95); backdrop-filter: blur(16px); border: 1px solid var(--border); border-radius: 24px;
-      padding: 35px; width: 100%; max-width: 440px; box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+      background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(16px); border: 1px solid var(--border); border-radius: 24px;
+      padding: 35px; width: 100%; max-width: 440px; box-shadow: 0 25px 50px rgba(0,0,0,0.9);
     }
     .auth-card h2 { text-align: center; margin-bottom: 20px; color: var(--accent); font-size: 2.2rem; font-weight: 900; text-shadow: 0 0 20px var(--accent-glow); }
     .tab-switch { display: flex; gap: 8px; margin-bottom: 20px; background: var(--bg-input); padding: 4px; border-radius: 12px; border: 1px solid var(--border); }
     .tab-btn { flex: 1; padding: 10px; background: transparent; border: none; border-radius: 9px; color: var(--text-muted); cursor: pointer; font-weight: 700; box-shadow: none; }
     .tab-btn.active { background: var(--accent); color: #000; box-shadow: 0 2px 10px var(--accent-glow); }
 
-    /* --- APLICAÇÃO PRINCIPAL --- */
+    /* --- LAYOUT PRINCIPAL --- */
     #mainApp { display: flex; flex: 1; min-height: 100vh; position: relative; }
 
-    /* Menu Lateral / Sidebar (Drawer com 3 barras "_") */
+    /* Menu Lateral / Sidebar com botão "_" (3 riscos) */
     sidebar {
       width: 320px; background-color: var(--bg-surface); border-right: 1px solid var(--border);
       display: flex; flex-direction: column; padding: 24px; position: fixed; top: 0; bottom: 0; left: 0;
@@ -67,17 +67,17 @@
       sidebar { transform: translateX(-100%); }
       sidebar.open { transform: translateX(0); }
     }
-    .brand { font-size: 1.5rem; font-weight: 900; color: var(--accent); margin-bottom: 25px; display: flex; align-items: center; gap: 10px; text-shadow: 0 0 15px var(--accent-glow); }
+    .brand { font-size: 1.4rem; font-weight: 900; color: var(--accent); margin-bottom: 25px; display: flex; align-items: center; gap: 10px; text-shadow: 0 0 15px var(--accent-glow); }
     .sidebar-block { margin-bottom: 20px; }
     .sidebar-block h4 { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 10px; }
     .sidebar-menu-btn { width: 100%; text-align: left; background: var(--bg-card); color: var(--text); border: 1px solid var(--border); padding: 12px 16px; border-radius: 12px; margin-bottom: 8px; font-weight: 600; box-shadow: none; display: flex; align-items: center; gap: 10px; cursor: pointer; }
-    .sidebar-menu-btn:hover { background: #262626; border-color: var(--accent); transform: none; }
+    .sidebar-menu-btn:hover { background: #222222; border-color: var(--accent); transform: none; }
 
     /* Conteúdo Principal */
     content-area { margin-left: 320px; flex: 1; padding: 30px; max-width: 1400px; width: 100%; }
     @media (max-width: 900px) { content-area { margin-left: 0; padding: 15px; } }
 
-    /* Topo / Header com botão hambúrguer "_" (3 riscos) */
+    /* Header com Botão Hambúrguer "_" */
     header {
       display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; gap: 15px;
       background-color: var(--bg-surface); padding: 16px 24px; border-radius: 18px; border: 1px solid var(--border);
@@ -97,32 +97,44 @@
     .status-open { background: rgba(245, 158, 11, 0.12); color: var(--accent); border: 1px solid rgba(245, 158, 11, 0.3); box-shadow: 0 0 15px var(--accent-glow); }
     .status-closed { background: rgba(239, 68, 68, 0.12); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
 
-    /* Cards e Grid */
+    /* Avisos e Alertas Modernos */
+    .alert-box { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 14px; padding: 16px; margin-bottom: 25px; font-size: 0.9rem; line-height: 1.5; color: #fbbf24; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+    .alert-box a { color: var(--text); text-decoration: underline; font-weight: 700; }
+
+    /* Grid e Cards */
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
     .card { background-color: var(--bg-surface); border: 1px solid var(--border); border-radius: 18px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.4); transition: transform 0.3s, border-color 0.3s; }
     .card:hover { transform: translateY(-4px); border-color: rgba(245, 158, 11, 0.4); }
     .card h3 { font-size: 1.15rem; margin-bottom: 8px; font-weight: 700; }
     .price-tag { color: var(--accent); font-weight: 900; font-size: 1.25rem; margin-bottom: 12px; text-shadow: 0 0 10px var(--accent-glow); }
 
-    /* Modais Estilizados */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 3000; display: flex; justify-content: center; align-items: center; padding: 20px; }
-    .modal-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 20px; padding: 30px; width: 100%; max-width: 600px; box-shadow: 0 25px 50px rgba(0,0,0,0.8); max-height: 90vh; overflow-y: auto; }
+    /* Modais */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 4000; display: flex; justify-content: center; align-items: center; padding: 20px; }
+    .modal-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 20px; padding: 30px; width: 100%; max-width: 600px; box-shadow: 0 25px 50px rgba(0,0,0,0.9); max-height: 90vh; overflow-y: auto; }
     
-    /* Upload customizado de foto do dispositivo */
     .file-upload-box { border: 2px dashed var(--border); border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; background: var(--bg-input); margin: 8px 0; transition: 0.3s; }
     .file-upload-box:hover { border-color: var(--accent); }
     .profile-preview { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); margin-bottom: 8px; display: inline-block; }
 
-    /* Back Button */
     .back-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--bg-card); border: 1px solid var(--border); padding: 8px 16px; border-radius: 10px; color: var(--text); font-weight: 600; cursor: pointer; margin-bottom: 20px; }
     .back-btn:hover { border-color: var(--accent); }
+
+    /* Estilos do Chat Inovador */
+    .chat-container { display: flex; flex-direction: column; height: 420px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-top: 10px; }
+    .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+    .chat-msg { max-width: 75%; padding: 10px 14px; border-radius: 12px; font-size: 0.9rem; word-break: break-word; }
+    .chat-msg.client { background: #262626; align-self: flex-start; border-bottom-left-radius: 2px; }
+    .chat-msg.admin { background: var(--accent); color: #000; align-self: flex-end; border-bottom-right-radius: 2px; font-weight: 600; }
+    .chat-msg img { max-width: 100%; border-radius: 8px; margin-top: 6px; display: block; border: 1px solid rgba(255,255,255,0.2); }
+    .chat-input-area { display: flex; padding: 10px; background: var(--bg-surface); border-top: 1px solid var(--border); gap: 8px; align-items: center; }
+    .chat-input-area input { margin: 0; }
   </style>
 </head>
 <body>
 
   <div id="authScreen">
     <div class="auth-card animate-fade">
-      <h2>⚡ Loja Master</h2>
+      <h2>⚡ Comunidade Fatal</h2>
       
       <div class="tab-switch">
         <button type="button" id="tabLoginBtn" class="tab-btn active" onclick="switchAuthTab('login')">Entrar</button>
@@ -148,7 +160,7 @@
       <div id="registerForm" class="hidden animate-fade">
         <input type="email" id="regEmail" placeholder="Seu e-mail" autocomplete="off">
         <input type="password" id="regPassword" placeholder="Sua senha (mínimo 6 dígitos)" autocomplete="new-password">
-        <input type="text" id="regDisplayName" placeholder="Nome de Exibição (Permitido duplicados)" autocomplete="off">
+        <input type="text" id="regDisplayName" placeholder="Nome de Exibição" autocomplete="off">
         <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">* Você poderá adicionar sua foto de perfil do dispositivo após entrar no site.</p>
         <button id="btnRegister" style="margin-top: 14px;">Finalizar Cadastro</button>
       </div>
@@ -158,7 +170,7 @@
   <div id="mainApp" class="hidden">
     
     <sidebar id="sidebarDrawer">
-      <div class="brand">⚡ Loja Master</div>
+      <div class="brand">⚡ Comunidade Fatal</div>
 
       <div class="sidebar-block" style="background: var(--bg-card); padding: 14px; border-radius: 16px; border: 1px solid var(--border);">
         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
@@ -172,7 +184,8 @@
       </div>
 
       <div class="sidebar-block">
-        <h4>Menu de Administração</h4>
+        <h4>Navegação</h4>
+        <button class="sidebar-menu-btn" onclick="openConversationsModal()">💬 Conversas com o Suporte</button>
         <button id="menuBtnAdmin" class="sidebar-menu-btn hidden" onclick="openAdminModal()">🛡️ Painel do Administrador</button>
       </div>
 
@@ -203,22 +216,26 @@
         </div>
       </header>
 
+      <div class="alert-box animate-fade">
+        ⚠️ <strong>Regra Oficial de Entrega de Robux:</strong> O envio de Robux é realizado exclusivamente via <strong>"Grupo"</strong>. O cliente precisa estar no mínimo <strong>14 dias no grupo</strong> para que possamos efetuar a entrega com segurança. Participe do nosso grupo oficial do Roblox clicando aqui: <a href="https://www.roblox.com/pt/communities/35595836/Comunidade-Fatal#!/about" target="_blank">Comunidade Fatal - Roblox</a>.
+      </div>
+
       <div id="viewContainer">
         <div id="robuxCalculatorCard" class="card animate-fade" style="margin-bottom: 30px; border-left: 6px solid var(--accent); background: linear-gradient(135deg, var(--bg-surface), var(--bg-card));">
-          <h3>💎 Compra de Robux Personalizados</h3>
-          <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; margin-bottom: 16px;">Insira a quantidade exata de Robux que precisa (Mínimo de 40).</p>
+          <h3>💎 Compra de Robux Personalizados (Via Grupo)</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; margin-bottom: 16px;">Insira a quantidade de Robux desejada (Mínimo automático de 40).</p>
           
           <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
             <div style="flex: 1; min-width: 200px;">
-              <label style="font-size: 0.8rem; color: var(--text-muted);">Quantidade de Robux</label>
+              <label style="font-size: 0.8rem; color: var(--text-muted);">Quantidade de Robux (Mín. 40)</label>
               <input type="number" id="robuxQtyInput" value="40" min="40" style="margin-top: 4px;">
             </div>
             <div style="flex: 1; min-width: 200px;">
-              <label style="font-size: 0.8rem; color: var(--text-muted);">Total Calculado</label>
+              <label style="font-size: 0.8rem; color: var(--text-muted);">Total Calculado (PIX)</label>
               <div id="robuxTotalDisplay" style="font-size: 1.8rem; font-weight: 900; color: var(--accent); padding: 6px 0; text-shadow: 0 0 12px var(--accent-glow);">R$ 2,00</div>
             </div>
             <div style="flex: 1; min-width: 160px;">
-              <button id="btnBuyRobux" style="height: 48px; margin-top: 18px;">Comprar Agora</button>
+              <button id="btnBuyRobuxCustom" style="height: 48px; margin-top: 18px;">Comprar Robux</button>
             </div>
           </div>
           <div id="stockWarningBanner" class="hidden" style="margin-top: 15px; background: rgba(239,68,68,0.15); color: var(--danger); border: 1px solid rgba(239,68,68,0.3); padding: 12px; border-radius: 10px; text-align: center; font-weight: bold;">
@@ -233,10 +250,62 @@
     </content-area>
   </div>
 
+  <div id="checkoutModal" class="modal-overlay hidden">
+    <div class="modal-card animate-fade" style="border: 2px solid var(--accent); max-width: 500px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3 style="color: var(--accent);">🛒 Finalizar Pedido & Pagamento PIX</h3>
+        <button class="btn-secondary" style="width: auto; padding: 6px 12px; margin:0;" onclick="closeCheckoutModal()">✕ Fechar</button>
+      </div>
+
+      <div style="background: var(--bg-input); padding: 14px; border-radius: 12px; margin-bottom: 15px; border: 1px solid var(--border);">
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Produto Selecionado:</p>
+        <strong id="checkoutItemName" style="font-size: 1.1rem; color: var(--text);">Item</strong>
+        <div style="margin-top: 6px; font-size: 1.2rem; font-weight: 900; color: var(--accent);" id="checkoutItemPrice">R$ 0,00</div>
+      </div>
+
+      <label style="font-size: 0.85rem; color: var(--text-muted);">Nome de Usuário do Roblox (Exato, não de exibição):</label>
+      <input type="text" id="checkoutRobloxUsername" placeholder="Ex: MeuUsuarioRoblox" required style="margin-bottom: 12px;" autocomplete="off">
+
+      <div style="background: rgba(245, 158, 11, 0.08); border: 1px dashed var(--accent); padding: 14px; border-radius: 12px; margin-bottom: 15px; text-align: center;">
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px;">Chave PIX para pagamento:</p>
+        <code style="font-size: 0.95rem; color: var(--accent); font-weight: bold; word-break: break-all;">0e03e1aa-cb48-4349-b299-16082c5aa1e1</code>
+        <button class="btn-secondary" style="padding: 6px; font-size: 0.8rem; margin-top: 8px;" onclick="copyPixKey()">Copiar Chave PIX</button>
+      </div>
+
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 15px; text-align: center;">Após pagar via PIX, abra a aba <strong>"Conversas"</strong> no menu lateral, envie o comprovante (foto do dispositivo) para validarmos.</p>
+
+      <button id="btnConfirmCheckout" class="btn-success">Gerar Pedido e Abrir Chat com Suporte</button>
+    </div>
+  </div>
+
+  <div id="conversationsModal" class="modal-overlay hidden">
+    <div class="modal-card animate-fade" style="max-width: 650px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3 style="color: var(--accent);">💬 Chat em Tempo Real com o Suporte</h3>
+        <button class="btn-secondary" style="width: auto; padding: 6px 12px; margin:0;" onclick="closeConversationsModal()">✕ Fechar</button>
+      </div>
+
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">Aqui você conversa com o administrador, envia o comprovante de pagamento (foto do seu dispositivo) e acompanha a aprovação do seu pedido.</p>
+
+      <div class="chat-container">
+        <div id="chatMessages" class="chat-messages">
+          <div style="text-align: center; color: var(--text-muted); margin-top: 20px;">Carregando mensagens...</div>
+        </div>
+        <div class="chat-input-area">
+          <input type="text" id="chatInputText" placeholder="Digite sua mensagem ou mande comprovante..." autocomplete="off">
+          <input type="file" id="chatImageFile" accept="image/*" class="hidden">
+          <button class="btn-secondary" style="width: auto; padding: 10px 14px; margin:0;" onclick="document.getElementById('chatImageFile').click()" title="Enviar Foto do Dispositivo">📷</button>
+          <button style="width: auto; padding: 10px 16px; margin:0;" onclick="sendChatMessage()">Enviar</button>
+        </div>
+      </div>
+      <button class="btn-danger" style="margin-top: 15px; padding: 8px; font-size: 0.85rem;" onclick="closeChatByClientModal()">Fechar / Arquivar Esta Conversa</button>
+    </div>
+  </div>
+
   <div id="adminModal" class="modal-overlay hidden">
     <div class="modal-card animate-fade" style="border: 2px dashed var(--accent);">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h3 style="color: var(--accent);">⚙️ Painel do Administrador</h3>
+        <h3 style="color: var(--accent);">🛡️ Painel do Administrador</h3>
         <button class="btn-secondary" style="width: auto; padding: 6px 12px; margin:0;" onclick="closeAdminModal()">✕ Fechar</button>
       </div>
 
@@ -256,15 +325,15 @@
         <button type="button" id="adminTabMapBtn" class="tab-btn active" onclick="switchAdminTab('map')">Criar Mapa</button>
         <button type="button" id="adminTabGpBtn" class="tab-btn" onclick="switchAdminTab('gp')">Criar Gamepass</button>
         <button type="button" id="adminTabOrdersBtn" class="tab-btn" onclick="switchAdminTab('orders')">Ver Pedidos</button>
+        <button type="button" id="adminTabChatsBtn" class="tab-btn" onclick="switchAdminTab('chats')">Gerenciar Chats</button>
       </div>
 
       <div id="adminMapFormSection">
         <form id="mapForm">
           <input type="text" id="mapName" placeholder="Nome do Mapa do Roblox" required style="margin: 4px 0 8px 0;" autocomplete="off">
-          
           <label style="font-size: 0.85rem; color: var(--text-muted);">Foto do Mapa (Do Dispositivo):</label>
           <div class="file-upload-box" onclick="document.getElementById('mapImageFile').click()">
-            <div id="mapUploadText" style="font-size: 0.85rem; color: var(--text-muted);">📁 Clique para escolher a imagem do mapa</div>
+            <div id="mapUploadText" style="font-size: 0.85rem; color: var(--text-muted);">📁 Clique para escolher a imagem</div>
             <input type="file" id="mapImageFile" accept="image/*" class="hidden" required>
           </div>
           <button type="submit" style="margin-top: 10px;">Cadastrar Mapa</button>
@@ -278,21 +347,28 @@
 
           <input type="text" id="gpName" placeholder="Nome da Gamepass" required style="margin: 4px 0 8px 0;" autocomplete="off">
           <input type="number" id="gpRobuxPrice" placeholder="Preço em Robux (ex: 400)" required style="margin: 4px 0 8px 0;" autocomplete="off">
-          <input type="text" id="gpBRLPrice" placeholder="Preço em R$ calculado automaticamente" readonly style="margin: 4px 0 8px 0; background: #181818; color: var(--accent); font-weight: bold;" autocomplete="off">
+          <input type="text" id="gpBRLPrice" placeholder="Preço em R$ calculado automaticamente" readonly style="margin: 4px 0 8px 0; background: #121212; color: var(--accent); font-weight: bold;" autocomplete="off">
           
           <label style="font-size: 0.85rem; color: var(--text-muted);">Foto da Gamepass (Do Dispositivo):</label>
           <div class="file-upload-box" onclick="document.getElementById('gpImageFile').click()">
-            <div id="gpUploadText" style="font-size: 0.85rem; color: var(--text-muted);">📁 Clique para escolher a imagem da gamepass</div>
+            <div id="gpUploadText" style="font-size: 0.85rem; color: var(--text-muted);">📁 Clique para escolher a imagem</div>
             <input type="file" id="gpImageFile" accept="image/*" class="hidden" required>
           </div>
-          <button type="submit" style="margin-top: 10px;">Cadastrar Gamepass no Mapa</button>
+          <button type="submit" style="margin-top: 10px;">Cadastrar Gamepass</button>
         </form>
       </div>
 
       <div id="adminOrdersSection" class="hidden">
-        <h4 style="color: var(--accent); margin-bottom: 10px;">Lista de Pedidos dos Clientes</h4>
+        <h4 style="color: var(--accent); margin-bottom: 10px;">Gerenciamento de Pedidos (Com Nick do Roblox Exato)</h4>
         <div id="adminOrdersList" style="display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto;">
-          Carregando pedidos...
+          Carregando...
+        </div>
+      </div>
+
+      <div id="adminChatsSection" class="hidden">
+        <h4 style="color: var(--accent); margin-bottom: 10px;">Conversas de Clientes (Recuperação e Monitoramento)</h4>
+        <div id="adminChatsList" style="display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto;">
+          Carregando chats...
         </div>
       </div>
     </div>
@@ -327,7 +403,6 @@
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, getDoc, setDoc, updateDoc, deleteDoc, where } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-    // Configuração oficial do Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyCGD9DZDFp0w9baW8jiqgGGfkasAvqreY0",
       authDomain: "site-ec6fd.firebaseapp.com",
@@ -344,14 +419,14 @@
     const db = getFirestore(app);
 
     const ADMIN_EMAIL = "raiyuri.freefire@gmail.com";
+    const PIX_KEY = "0e03e1aa-cb48-4349-b299-16082c5aa1e1";
 
-    // Limpar campos de login no carregamento para evitar autofill indesejado
     window.addEventListener('DOMContentLoaded', () => {
       document.getElementById('loginEmail').value = '';
       document.getElementById('loginPassword').value = '';
     });
 
-    // Sidebar Responsiva (Menu lateral controlado pelo botão "_")
+    // Sidebar
     window.toggleSidebar = function() {
       document.getElementById('sidebarDrawer').classList.toggle('open');
     };
@@ -373,7 +448,20 @@
     };
     window.closeProfileModal = function() { document.getElementById('profileModal').classList.add('hidden'); };
 
-    // Alternar Abas de Autenticação
+    window.openConversationsModal = function() {
+      document.getElementById('conversationsModal').classList.remove('hidden');
+      toggleSidebar();
+      listenToUserChat();
+    };
+    window.closeConversationsModal = function() { document.getElementById('conversationsModal').classList.add('hidden'); };
+
+    // Copiar PIX
+    window.copyPixKey = function() {
+      navigator.clipboard.writeText(PIX_KEY);
+      alert("Chave PIX copiada com sucesso!");
+    };
+
+    // Abas de Auth
     window.switchAuthTab = function(tab) {
       document.getElementById('loginForm').classList.add('hidden');
       document.getElementById('registerForm').classList.add('hidden');
@@ -397,21 +485,20 @@
       switchAuthTab('forgot');
     });
 
-    // Redefinição de senha
     document.getElementById('btnSendReset').addEventListener('click', async () => {
       const email = document.getElementById('forgotEmail').value.trim();
       if (!email) { alert("Insira seu e-mail!"); return; }
       try {
         await sendPasswordResetEmail(auth, email);
-        alert("Link de redefinição de senha enviado para o e-mail informado.");
+        alert("Link de redefinição de senha enviado.");
         switchAuthTab('login');
       } catch (err) {
-        alert("Verifique o e-mail inserido. Caso possua conta, o link foi enviado.");
+        alert("Verifique o e-mail inserido.");
         switchAuthTab('login');
       }
     });
 
-    // Conversão de arquivo do dispositivo para Base64 comprimido (Eliminando URLs)
+    // Processamento de Imagens do Dispositivo (Base64)
     function processImageFile(fileInputId, previewImgId = null, textLabelId = null) {
       return new Promise((resolve, reject) => {
         const fileInput = document.getElementById(fileInputId);
@@ -438,7 +525,7 @@
             const base64 = canvas.toDataURL('image/jpeg', 0.8);
 
             if (previewImgId) document.getElementById(previewImgId).src = base64;
-            if (textLabelId) document.getElementById(textLabelId).textContent = "Imagem carregada com sucesso! ✅";
+            if (textLabelId) document.getElementById(textLabelId).textContent = "Imagem carregada ✅";
             resolve(base64);
           };
           img.onerror = reject;
@@ -452,6 +539,7 @@
     let newProfilePhotoBase64 = null;
     let newMapPhotoBase64 = null;
     let newGpPhotoBase64 = null;
+    let chatImageBase64 = null;
 
     document.getElementById('editPhotoFile').addEventListener('change', async () => {
       newProfilePhotoBase64 = await processImageFile('editPhotoFile', 'modalProfilePreview', 'uploadBoxText');
@@ -462,27 +550,30 @@
     document.getElementById('gpImageFile').addEventListener('change', async () => {
       newGpPhotoBase64 = await processImageFile('gpImageFile', null, 'gpUploadText');
     });
+    document.getElementById('chatImageFile').addEventListener('change', async () => {
+      chatImageBase64 = await processImageFile('chatImageFile');
+      if (chatImageBase64) {
+        alert("Foto do comprovante carregada! Clique em enviar.");
+      }
+    });
 
-    // Salvar Perfil (Usando setDoc com merge: true para evitar erros de documento inexistente)
     document.getElementById('btnSaveProfile').addEventListener('click', async () => {
       if (!auth.currentUser) return;
       const newName = document.getElementById('editDisplayName').value.trim();
-      if (!newName) { alert("O nome de exibição não pode ficar vazio."); return; }
+      if (!newName) { alert("Nome vazio."); return; }
 
       try {
         const updateData = { displayName: newName };
         if (newProfilePhotoBase64) updateData.photoUrl = newProfilePhotoBase64;
-
         await setDoc(doc(db, "usuarios", auth.currentUser.uid), updateData, { merge: true });
-        alert("Perfil atualizado com sucesso!");
+        alert("Perfil atualizado!");
         closeProfileModal();
         window.location.reload();
       } catch (err) {
-        alert("Erro ao atualizar perfil: " + err.message);
+        alert("Erro: " + err.message);
       }
     });
 
-    // Cadastro de Conta (Permite nomes duplicados, sem foto inicial)
     document.getElementById('btnRegister').addEventListener('click', async () => {
       const email = document.getElementById('regEmail').value.trim();
       const pass = document.getElementById('regPassword').value;
@@ -498,28 +589,26 @@
           displayName: displayName,
           photoUrl: "https://via.placeholder.com/150"
         });
-        alert("Conta criada com sucesso! Faça login.");
+        alert("Conta criada!");
         switchAuthTab('login');
       } catch (err) {
-        alert("Erro no cadastro: " + err.message);
+        alert("Erro: " + err.message);
       }
     });
 
-    // Login
     document.getElementById('btnLogin').addEventListener('click', async () => {
       const email = document.getElementById('loginEmail').value.trim();
       const pass = document.getElementById('loginPassword').value;
       try {
         await signInWithEmailAndPassword(auth, email, pass);
       } catch (err) {
-        alert("Erro ao entrar: " + err.message);
+        alert("Erro: " + err.message);
       }
     });
 
-    // Logout
     document.getElementById('btnLogout').addEventListener('click', () => signOut(auth));
 
-    // Monitoramento de Sessão
+    // Estado da Sessão
     let currentUserData = null;
     let storeConfig = { stockActive: true, robuxPrice: 0.05 };
 
@@ -540,7 +629,6 @@
           document.getElementById('userDisplayName').textContent = currentUserData.displayName;
           document.getElementById('userAvatar').src = currentUserData.photoUrl || "https://via.placeholder.com/150";
         } else {
-          // Garante criação automática caso venha de login externo sem doc
           currentUserData = { displayName: user.email.split('@')[0], photoUrl: "https://via.placeholder.com/150" };
           await setDoc(userDocRef, currentUserData, { merge: true });
           document.getElementById('userDisplayName').textContent = currentUserData.displayName;
@@ -563,7 +651,7 @@
       }
     });
 
-    // Configurações Globais da Loja
+    // Configurações
     const storeConfigRef = doc(db, "config", "lojaConfig");
     onSnapshot(storeConfigRef, (docSnap) => {
       if (docSnap.exists()) {
@@ -577,7 +665,6 @@
     function refreshStoreStateUI() {
       const statusDisplay = document.getElementById('storeStatusDisplay');
       const warningBanner = document.getElementById('stockWarningBanner');
-      const btnBuyRobux = document.getElementById('btnBuyRobux');
       const robuxUnitPriceInput = document.getElementById('robuxUnitPriceInput');
 
       if (robuxUnitPriceInput && document.activeElement !== robuxUnitPriceInput) {
@@ -588,62 +675,190 @@
         statusDisplay.className = "status-badge status-open";
         statusDisplay.innerHTML = "<span>●</span> Loja Aberta";
         warningBanner.classList.add('hidden');
-        btnBuyRobux.disabled = false;
-        btnBuyRobux.style.opacity = "1";
       } else {
         statusDisplay.className = "status-badge status-closed";
         statusDisplay.innerHTML = "<span>●</span> Sem Estoque (Fechada)";
         warningBanner.classList.remove('hidden');
-        btnBuyRobux.disabled = true;
-        btnBuyRobux.style.opacity = "0.5";
       }
       calcRobuxCost();
-      // Atualiza conversão de preço BRL na criação de gamepasses
       updateGpBrlPreview();
     }
 
-    // Calculadora de Robux
+    // Calculadora de Robux (Mínimo 40 automático)
     const robuxQtyInput = document.getElementById('robuxQtyInput');
     const robuxTotalDisplay = document.getElementById('robuxTotalDisplay');
 
     function calcRobuxCost() {
       let qty = parseInt(robuxQtyInput.value) || 40;
-      if (qty < 40) qty = 40;
+      if (qty < 40) {
+        qty = 40;
+        robuxQtyInput.value = 40;
+      }
       const total = qty * (storeConfig.robuxPrice || 0.05);
       robuxTotalDisplay.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
     }
     robuxQtyInput.addEventListener('input', calcRobuxCost);
 
-    // Comprar Robux personalizado
-    document.getElementById('btnBuyRobux').addEventListener('click', async () => {
-      if (!storeConfig.stockActive) { alert("Loja sem estoque no momento!"); return; }
-      const qty = parseInt(robuxQtyInput.value);
-      if (qty < 40) { alert("Mínimo de 40 Robux!"); return; }
+    let pendingCheckoutItem = null;
 
-      const totalValue = (qty * storeConfig.robuxPrice).toFixed(2);
+    document.getElementById('btnBuyRobuxCustom').addEventListener('click', () => {
+      if (!storeConfig.stockActive) { alert("Loja sem estoque!"); return; }
+      let qty = parseInt(robuxQtyInput.value) || 40;
+      if (qty < 40) qty = 40;
+      const total = (qty * storeConfig.robuxPrice).toFixed(2);
+      
+      pendingCheckoutItem = {
+        name: `${qty} Robux (Via Grupo)`,
+        price: total
+      };
+      openCheckoutModal(pendingCheckoutItem);
+    });
+
+    function openCheckoutModal(item) {
+      document.getElementById('checkoutItemName').textContent = item.name;
+      document.getElementById('checkoutItemPrice').textContent = `R$ ${item.price.replace('.', ',')}`;
+      document.getElementById('checkoutRobloxUsername').value = '';
+      document.getElementById('checkoutModal').classList.remove('hidden');
+    }
+
+    window.closeCheckoutModal = function() {
+      document.getElementById('checkoutModal').classList.add('hidden');
+    };
+
+    // Confirmação de Checkout (Solicita Nick exato do Roblox)
+    document.getElementById('btnConfirmCheckout').addEventListener('click', async () => {
+      const robloxNick = document.getElementById('checkoutRobloxUsername').value.trim();
+      if (!robloxNick) { alert("Digite seu nome de usuário do Roblox!"); return; }
+      if (!pendingCheckoutItem) return;
+
       try {
         await addDoc(collection(db, "pedidos"), {
           userId: auth.currentUser.uid,
           comprador: currentUserData ? currentUserData.displayName : "Cliente",
-          item: `${qty} Robux`,
-          valor: totalValue,
+          robloxNick: robloxNick,
+          item: pendingCheckoutItem.name,
+          valor: pendingCheckoutItem.price,
           data: new Date(),
-          status: "Pendente"
+          status: "Pendente (Aguardando Comprovante)"
         });
-        alert(`Pedido de ${qty} Robux gerado com sucesso!`);
+
+        // Cria mensagem inicial no chat automático da conversa
+        await addDoc(collection(db, "conversas"), {
+          userId: auth.currentUser.uid,
+          comprador: currentUserData ? currentUserData.displayName : "Cliente",
+          robloxNick: robloxNick,
+          mensagem: `Olá! Fiz o pedido de ${pendingCheckoutItem.name} no valor de R$ ${pendingCheckoutItem.price}. Meu nick do Roblox é: ${robloxNick}. Segue meu comprovante!`,
+          remetente: "cliente",
+          timestamp: new Date(),
+          closedByClient: false,
+          archivedByAdmin: false
+        });
+
+        alert("Pedido gerado com sucesso! Abrindo o chat para você enviar o comprovante.");
+        closeCheckoutModal();
+        openConversationsModal();
       } catch (err) {
-        alert("Erro ao efetuar pedido: " + err.message);
+        alert("Erro: " + err.message);
       }
     });
 
-    // Abas do Painel Admin
+    // Chat em tempo real
+    let chatUnsubscribe = null;
+    function listenToUserChat() {
+      if (!auth.currentUser) return;
+      const chatMessagesEl = document.getElementById('chatMessages');
+      chatMessagesEl.innerHTML = '<div style="text-align: center; color: var(--text-muted);">Carregando mensagens...</div>';
+
+      const q = query(collection(db, "conversas"), where("userId", "==", auth.currentUser.uid), orderBy("timestamp", "asc"));
+      
+      if (chatUnsubscribe) chatUnsubscribe();
+
+      chatUnsubscribe = onSnapshot(q, (snapshot) => {
+        chatMessagesEl.innerHTML = '';
+        if (snapshot.empty) {
+          chatMessagesEl.innerHTML = '<div style="text-align: center; color: var(--text-muted);">Nenhuma mensagem ainda. Envie seu comprovante!</div>';
+          return;
+        }
+
+        snapshot.forEach(docSnap => {
+          const msg = docSnap.data();
+          if (msg.closedByClient) return; // Se fechado pelo cliente, oculta na visão dele
+
+          const div = document.createElement('div');
+          div.className = `chat-msg ${msg.remetente === 'admin' ? 'admin' : 'client'}`;
+          let html = `<div>${msg.mensagem}</div>`;
+          if (msg.foto) {
+            html += `<img src="${msg.foto}" alt="Comprovante">`;
+          }
+          div.innerHTML = html;
+          chatMessagesEl.appendChild(div);
+        });
+        chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+      });
+    }
+
+    window.sendChatMessage = async function() {
+      if (!auth.currentUser) return;
+      const textInput = document.getElementById('chatInputText');
+      const text = textInput.value.trim();
+
+      if (!text && !chatImageBase64) return;
+
+      try {
+        const msgData = {
+          userId: auth.currentUser.uid,
+          comprador: currentUserData ? currentUserData.displayName : "Cliente",
+          robloxNick: currentUserData ? currentUserData.displayName : "",
+          mensagem: text || "Envio de Comprovante",
+          remetente: "cliente",
+          timestamp: new Date(),
+          closedByClient: false,
+          archivedByAdmin: false
+        };
+
+        if (chatImageBase64) {
+          msgData.foto = chatImageBase64;
+          chatImageBase64 = null;
+        }
+
+        await addDoc(collection(db, "conversas"), msgData);
+        textInput.value = '';
+      } catch (err) {
+        alert("Erro ao enviar mensagem: " + err.message);
+      }
+    };
+
+    window.closeChatByClientModal = async function() {
+      if (!confirm("Deseja fechar/arquivar esta conversa? Ela será limpa da sua tela.")) return;
+      try {
+        // Marca todas as mensagens do usuário como fechadas pelo cliente
+        // Na prática, adiciona uma mensagem de encerramento ou atualiza o estado
+        await addDoc(collection(db, "conversas"), {
+          userId: auth.currentUser.uid,
+          comprador: currentUserData ? currentUserData.displayName : "Cliente",
+          mensagem: "[Conversa encerrada pelo cliente]",
+          remetente: "cliente",
+          timestamp: new Date(),
+          closedByClient: true,
+          archivedByAdmin: false
+        });
+        document.getElementById('chatMessages').innerHTML = '<div style="text-align: center; color: var(--text-muted);">Conversa fechada e apagada da sua tela. O admin ainda pode recuperá-la se necessário.</div>';
+        alert("Conversa fechada com sucesso!");
+      } catch (err) {
+        alert("Erro: " + err.message);
+      }
+    };
+
+    // Admin Abas e Ações
     window.switchAdminTab = function(tab) {
       document.getElementById('adminMapFormSection').classList.add('hidden');
       document.getElementById('adminGpFormSection').classList.add('hidden');
       document.getElementById('adminOrdersSection').classList.add('hidden');
+      document.getElementById('adminChatsSection').classList.add('hidden');
       document.getElementById('adminTabMapBtn').classList.remove('active');
       document.getElementById('adminTabGpBtn').classList.remove('active');
       document.getElementById('adminTabOrdersBtn').classList.remove('active');
+      document.getElementById('adminTabChatsBtn').classList.remove('active');
 
       if (tab === 'map') {
         document.getElementById('adminMapFormSection').classList.remove('hidden');
@@ -656,35 +871,14 @@
         document.getElementById('adminOrdersSection').classList.remove('hidden');
         document.getElementById('adminTabOrdersBtn').classList.add('active');
         loadAllAdminOrders();
+      } else if (tab === 'chats') {
+        document.getElementById('adminChatsSection').classList.remove('hidden');
+        document.getElementById('adminTabChatsBtn').classList.add('active');
+        loadAllAdminChats();
       }
     };
 
-    // Preço em BRL automático para Gamepasses baseado no Robux real do mapa
-    const gpRobuxPriceInput = document.getElementById('gpRobuxPrice');
-    const gpBRLPriceInput = document.getElementById('gpBRLPrice');
-
-    function updateGpBrlPreview() {
-      const robux = parseFloat(gpRobuxPriceInput.value) || 0;
-      const brl = robux * (storeConfig.robuxPrice || 0.05);
-      gpBRLPriceInput.value = `R$ ${brl.toFixed(2).replace('.', ',')} (Baseado na cotação)`;
-    }
-    gpRobuxPriceInput.addEventListener('input', updateGpBrlPreview);
-
-    // Salvar Configurações Admin
-    document.getElementById('btnToggleStock').addEventListener('click', async () => {
-      const newStatus = !storeConfig.stockActive;
-      await updateDoc(storeConfigRef, { stockActive: newStatus });
-      alert(newStatus ? "Estoque ativado!" : "Estoque desativado!");
-    });
-
-    document.getElementById('btnSaveRobuxPrice').addEventListener('click', async () => {
-      const val = parseFloat(document.getElementById('robuxUnitPriceInput').value);
-      if (isNaN(val) || val <= 0) { alert("Insira um valor válido!"); return; }
-      await updateDoc(storeConfigRef, { robuxPrice: val });
-      alert("Cotação de 1 Robux atualizada!");
-    });
-
-    // Criar Mapa
+    // Cadastro de Mapa e Gamepass
     document.getElementById('mapForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const nome = document.getElementById('mapName').value.trim();
@@ -698,20 +892,17 @@
         });
         document.getElementById('mapForm').reset();
         newMapPhotoBase64 = null;
-        document.getElementById('mapUploadText').textContent = "📁 Clique para escolher a imagem do mapa";
-        alert("Mapa criado com sucesso!");
+        document.getElementById('mapUploadText').textContent = "📁 Escolher imagem";
+        alert("Mapa cadastrado com sucesso!");
         switchAdminTab('gp');
       } catch (err) {
-        alert("Erro ao criar mapa: " + err.message);
+        alert("Erro: " + err.message);
       }
     });
 
-    // Popular Select de Mapas
     let cachedMaps = [];
     async function populateMapSelect() {
       const select = document.getElementById('gpMapSelect');
-      select.innerHTML = '<option value="">Carregando mapas...</option>';
-      
       onSnapshot(query(collection(db, "mapas"), orderBy("criadoEm", "desc")), (snapshot) => {
         cachedMaps = [];
         select.innerHTML = '<option value="">Selecione o Mapa</option>';
@@ -726,15 +917,24 @@
       });
     }
 
-    // Criar Gamepass dentro de um Mapa
+    const gpRobuxPriceInput = document.getElementById('gpRobuxPrice');
+    const gpBRLPriceInput = document.getElementById('gpBRLPrice');
+
+    function updateGpBrlPreview() {
+      const robux = parseFloat(gpRobuxPriceInput.value) || 0;
+      const brl = robux * (storeConfig.robuxPrice || 0.05);
+      gpBRLPriceInput.value = `R$ ${brl.toFixed(2).replace('.', ',')} (Cotação Automática)`;
+    }
+    gpRobuxPriceInput.addEventListener('input', updateGpBrlPreview);
+
     document.getElementById('gamepassForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const mapaId = document.getElementById('gpMapSelect').value;
       const nome = document.getElementById('gpName').value.trim();
       const robuxPrice = parseInt(document.getElementById('gpRobuxPrice').value);
       
-      if (!mapaId) { alert("Selecione um mapa!"); return; }
-      if (!newGpPhotoBase64) { alert("Envie a foto da gamepass do dispositivo!"); return; }
+      if (!mapaId) { alert("Selecione o mapa!"); return; }
+      if (!newGpPhotoBase64) { alert("Envie a foto da gamepass!"); return; }
 
       const brlValue = (robuxPrice * storeConfig.robuxPrice).toFixed(2);
 
@@ -749,15 +949,28 @@
         });
         document.getElementById('gamepassForm').reset();
         newGpPhotoBase64 = null;
-        document.getElementById('gpUploadText').textContent = "📁 Clique para escolher a imagem da gamepass";
-        alert("Gamepass cadastrada com sucesso no mapa!");
+        document.getElementById('gpUploadText').textContent = "📁 Escolher imagem";
+        alert("Gamepass cadastrada com sucesso!");
         closeAdminModal();
       } catch (err) {
-        alert("Erro ao cadastrar gamepass: " + err.message);
+        alert("Erro: " + err.message);
       }
     });
 
-    // Navegação Principal: Mapas -> Gamepasses do Mapa
+    document.getElementById('btnToggleStock').addEventListener('click', async () => {
+      const newStatus = !storeConfig.stockActive;
+      await updateDoc(storeConfigRef, { stockActive: newStatus });
+      alert(newStatus ? "Estoque ativado!" : "Estoque desativado!");
+    });
+
+    document.getElementById('btnSaveRobuxPrice').addEventListener('click', async () => {
+      const val = parseFloat(document.getElementById('robuxUnitPriceInput').value);
+      if (isNaN(val) || val <= 0) { alert("Valor inválido!"); return; }
+      await updateDoc(storeConfigRef, { robuxPrice: val });
+      alert("Preço atualizado!");
+    });
+
+    // Vitrine de Mapas e Gamepasses
     let currentSelectedMapId = null;
     let allMapsData = [];
     let allGamepassesData = [];
@@ -781,7 +994,7 @@
       grid.innerHTML = '';
 
       if (maps.length === 0) {
-        grid.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1;">Nenhum mapa cadastrado pelo administrador.</p>';
+        grid.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1;">Nenhum mapa cadastrado.</p>';
         return;
       }
 
@@ -792,7 +1005,7 @@
           <div>
             <img src="${map.imagem}" alt="Mapa" style="width: 100%; height: 150px; object-fit: cover; border-radius: 12px; margin-bottom: 12px;">
             <h3>🗺️ ${map.nome}</h3>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">Clique para ver as gamepasses deste mapa.</p>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">Clique para ver gamepasses.</p>
           </div>
           <button style="margin-top: 15px;" onclick="selectMap('${map.id}')">Ver Gamepasses</button>
         `;
@@ -825,7 +1038,7 @@
 
       const filteredGps = allGamepassesData.filter(gp => gp.mapaId === mapId);
       if (filteredGps.length === 0) {
-        grid.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1;">Nenhuma gamepass cadastrada para este mapa ainda.</p>';
+        grid.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1;">Nenhuma gamepass cadastrada aqui.</p>';
         return;
       }
 
@@ -836,7 +1049,7 @@
           <div>
             <img src="${gp.imagem}" alt="Gamepass" style="width: 100%; height: 140px; object-fit: cover; border-radius: 10px; margin-bottom: 12px;">
             <h3>${gp.nome}</h3>
-            <div style="font-size: 0.9rem; color: var(--text-muted);">Preço Real: <strong style="color: var(--accent);">${gp.precoRobux} Robux</strong></div>
+            <div style="font-size: 0.9rem; color: var(--text-muted);">Robux no Jogo: <strong style="color: var(--accent);">${gp.precoRobux} Robux</strong></div>
             <div class="price-tag">R$ ${parseFloat(gp.precoBRL).toFixed(2).replace('.', ',')}</div>
           </div>
           <button class="btn-buy-gp" data-name="${gp.nome}" data-price="${gp.precoBRL}" data-robux="${gp.precoRobux}">Comprar Gamepass</button>
@@ -845,67 +1058,22 @@
       });
 
       document.querySelectorAll('.btn-buy-gp').forEach(btn => {
-        btn.addEventListener('click', async (e) => {
-          if (!storeConfig.stockActive) { alert("Loja sem estoque no momento!"); return; }
+        btn.addEventListener('click', (e) => {
+          if (!storeConfig.stockActive) { alert("Loja sem estoque!"); return; }
           const name = e.target.getAttribute('data-name');
           const price = e.target.getAttribute('data-price');
           const robux = e.target.getAttribute('data-robux');
 
-          try {
-            await addDoc(collection(db, "pedidos"), {
-              userId: auth.currentUser.uid,
-              comprador: currentUserData ? currentUserData.displayName : "Cliente",
-              item: `${name} (${robux} Robux)`,
-              valor: price,
-              data: new Date(),
-              status: "Pendente"
-            });
-            alert(`Compra da gamepass "${name}" realizada com sucesso!`);
-          } catch (err) {
-            alert("Erro ao efetuar compra: " + err.message);
-          }
+          pendingCheckoutItem = {
+            name: `${name} (${robux} Robux)`,
+            price: price
+          };
+          openCheckoutModal(pendingCheckoutItem);
         });
       });
     }
 
-    // Pesquisa global
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-      const term = e.target.value.toLowerCase();
-      if (!term) {
-        if (currentSelectedMapId) renderGamepassesForMap(currentSelectedMapId);
-        else renderMaps(allMapsData);
-        return;
-      }
-
-      if (!currentSelectedMapId) {
-        const filteredMaps = allMapsData.filter(m => m.nome.toLowerCase().includes(term));
-        renderMaps(filteredMaps);
-      } else {
-        const filteredGps = allGamepassesData.filter(gp => gp.mapaId === currentSelectedMapId && gp.nome.toLowerCase().includes(term));
-        const grid = document.getElementById('dynamicGrid');
-        grid.innerHTML = '';
-        if (filteredGps.length === 0) {
-          grid.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1;">Nenhuma gamepass encontrada.</p>';
-          return;
-        }
-        filteredGps.forEach(gp => {
-          const card = document.createElement('div');
-          card.className = 'card';
-          card.innerHTML = `
-            <div>
-              <img src="${gp.imagem}" alt="Gamepass" style="width: 100%; height: 140px; object-fit: cover; border-radius: 10px; margin-bottom: 12px;">
-              <h3>${gp.nome}</h3>
-              <div style="font-size: 0.9rem; color: var(--text-muted);">Preço Real: <strong style="color: var(--accent);">${gp.precoRobux} Robux</strong></div>
-              <div class="price-tag">R$ ${parseFloat(gp.precoBRL).toFixed(2).replace('.', ',')}</div>
-            </div>
-            <button class="btn-buy-gp" data-name="${gp.nome}" data-price="${gp.precoBRL}" data-robux="${gp.precoRobux}">Comprar Gamepass</button>
-          `;
-          grid.appendChild(card);
-        });
-      }
-    });
-
-    // Histórico de Pedidos no Menu Lateral do Cliente
+    // Histórico de pedidos do usuário
     function loadUserOrders(uid) {
       const q = query(collection(db, "pedidos"), where("userId", "==", uid), orderBy("data", "desc"));
       onSnapshot(q, (snapshot) => {
@@ -924,6 +1092,7 @@
           box.style.border = '1px solid var(--border)';
           box.innerHTML = `
             <strong style="color: var(--text);">📦 ${ord.item}</strong><br>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Roblox Nick: <b>${ord.robloxNick || 'N/A'}</b></span><br>
             <span style="color: var(--accent); font-weight: 600;">R$ ${ord.valor}</span><br>
             <span style="color: var(--accent); font-size: 0.75rem;">Status: ${ord.status}</span>
           `;
@@ -932,7 +1101,7 @@
       });
     }
 
-    // Área do Admin para ver e gerenciar pedidos
+    // Área Admin: Ver Pedidos (Com Nick exato do Roblox, Aprovação e Apagamento)
     function loadAllAdminOrders() {
       const q = query(collection(db, "pedidos"), orderBy("data", "desc"));
       onSnapshot(q, (snapshot) => {
@@ -955,10 +1124,12 @@
               <strong style="color: var(--accent);">👤 ${ord.comprador}</strong>
               <span style="font-size: 0.8rem; color: var(--text-muted);">Status: <strong style="color: var(--accent);">${ord.status}</strong></span>
             </div>
-            <div style="font-size: 0.9rem; margin-bottom: 8px;">Item: <b>${ord.item}</b> | Valor: <b>R$ ${ord.valor}</b></div>
-            <div style="display: flex; gap: 8px;">
-              <button class="btn-success" style="padding: 6px; font-size: 0.8rem; margin:0;" onclick="updateOrderStatus('${ordId}', 'Concluído')">Aprovar / Concluir</button>
-              <button class="btn-danger" style="padding: 6px; font-size: 0.8rem; margin:0;" onclick="deleteOrder('${ordId}')">Excluir</button>
+            <div style="font-size: 0.9rem; margin-bottom: 4px;">🎮 Roblox Nick Exato: <b style="color: var(--accent);">${ord.robloxNick || 'Não informado'}</b></div>
+            <div style="font-size: 0.9rem; margin-bottom: 8px;">📦 Item: <b>${ord.item}</b> | Valor: <b>R$ ${ord.valor}</b></div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="btn-success" style="padding: 6px; font-size: 0.8rem; margin:0; flex:1;" onclick="updateOrderStatus('${ordId}', 'Pagamento Confirmado (Entrega Pendente)')">Confirmar Pagamento</button>
+              <button class="btn-success" style="padding: 6px; font-size: 0.8rem; margin:0; flex:1; background: #0ea5e9;" onclick="updateOrderStatus('${ordId}', 'Entregue com Sucesso')">Marcar como Entregue</button>
+              <button class="btn-danger" style="padding: 6px; font-size: 0.8rem; margin:0;" onclick="deleteOrder('${ordId}')">Apagar Pedido</button>
             </div>
           `;
           listEl.appendChild(box);
@@ -969,20 +1140,92 @@
     window.updateOrderStatus = async function(orderId, status) {
       try {
         await updateDoc(doc(db, "pedidos", orderId), { status: status });
-        alert("Status do pedido atualizado!");
+        alert("Status atualizado!");
       } catch (err) {
         alert("Erro: " + err.message);
       }
     };
 
     window.deleteOrder = async function(orderId) {
-      if (confirm("Deseja realmente excluir este pedido?")) {
+      if (confirm("Deseja apagar este pedido após a entrega?")) {
         try {
           await deleteDoc(doc(db, "pedidos", orderId));
         } catch (err) {
           alert("Erro: " + err.message);
         }
       }
+    };
+
+    // Área Admin: Gerenciar Chats (Recuperação e Monitoramento de conversas fechadas)
+    function loadAllAdminChats() {
+      const q = query(collection(db, "conversas"), orderBy("timestamp", "desc"));
+      onSnapshot(q, (snapshot) => {
+        const listEl = document.getElementById('adminChatsList');
+        listEl.innerHTML = '';
+        if (snapshot.empty) {
+          listEl.innerHTML = '<span style="color: var(--text-muted);">Nenhum chat registrado.</span>';
+          return;
+        }
+
+        // Agrupar por usuário
+        const chatsByUser = {};
+        snapshot.forEach(docSnap => {
+          const chat = { id: docSnap.id, ...docSnap.data() };
+          if (!chatsByUser[chat.userId]) {
+            chatsByUser[chat.userId] = {
+              comprador: chat.comprador,
+              robloxNick: chat.robloxNick,
+              messages: []
+            };
+          }
+          chatsByUser[chat.userId].messages.push(chat);
+        });
+
+        for (const [userId, data] of Object.entries(chatsByUser)) {
+          const box = document.createElement('div');
+          box.style.background = 'var(--bg-input)';
+          box.style.padding = '12px';
+          box.style.borderRadius = '10px';
+          box.style.border = '1px solid var(--border)';
+          
+          let lastMsg = data.messages[data.messages.length - 1];
+          box.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <strong style="color: var(--accent);">💬 Cliente: ${data.comprador} (Roblox: ${data.robloxNick || 'N/A'})</strong>
+            </div>
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">Última mensagem: ${lastMsg.mensagem}</div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn-secondary" style="padding: 6px; font-size: 0.8rem; margin:0;" onclick="adminViewUserChat('${userId}')">Ver / Responder Chat</button>
+            </div>
+          `;
+          listEl.appendChild(box);
+        }
+      });
+    }
+
+    window.adminViewUserChat = function(userId) {
+      // Abre o modal de chat simulando o usuário ou painel admin de chat (reutilizamos o modal de conversas com envio como admin)
+      openConversationsModal();
+      // Opcional: Permitir admin responder diretamente se necessário ou visualizar todas as mensagens do cliente
+      const chatMessagesEl = document.getElementById('chatMessages');
+      chatMessagesEl.innerHTML = '<div style="text-align: center; color: var(--text-muted);">Carregando chat do cliente...</div>';
+
+      const q = query(collection(db, "conversas"), where("userId", "==", userId), orderBy("timestamp", "asc"));
+      onSnapshot(q, (snapshot) => {
+        chatMessagesEl.innerHTML = '';
+        snapshot.forEach(docSnap => {
+          const msg = docSnap.data();
+          const div = document.createElement('div');
+          div.className = `chat-msg ${msg.remetente === 'admin' ? 'admin' : 'client'}`;
+          let html = `<div><b>[${msg.remetente.toUpperCase()}]</b> ${msg.mensagem}</div>`;
+          if (msg.foto) {
+            html += `<img src="${msg.foto}" alt="Comprovante">`;
+          }
+          div.innerHTML = html;
+          chatMessagesEl.appendChild(div);
+        });
+        chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+      });
     };
   </script>
 </body>
