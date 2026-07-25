@@ -6,86 +6,99 @@
   <title>Loja Master - Robux & Gamepasses</title>
   <style>
     :root {
-      --bg-base: #07090e;
-      --bg-surface: #0f172a;
-      --bg-card: #1e293b;
+      --bg-base: #05070b;
+      --bg-surface: #0d1322;
+      --bg-card: #161f33;
       --bg-input: #090d16;
       --accent: #10b981;
+      --accent-glow: rgba(16, 185, 129, 0.4);
       --accent-hover: #059669;
       --danger: #ef4444;
       --warning: #f59e0b;
       --text: #f8fafc;
       --text-muted: #94a3b8;
-      --border: #334155;
+      --border: #22304a;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', 'Segoe UI', sans-serif; }
-    body { background-color: var(--bg-base); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+    body { background-color: var(--bg-base); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
 
-    /* Estilos Utilitários */
+    /* Utilitários */
     .hidden { display: none !important; }
-    input, button, select { width: 100%; padding: 12px 16px; margin: 8px 0; border-radius: 10px; border: 1px solid var(--border); background: var(--bg-input); color: var(--text); font-size: 0.95rem; outline: none; transition: 0.2s; }
-    input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2); }
-    button { background-color: var(--accent); color: white; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; }
-    button:hover { background-color: var(--accent-hover); }
-    .btn-danger { background-color: var(--danger); }
-    .btn-danger:hover { background-color: #dc2626; }
-    .btn-secondary { background-color: #475569; }
-    .btn-secondary:hover { background-color: #334155; }
+    input, button, select { width: 100%; padding: 14px 16px; margin: 8px 0; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-input); color: var(--text); font-size: 0.95rem; outline: none; transition: all 0.3s ease; }
+    input:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+    button { background: linear-gradient(135deg, var(--accent), var(--accent-hover)); color: white; font-weight: 700; cursor: pointer; border: none; box-shadow: 0 4px 12px var(--accent-glow); transition: transform 0.2s, filter 0.2s; }
+    button:hover { filter: brightness(1.15); transform: translateY(-2px); }
+    button:active { transform: translateY(0); }
+    .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4); }
+    .btn-secondary { background: #334155; box-shadow: none; }
+    .btn-secondary:hover { background: #475569; }
 
-    /* --- TELA DE LOGIN / CADASTRO (Centralizada) --- */
+    /* Animação de entrada suave */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+    /* --- TELA DE LOGIN / CADASTRO --- */
     #authScreen {
-      position: fixed; inset: 0; background: var(--bg-base); z-index: 1000;
+      position: fixed; inset: 0; background: radial-gradient(circle at center, #111c38 0%, var(--bg-base) 100%); z-index: 1000;
       display: flex; justify-content: center; align-items: center; padding: 20px;
     }
     .auth-card {
-      background: var(--bg-surface); border: 1px solid var(--border); border-radius: 20px;
-      padding: 40px; width: 100%; max-width: 440px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
+      background: rgba(13, 19, 34, 0.85); backdrop-filter: blur(16px); border: 1px solid var(--border); border-radius: 24px;
+      padding: 35px; width: 100%; max-width: 440px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7);
     }
-    .auth-card h2 { text-align: center; margin-bottom: 24px; color: var(--accent); font-size: 1.8rem; }
-    .tab-switch { display: flex; gap: 10px; margin-bottom: 20px; }
-    .tab-btn { flex: 1; padding: 10px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; color: var(--text-muted); cursor: pointer; font-weight: 650; }
-    .tab-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+    .auth-card h2 { text-align: center; margin-bottom: 20px; color: var(--accent); font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; }
+    .tab-switch { display: flex; gap: 8px; margin-bottom: 20px; background: var(--bg-input); padding: 4px; border-radius: 12px; border: 1px solid var(--border); }
+    .tab-btn { flex: 1; padding: 10px; background: transparent; border: none; border-radius: 9px; color: var(--text-muted); cursor: pointer; font-weight: 650; box-shadow: none; }
+    .tab-btn.active { background: var(--accent); color: white; box-shadow: 0 2px 8px var(--accent-glow); }
 
-    /* --- LAYOUT PRINCIPAL DO SITE (Aparece pós-login) --- */
+    /* Upload de foto customizado */
+    .file-upload-wrapper {
+      border: 2px dashed var(--border); border-radius: 12px; padding: 12px; text-align: center; cursor: pointer; background: var(--bg-input); margin: 8px 0; transition: 0.3s;
+    }
+    .file-upload-wrapper:hover { border-color: var(--accent); }
+    .preview-avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); display: inline-block; margin-bottom: 6px; }
+
+    /* --- LAYOUT PRINCIPAL --- */
     #mainApp { display: flex; flex: 1; min-height: 100vh; }
-
-    /* Menu Lateral / Sidebar */
     sidebar {
       width: 300px; background-color: var(--bg-surface); border-right: 1px solid var(--border);
-      display: flex; flex-direction: column; padding: 24px; position: fixed; height: 100vh; overflow-y: auto;
-      z-index: 10;
+      display: flex; flex-direction: column; padding: 24px; position: fixed; height: 100vh; overflow-y: auto; z-index: 10;
     }
-    .brand { font-size: 1.4rem; font-weight: 800; color: var(--accent); margin-bottom: 30px; display: flex; align-items: center; gap: 10px; }
+    .brand { font-size: 1.5rem; font-weight: 900; color: var(--accent); margin-bottom: 25px; display: flex; align-items: center; gap: 10px; text-shadow: 0 0 20px var(--accent-glow); }
     .sidebar-block { margin-bottom: 24px; }
-    .sidebar-block h4 { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .sidebar-block h4 { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 12px; }
 
-    /* Conteúdo Principal */
     content-area { margin-left: 300px; flex: 1; padding: 30px; max-width: 1300px; }
 
-    /* Topo / Header */
+    /* Header e Pesquisa */
     header {
       display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; gap: 20px;
-      background-color: var(--bg-surface); padding: 16px 24px; border-radius: 16px; border: 1px solid var(--border);
+      background-color: var(--bg-surface); padding: 16px 24px; border-radius: 18px; border: 1px solid var(--border);
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
     }
     .search-container { flex: 1; position: relative; max-width: 500px; }
-    .search-container input { margin: 0; padding-left: 42px; background: var(--bg-input); }
-    .search-icon { position: absolute; left: 14px; top: 14px; color: var(--text-muted); }
+    .search-container input { margin: 0; padding-left: 44px; background: var(--bg-input); }
+    .search-icon { position: absolute; left: 15px; top: 15px; color: var(--text-muted); }
     
-    .status-badge { padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
-    .status-open { background: rgba(16, 185, 129, 0.1); color: var(--accent); border: 1px solid rgba(16, 185, 129, 0.3); }
-    .status-closed { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+    .status-badge { padding: 8px 16px; border-radius: 30px; font-size: 0.85rem; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; }
+    .status-open { background: rgba(16, 185, 129, 0.12); color: var(--accent); border: 1px solid rgba(16, 185, 129, 0.3); box-shadow: 0 0 15px rgba(16, 185, 129, 0.15); }
+    .status-closed { background: rgba(239, 68, 68, 0.12); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); box-shadow: 0 0 15px rgba(239, 68, 68, 0.15); }
 
-    /* Cards e Grades */
+    /* Cards e Grid */
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
-    .card { background-color: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2); }
-    .card h3 { font-size: 1.1rem; margin-bottom: 8px; }
-    .price-tag { color: var(--accent); font-weight: 700; font-size: 1.25rem; margin-bottom: 14px; }
+    .card { background-color: var(--bg-surface); border: 1px solid var(--border); border-radius: 18px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.4); transition: transform 0.3s, border-color 0.3s; }
+    .card:hover { transform: translateY(-4px); border-color: rgba(16, 185, 129, 0.4); }
+    .card h3 { font-size: 1.15rem; margin-bottom: 8px; font-weight: 700; }
+    .price-tag { color: var(--accent); font-weight: 800; font-size: 1.35rem; margin-bottom: 16px; text-shadow: 0 0 10px var(--accent-glow); }
 
-    /* Painel do Admin */
-    .admin-card { background: linear-gradient(135deg, #1e293b, #0f172a); border: 2px dashed var(--warning); padding: 24px; border-radius: 16px; margin-bottom: 30px; }
-    .admin-title { color: var(--warning); display: flex; align-items: center; gap: 8px; margin-bottom: 15px; font-size: 1.2rem; }
+    /* Painel Admin */
+    .admin-card { background: linear-gradient(135deg, #1b263b, #0d1322); border: 2px dashed var(--warning); padding: 28px; border-radius: 20px; margin-bottom: 30px; box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
+    .admin-title { color: var(--warning); display: flex; align-items: center; gap: 10px; margin-bottom: 18px; font-size: 1.3rem; font-weight: 800; }
 
-    /* Responsivo Celular */
+    /* Responsivo para celular */
     @media (max-width: 900px) {
       #mainApp { flex-direction: column; }
       sidebar { width: 100%; height: auto; position: relative; }
@@ -97,7 +110,7 @@
 <body>
 
   <div id="authScreen">
-    <div class="auth-card">
+    <div class="auth-card animate-fade">
       <h2>⚡ Loja Master</h2>
       
       <div class="tab-switch">
@@ -106,17 +119,34 @@
       </div>
 
       <div id="loginForm">
-        <input type="email" id="loginEmail" placeholder="Seu e-mail">
-        <input type="password" id="loginPassword" placeholder="Sua senha">
-        <button id="btnLogin" style="margin-top: 15px;">Acessar Loja</button>
+        <input type="email" id="loginEmail" placeholder="Seu e-mail" autocomplete="username">
+        <input type="password" id="loginPassword" placeholder="Sua senha" autocomplete="current-password">
+        <button id="btnLogin" style="margin-top: 10px;">Acessar Sistema</button>
+        <div style="text-align: right; margin-top: 8px;">
+          <a href="#" id="linkForgotPass" style="color: var(--text-muted); font-size: 0.85rem; text-decoration: none;">Esqueci a senha?</a>
+        </div>
       </div>
 
-      <div id="registerForm" class="hidden">
-        <input type="email" id="regEmail" placeholder="Seu e-mail">
-        <input type="password" id="regPassword" placeholder="Sua senha (mínimo 6 dígitos)">
-        <input type="text" id="regDisplayName" placeholder="Nome de Exibição Único (Ex: ProGamer)">
-        <input type="url" id="regPhotoUrl" placeholder="Link da Foto de Perfil (URL da imagem)">
-        <button id="btnRegister" style="margin-top: 15px;" class="btn-secondary">Cadastrar Conta</button>
+      <div id="forgotForm" class="hidden animate-fade">
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px; text-align: center;">Insira seu e-mail cadastrado para receber o link de redefinição.</p>
+        <input type="email" id="forgotEmail" placeholder="Digite seu e-mail">
+        <button id="btnSendReset" style="margin-top: 8px;">Enviar E-mail de Recuperação</button>
+        <button type="button" class="btn-secondary" onclick="switchAuthTab('login')" style="margin-top: 6px;">Voltar ao Login</button>
+      </div>
+
+      <div id="registerForm" class="hidden animate-fade">
+        <input type="email" id="regEmail" placeholder="Seu e-mail" autocomplete="email">
+        <input type="password" id="regPassword" placeholder="Sua senha (mínimo 6 dígitos)" autocomplete="new-password">
+        <input type="text" id="regDisplayName" placeholder="Nome de Exibição Único (Ex: ProMaster)" autocomplete="nickname">
+        
+        <label style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-top: 6px;">Foto de Perfil do Dispositivo:</label>
+        <div class="file-upload-wrapper" onclick="document.getElementById('regPhotoFile').click()">
+          <img id="previewImg" class="preview-avatar hidden" src="" alt="Preview">
+          <div id="uploadPlaceholderText" style="font-size: 0.85rem; color: var(--text-muted);">📁 Clique para escolher uma foto</div>
+          <input type="file" id="regPhotoFile" accept="image/*" class="hidden">
+        </div>
+
+        <button id="btnRegister" style="margin-top: 12px;">Finalizar Cadastro</button>
       </div>
     </div>
   </div>
@@ -126,12 +156,12 @@
     <sidebar>
       <div class="brand">⚡ Loja Master</div>
 
-      <div class="sidebar-block" style="background: var(--bg-card); padding: 12px; border-radius: 12px; border: 1px solid var(--border);">
-        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
-          <img id="userAvatar" src="" alt="Avatar" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
+      <div class="sidebar-block" style="background: var(--bg-card); padding: 14px; border-radius: 16px; border: 1px solid var(--border);">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+          <img id="userAvatar" src="" alt="Avatar" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
           <div style="overflow: hidden;">
             <strong id="userDisplayName" style="display: block; font-size: 0.95rem; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;"></strong>
-            <span id="adminBadge" class="hidden" style="background: var(--warning); color: black; font-size: 0.7rem; font-weight: bold; padding: 2px 6px; border-radius: 4px;">DONO / ADMIN</span>
+            <span id="adminBadge" class="hidden" style="background: var(--warning); color: black; font-size: 0.7rem; font-weight: 800; padding: 2px 6px; border-radius: 4px;">DONO / ADMIN</span>
           </div>
         </div>
         <button id="btnLogout" class="btn-danger" style="margin: 0; padding: 8px; font-size: 0.85rem;">Sair da Conta</button>
@@ -140,7 +170,7 @@
       <div class="sidebar-block" style="flex: 1;">
         <h4>📦 Meus Pedidos Recentes</h4>
         <div id="myOrdersList" style="font-size: 0.85rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 8px;">
-          Carregando pedidos...
+          Carregando...
         </div>
       </div>
     </sidebar>
@@ -150,7 +180,7 @@
       <header>
         <div class="search-container">
           <span class="search-icon">🔍</span>
-          <input type="text" id="searchInput" placeholder="Pesquisar gamepasses e itens...">
+          <input type="text" id="searchInput" placeholder="Pesquisar gamepasses ou itens...">
         </div>
         <div id="storeStatusDisplay" class="status-badge status-open">
           <span>●</span> Loja Aberta
@@ -158,36 +188,36 @@
       </header>
 
       <div id="adminPanel" class="admin-card hidden">
-        <div class="admin-title">⚙️ Painel de Controle do Dono</div>
+        <div class="admin-title">⚙️ Painel de Controle Exclusivo do Dono</div>
         
-        <div style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
-          <button id="btnToggleStock" class="btn-danger" style="flex: 1; margin: 0;">Alternar Estoque (Ligar/Desligar Vendas)</button>
+        <div style="display: flex; gap: 15px; margin-bottom: 22px;">
+          <button id="btnToggleStock" class="btn-danger" style="margin: 0;">Alternar Estoque Global (Ligar/Desligar Vendas)</button>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start;">
           <div>
-            <h4 style="color: var(--warning); margin-bottom: 10px;">Adicionar Gamepass / Produto</h4>
+            <h4 style="color: var(--warning); margin-bottom: 8px; font-size: 0.95rem;">Criar Gamepass / Produto</h4>
             <form id="productForm">
-              <input type="text" id="prodName" placeholder="Nome do item" required style="margin: 4px 0 10px 0;">
-              <input type="number" step="0.01" id="prodPrice" placeholder="Preço em R$" required style="margin: 4px 0 10px 0;">
-              <input type="url" id="prodImage" placeholder="Link da imagem (Opcional)" style="margin: 4px 0 10px 0;">
+              <input type="text" id="prodName" placeholder="Nome do item" required style="margin: 4px 0 8px 0;">
+              <input type="number" step="0.01" id="prodPrice" placeholder="Preço em R$" required style="margin: 4px 0 8px 0;">
+              <input type="url" id="prodImage" placeholder="Link da imagem (Opcional)" style="margin: 4px 0 8px 0;">
               <button type="submit" style="background: var(--warning); color: black;">Criar Produto</button>
             </form>
           </div>
           <div>
-            <h4 style="color: var(--warning); margin-bottom: 10px;">Configurar Preço do Robux</h4>
+            <h4 style="color: var(--warning); margin-bottom: 8px; font-size: 0.95rem;">Preço por 1 Robux</h4>
             <div style="display: flex; gap: 8px;">
-              <input type="number" step="0.001" id="robuxUnitPriceInput" placeholder="Preço de 1 Robux" style="margin:0;">
-              <button id="btnSaveRobuxPrice" style="width: 130px; margin:0;">Salvar</button>
+              <input type="number" step="0.001" id="robuxUnitPriceInput" placeholder="Ex: 0.05" style="margin:0;">
+              <button id="btnSaveRobuxPrice" style="width: 120px; margin:0;">Salvar</button>
             </div>
-            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">Ex: Se colocar 0.05, 40 Robux custarão R$ 2,00.</p>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">Ex: Se 0.05, 40 Robux saem por R$ 2,00.</p>
           </div>
         </div>
       </div>
 
-      <div class="card" style="margin-bottom: 30px; border-left: 5px solid var(--accent);">
-        <h3>💎 Comprar Robux Personalizados</h3>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; margin-bottom: 16px;">Escolha quantos Robux deseja (Mínimo de 40).</p>
+      <div class="card animate-fade" style="margin-bottom: 30px; border-left: 6px solid var(--accent); background: linear-gradient(135deg, var(--bg-surface), var(--bg-card));">
+        <h3>💎 Compra de Robux Personalizados</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; margin-bottom: 16px;">Insira a quantidade exata de Robux que precisa (Mínimo de 40).</p>
         
         <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
           <div style="flex: 1; min-width: 200px;">
@@ -196,18 +226,18 @@
           </div>
           <div style="flex: 1; min-width: 200px;">
             <label style="font-size: 0.8rem; color: var(--text-muted);">Total Calculado</label>
-            <div id="robuxTotalDisplay" style="font-size: 1.6rem; font-weight: 800; color: var(--accent); padding: 8px 0;">R$ 2,00</div>
+            <div id="robuxTotalDisplay" style="font-size: 1.8rem; font-weight: 900; color: var(--accent); padding: 6px 0; text-shadow: 0 0 12px var(--accent-glow);">R$ 2,00</div>
           </div>
           <div style="flex: 1; min-width: 160px;">
             <button id="btnBuyRobux" style="height: 48px; margin-top: 18px;">Comprar Agora</button>
           </div>
         </div>
-        <div id="stockWarningBanner" class="hidden" style="margin-top: 15px; background: rgba(239,68,68,0.2); color: var(--danger); padding: 10px; border-radius: 8px; text-align: center; font-weight: bold;">
-          ⚠️ LOJA SEM ESTOQUE: As compras estão temporariamente desativadas pelo dono.
+        <div id="stockWarningBanner" class="hidden" style="margin-top: 15px; background: rgba(239,68,68,0.15); color: var(--danger); border: 1px solid rgba(239,68,68,0.3); padding: 12px; border-radius: 10px; text-align: center; font-weight: bold;">
+          ⚠️ LOJA SEM ESTOQUE: As compras de Robux estão temporariamente desativadas pelo dono.
         </div>
       </div>
 
-      <h2 style="margin-bottom: 15px; font-size: 1.3rem;">Gamepasses & Produtos Disponíveis</h2>
+      <h2 style="margin-bottom: 16px; font-size: 1.35rem; font-weight: 800;">Gamepasses & Produtos da Loja</h2>
       <div id="productList" class="grid">
         </div>
     </content-area>
@@ -215,17 +245,19 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, getDoc, setDoc, updateDoc, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-    // ⚠️ COLOQUE SEU FIREBASE CONFIG REAL AQUI ⚠️
+    // 🔑 Configuração real do seu projeto Firebase fornecida
     const firebaseConfig = {
-      apiKey: "SUA_API_KEY",
+      apiKey: "AIzaSyCGD9DZDFp0w9baW8jiqgGGfkasAvqreY0",
       authDomain: "site-ec6fd.firebaseapp.com",
+      databaseURL: "https://site-ec6fd-default-rtdb.firebaseio.com",
       projectId: "site-ec6fd",
       storageBucket: "site-ec6fd.firebasestorage.app",
       messagingSenderId: "338689686380",
-      appId: "1:338689686380:web:509aebb8d64694a0e1d149"
+      appId: "1:338689686380:web:509aebb8d64694a0e1d149",
+      measurementId: "G-17MWLV6N26"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -234,27 +266,87 @@
 
     const ADMIN_EMAIL = "raiyuri.freefire@gmail.com";
 
-    // Alternar abas da tela de login
+    // Alternar entre abas de Login, Cadastro e Recuperação
     window.switchAuthTab = function(tab) {
+      document.getElementById('loginForm').classList.add('hidden');
+      document.getElementById('registerForm').classList.add('hidden');
+      document.getElementById('forgotForm').classList.add('hidden');
+      document.getElementById('tabLoginBtn').classList.remove('active');
+      document.getElementById('tabRegBtn').classList.remove('active');
+
       if (tab === 'login') {
         document.getElementById('loginForm').classList.remove('hidden');
-        document.getElementById('registerForm').classList.add('hidden');
         document.getElementById('tabLoginBtn').classList.add('active');
-        document.getElementById('tabRegBtn').classList.remove('active');
-      } else {
-        document.getElementById('loginForm').classList.add('hidden');
+      } else if (tab === 'register') {
         document.getElementById('registerForm').classList.remove('hidden');
-        document.getElementById('tabLoginBtn').classList.remove('active');
         document.getElementById('tabRegBtn').classList.add('active');
+      } else if (tab === 'forgot') {
+        document.getElementById('forgotForm').classList.remove('hidden');
       }
     };
 
-    // Cadastro de Conta (Com nome único obrigatório)
+    document.getElementById('linkForgotPass').addEventListener('click', (e) => {
+      e.preventDefault();
+      switchAuthTab('forgot');
+    });
+
+    // Enviar e-mail de recuperação de senha
+    document.getElementById('btnSendReset').addEventListener('click', async () => {
+      const email = document.getElementById('forgotEmail').value.trim();
+      if (!email) {
+        alert("Insira seu e-mail de recuperação!");
+        return;
+      }
+      try {
+        await sendPasswordResetEmail(auth, email);
+        alert("E-mail de redefinição enviado com sucesso! Verifique sua caixa de entrada ou spam.");
+        switchAuthTab('login');
+      } catch (err) {
+        alert("Erro ao enviar e-mail: " + err.message);
+      }
+    });
+
+    // Processamento de imagem do dispositivo para Base64 Compacto
+    let encodedProfileImage = "https://via.placeholder.com/150";
+    document.getElementById('regPhotoFile').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 150;
+          let width = img.width;
+          let height = img.height;
+          if (width > height) {
+            if (width > maxDim) { height *= maxDim / width; width = maxDim; }
+          } else {
+            if (height > maxDim) { width *= maxDim / height; height = maxDim; }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          encodedProfileImage = canvas.toDataURL('image/jpeg', 0.75);
+
+          // Mostrar pré-visualização
+          const preview = document.getElementById('previewImg');
+          preview.src = encodedProfileImage;
+          preview.classList.remove('hidden');
+          document.getElementById('uploadPlaceholderText').textContent = "Foto carregada com sucesso! ✅";
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Cadastro de Conta
     document.getElementById('btnRegister').addEventListener('click', async () => {
       const email = document.getElementById('regEmail').value.trim();
       const pass = document.getElementById('regPassword').value;
       const displayName = document.getElementById('regDisplayName').value.trim();
-      const photoUrl = document.getElementById('regPhotoUrl').value.trim() || 'https://via.placeholder.com/150';
 
       if (!displayName || !email || !pass) {
         alert("Preencha todos os campos obrigatórios!");
@@ -262,7 +354,6 @@
       }
 
       try {
-        // Verificar se já existe o nome de exibição no banco
         const nameQuery = query(collection(db, "usuarios"), where("displayName", "==", displayName));
         const nameSnap = await getDocs(nameQuery);
         if (!nameSnap.empty) {
@@ -273,12 +364,12 @@
         const cred = await createUserWithEmailAndPassword(auth, email, pass);
         await setDoc(doc(db, "usuarios", cred.user.uid), {
           uid: cred.user.uid,
-          email: email, // Ocultado do público na interface
+          email: email,
           displayName: displayName,
-          photoUrl: photoUrl
+          photoUrl: encodedProfileImage
         });
 
-        alert("Conta criada com sucesso! Você já pode navegar na Loja Master.");
+        alert("Conta criada com sucesso!");
       } catch (err) {
         alert("Erro no cadastro: " + err.message);
       }
@@ -298,7 +389,7 @@
     // Logout
     document.getElementById('btnLogout').addEventListener('click', () => signOut(auth));
 
-    // Monitoramento de Sessão (Gerencia o aparecimento das telas)
+    // Monitoramento de Sessão & Painel
     let currentUserData = null;
     let storeConfig = { stockActive: true, robuxPrice: 0.05 };
 
@@ -309,11 +400,9 @@
       const adminBadge = document.getElementById('adminBadge');
 
       if (user) {
-        // Esconde tela de login e mostra o sistema principal
         authScreen.classList.add('hidden');
         mainApp.classList.remove('hidden');
 
-        // Buscar perfil do usuário
         const userDoc = await getDoc(doc(db, "usuarios", user.uid));
         if (userDoc.exists()) {
           currentUserData = userDoc.data();
@@ -321,7 +410,6 @@
           document.getElementById('userAvatar').src = currentUserData.photoUrl;
         }
 
-        // Verificação estrita do Admin
         if (user.email === ADMIN_EMAIL) {
           adminBadge.classList.remove('hidden');
           adminPanel.classList.remove('hidden');
@@ -332,14 +420,13 @@
 
         loadUserOrders(user.uid);
       } else {
-        // Mostra o login e esconde o sistema principal
         authScreen.classList.remove('hidden');
         mainApp.classList.add('hidden');
         currentUserData = null;
       }
     });
 
-    // Configurações Globais da Loja (Estoque e Preço do Robux)
+    // Configurações de Estoque Global
     const storeConfigRef = doc(db, "config", "lojaConfig");
     onSnapshot(storeConfigRef, (docSnap) => {
       if (docSnap.exists()) {
@@ -383,7 +470,7 @@
     }
     robuxQtyInput.addEventListener('input', calcRobuxCost);
 
-    // Ação de Comprar Robux
+    // Comprar Robux
     document.getElementById('btnBuyRobux').addEventListener('click', async () => {
       if (!storeConfig.stockActive) {
         alert("A loja está sem estoque no momento!");
@@ -411,11 +498,11 @@
       }
     });
 
-    // Funções Administrativas
+    // Controles Admin
     document.getElementById('btnToggleStock').addEventListener('click', async () => {
       const newStatus = !storeConfig.stockActive;
       await updateDoc(storeConfigRef, { stockActive: newStatus });
-      alert(newStatus ? "Estoque ativado! Compras liberadas." : "Estoque desativado! Compras travadas para todos.");
+      alert(newStatus ? "Estoque ativado! Compras liberadas." : "Estoque desativado! Compras travadas.");
     });
 
     document.getElementById('btnSaveRobuxPrice').addEventListener('click', async () => {
@@ -448,7 +535,7 @@
       }
     });
 
-    // Vitrine de Produtos e Pesquisa em Tempo Real
+    // Vitrine e Pesquisa
     let masterProductsList = [];
     const productListEl = document.getElementById('productList');
 
@@ -513,7 +600,7 @@
       renderProducts(filtered);
     });
 
-    // Histórico de Pedidos no Menu Lateral (Com total privacidade de e-mails)
+    // Histórico de Pedidos no Menu Lateral (privacidade de e-mails mantida)
     function loadUserOrders(uid) {
       const ordersQuery = query(collection(db, "pedidos"), where("userId", "==", uid), orderBy("data", "desc"));
       onSnapshot(ordersQuery, (snapshot) => {
