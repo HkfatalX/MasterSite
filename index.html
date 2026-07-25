@@ -6,59 +6,48 @@
     <title>MasterFlix</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23141414'/%3E%3Cpath d='M20 78 L20 22 L35 22 L50 55 L65 22 L80 22 L80 78 L68 78 L68 42 L56 68 L44 68 L32 42 L32 78 Z' fill='%23e50914'/%3E%3C/svg%3E">
     <meta name="theme-color" content="#e50914">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-        :root{
-            --primary:#e50914;--primary-glow:rgba(229,9,20,.35);
-            --bg:#0a0a0a;--bg2:#141414;--card:#1a1a1a;--modal:#181818;
-            --txt:#fff;--muted:#8c8c8c;--border:rgba(255,255,255,.08);
-            --r-sm:8px;--r-md:14px;--r-lg:20px;--r-xl:28px;
-            --shadow:0 8px 32px rgba(0,0,0,.6);--shadow-modal:0 25px 80px rgba(0,0,0,.9);
-            --fast:.2s cubic-bezier(.4,0,.2,1);--smooth:.35s cubic-bezier(.4,0,.2,1);
-            --safe-t:env(safe-area-inset-top,0px);--safe-b:env(safe-area-inset-bottom,0px);
-            --safe-l:env(safe-area-inset-left,0px);--safe-r:env(safe-area-inset-right,0px);
-        }
+        :root{--primary:#e50914;--primary-glow:rgba(229,9,20,.35);--bg:#0a0a0a;--bg2:#141414;--card:#1a1a1a;--modal:#181818;--txt:#fff;--muted:#8c8c8c;--border:rgba(255,255,255,.08);--r-sm:8px;--r-md:14px;--r-lg:20px;--r-xl:28px;--shadow:0 8px 32px rgba(0,0,0,.6);--shadow-modal:0 25px 80px rgba(0,0,0,.9);--fast:.2s cubic-bezier(.4,0,.2,1);--smooth:.35s cubic-bezier(.4,0,.2,1);--safe-t:env(safe-area-inset-top,0px);--safe-b:env(safe-area-inset-bottom,0px);--safe-l:env(safe-area-inset-left,0px);--safe-r:env(safe-area-inset-right,0px)}
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-tap-highlight-color:transparent}
         *:focus-visible{outline:3px solid var(--primary)!important;outline-offset:3px!important;z-index:100}
         html,body{background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden;width:100%;font-size:14px;touch-action:manipulation;scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
         body.modal-open{overflow:hidden}
-        ::-webkit-scrollbar{width:6px;height:6px}
-        ::-webkit-scrollbar-track{background:transparent}
-        ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:3px}
+        ::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:3px}
 
         header{position:fixed;top:0;left:0;width:100%;height:68px;background:linear-gradient(180deg,rgba(0,0,0,.95) 0%,rgba(0,0,0,.6) 60%,transparent 100%);display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:100;transition:all var(--smooth)}
         header.scrolled{background:rgba(10,10,10,.98);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border);height:60px}
         .header-left{display:flex;align-items:center;gap:14px;flex-shrink:0}
         .menu-toggle-btn{width:42px;height:42px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--r-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;padding:11px 10px;transition:all var(--fast)}
-        .menu-toggle-btn:hover,.menu-toggle-btn:focus{background:var(--primary);border-color:var(--primary);transform:scale(1.05)}
+        .menu-toggle-btn:hover,.menu-toggle-btn:focus{background:var(--primary);border-color:var(--primary)}
         .menu-toggle-btn .bar{width:100%;height:2px;background:#fff;border-radius:2px;transition:all .3s ease}
         .menu-toggle-btn.active .bar:nth-child(1){transform:translateY(7px) rotate(45deg)}
-        .menu-toggle-btn.active .bar:nth-child(2){opacity:0;transform:scaleX(0)}
+        .menu-toggle-btn.active .bar:nth-child(2){opacity:0}
         .menu-toggle-btn.active .bar:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-        .brand{font-size:22px;font-weight:900;color:var(--primary);cursor:pointer;text-transform:uppercase;display:flex;align-items:center;gap:8px;letter-spacing:-.5px;transition:all var(--fast)}
-        .brand:hover{opacity:.85;transform:scale(.98)}
+        .brand{font-size:22px;font-weight:900;color:var(--primary);cursor:pointer;text-transform:uppercase;display:flex;align-items:center;gap:8px;letter-spacing:-.5px}
+        .brand:hover{opacity:.85}
         .brand-logo{width:28px;height:28px}
         .nav-actions{display:flex;align-items:center;gap:10px}
-
         .search-wrapper{position:relative;display:flex;align-items:center}
-        .search-box{display:flex;align-items:center;background:rgba(255,255,255,.06);border:1.5px solid transparent;border-radius:24px;transition:all .4s cubic-bezier(.4,0,.2,1);overflow:hidden;width:42px;height:42px}
-        .search-box.active{width:320px;max-width:calc(100vw - 140px);border-color:rgba(255,255,255,.25);background:rgba(0,0,0,.85);backdrop-filter:blur(20px);box-shadow:0 4px 30px rgba(0,0,0,.5)}
-        .search-box.active:focus-within{border-color:var(--primary);box-shadow:0 0 0 4px var(--primary-glow),0 4px 30px rgba(0,0,0,.5)}
-        .search-icon-btn{min-width:42px;height:42px;background:transparent;border:none;color:#fff;cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center;transition:all var(--fast)}
-        .search-icon-btn:hover{transform:scale(1.1)}
-        .search-input-field{flex:1;background:transparent;border:none;color:#fff;padding:0 4px;font-size:14px;font-weight:500;width:0;opacity:0;outline:none;transition:opacity .3s ease}
+        .search-box{display:flex;align-items:center;background:rgba(255,255,255,.06);border:1.5px solid transparent;border-radius:24px;transition:all .4s;overflow:hidden;width:42px;height:42px}
+        .search-box.active{width:320px;max-width:calc(100vw - 140px);border-color:rgba(255,255,255,.25);background:rgba(0,0,0,.85);backdrop-filter:blur(20px)}
+        .search-box.active:focus-within{border-color:var(--primary);box-shadow:0 0 0 4px var(--primary-glow)}
+        .search-icon-btn{min-width:42px;height:42px;background:transparent;border:none;color:#fff;cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center}
+        .search-input-field{flex:1;background:transparent;border:none;color:#fff;padding:0 4px;font-size:14px;font-weight:500;width:0;opacity:0;outline:none;transition:opacity .3s}
         .search-box.active .search-input-field{width:auto;opacity:1}
-        .search-clear-btn{background:rgba(255,255,255,.1);border:none;color:#999;cursor:pointer;padding:0;font-size:11px;display:none;width:26px;height:26px;border-radius:50%;margin-right:8px;transition:all var(--fast)}
-        .search-clear-btn:hover{background:rgba(255,255,255,.2);color:#fff}
+        .search-clear-btn{background:rgba(255,255,255,.1);border:none;color:#999;cursor:pointer;font-size:11px;display:none;width:26px;height:26px;border-radius:50%;margin-right:8px}
         .search-box.active.has-text .search-clear-btn{display:flex;align-items:center;justify-content:center}
-        .search-results-dropdown{position:absolute;top:calc(100% + 10px);right:0;width:420px;max-width:calc(100vw - 24px);max-height:480px;overflow-y:auto;background:rgba(18,18,18,.98);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,.1);border-radius:var(--r-md);display:none;z-index:200;box-shadow:var(--shadow-modal);animation:dropIn .25s ease}
+        .search-results-dropdown{position:absolute;top:calc(100% + 10px);right:0;width:420px;max-width:calc(100vw - 24px);max-height:480px;overflow-y:auto;background:rgba(18,18,18,.98);backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,.1);border-radius:var(--r-md);display:none;z-index:200;box-shadow:var(--shadow-modal);animation:dropIn .25s ease}
         @keyframes dropIn{from{opacity:0;transform:translateY(-8px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
         .search-results-dropdown.visible{display:block}
         .search-results-header{padding:14px 16px 10px;font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;border-bottom:1px solid rgba(255,255,255,.06)}
         .search-result-item{display:flex;align-items:center;gap:14px;padding:12px 16px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.04);transition:all var(--fast)}
-        .search-result-item:hover,.search-result-item:focus{background:rgba(229,9,20,.1)}
+        .search-result-item:hover{background:rgba(229,9,20,.1)}
         .search-result-item:last-child{border-bottom:none}
         .search-result-thumb{width:48px;height:68px;border-radius:6px;object-fit:cover;background:#222;flex-shrink:0}
         .search-result-info{flex:1;min-width:0}
@@ -68,19 +57,17 @@
         .search-result-meta .type-badge{background:rgba(229,9,20,.15);color:var(--primary);padding:2px 8px;border-radius:4px;font-weight:800;font-size:9px;text-transform:uppercase}
         .search-no-results{padding:40px 20px;text-align:center;color:var(--muted);font-size:13px}
         .search-no-results .search-empty-icon{font-size:36px;margin-bottom:10px;display:block}
-
         .user-avatar-btn{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#ff6b35);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;cursor:pointer;overflow:hidden;border:2.5px solid rgba(255,255,255,.15);transition:all var(--fast)}
-        .user-avatar-btn:hover,.user-avatar-btn:focus{border-color:var(--primary);transform:scale(1.08);box-shadow:0 0 0 4px var(--primary-glow)}
+        .user-avatar-btn:hover{border-color:var(--primary);transform:scale(1.08);box-shadow:0 0 0 4px var(--primary-glow)}
         .user-avatar-btn img{width:100%;height:100%;object-fit:cover}
-
         .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(8px);z-index:998;opacity:0;visibility:hidden;transition:all var(--smooth)}
         .sidebar-overlay.active{opacity:1;visibility:visible}
-        .sidebar-menu{position:fixed;top:0;left:0;width:290px;max-width:85vw;height:100vh;height:100dvh;background:linear-gradient(180deg,#161616 0%,#0a0a0a 100%);border-right:1px solid var(--border);z-index:999;transform:translateX(-100%);transition:transform .4s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
+        .sidebar-menu{position:fixed;top:0;left:0;width:290px;max-width:85vw;height:100vh;height:100dvh;background:linear-gradient(180deg,#161616,#0a0a0a);border-right:1px solid var(--border);z-index:999;transform:translateX(-100%);transition:transform .4s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
         .sidebar-menu.active{transform:translateX(0)}
         .sidebar-header{padding:22px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
-        .sidebar-brand{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:900;color:var(--primary);letter-spacing:-.3px}
+        .sidebar-brand{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:900;color:var(--primary)}
         .sidebar-brand svg{width:30px;height:30px}
-        .sidebar-close-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#999;font-size:18px;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all var(--fast)}
+        .sidebar-close-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#999;font-size:18px;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center}
         .sidebar-close-btn:hover{background:var(--primary);color:#fff}
         .sidebar-user{padding:20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.02)}
         .sidebar-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#ff6b35);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;overflow:hidden;border:2px solid rgba(255,255,255,.15);flex-shrink:0}
@@ -95,60 +82,53 @@
         .sidebar-item .icon{font-size:18px;width:26px;text-align:center}
         .sidebar-divider{height:1px;background:var(--border);margin:8px 22px}
         .sidebar-footer{padding:18px 22px;border-top:1px solid var(--border);font-size:10px;color:var(--muted);text-align:center}
-
         .app-container{padding-top:78px;padding-bottom:60px}
-
-        .featured-showcase{width:96%;max-width:1680px;margin:0 auto 34px auto}
-        .featured-topbar{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:18px;padding:0 2px}
-        .featured-kicker{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--primary),#ff4444);font-size:10px;font-weight:900;padding:7px 14px;border-radius:999px;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+        .featured-showcase{width:96%;max-width:1680px;margin:0 auto 34px}
+        .featured-topbar{margin-bottom:18px;padding:0 2px}
+        .featured-kicker{display:inline-flex;background:linear-gradient(135deg,var(--primary),#ff4444);font-size:10px;font-weight:900;padding:7px 14px;border-radius:999px;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
         .featured-heading{font-size:clamp(26px,4vw,42px);font-weight:900;letter-spacing:-1px;line-height:1.05}
         .featured-sub{font-size:13px;color:#9a9a9a;margin-top:8px;line-height:1.6;max-width:720px}
         .featured-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
         .featured-card{position:relative;min-height:430px;border-radius:var(--r-xl);overflow:hidden;background:#151515;border:1px solid rgba(255,255,255,.06);cursor:pointer;transition:all var(--smooth);box-shadow:var(--shadow)}
-        .featured-card:hover,.featured-card:focus{transform:translateY(-6px) scale(1.01);border-color:rgba(229,9,20,.4);box-shadow:0 24px 60px rgba(0,0,0,.75)}
-        .featured-card-bg{position:absolute;inset:0;background:center/cover no-repeat;transform:scale(1);transition:transform .6s ease}
+        .featured-card:hover{transform:translateY(-6px) scale(1.01);border-color:rgba(229,9,20,.4)}
+        .featured-card-bg{position:absolute;inset:0;background:center/cover no-repeat;transition:transform .6s}
         .featured-card:hover .featured-card-bg{transform:scale(1.06)}
-        .featured-card-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,.08) 0%,rgba(10,10,10,.18) 24%,rgba(10,10,10,.65) 70%,rgba(10,10,10,.96) 100%),linear-gradient(90deg,rgba(10,10,10,.35) 0%,transparent 55%)}
-        .featured-rank{position:absolute;top:14px;left:14px;z-index:3;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.72);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#fff;backdrop-filter:blur(12px)}
+        .featured-card-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,.08) 0%,rgba(10,10,10,.65) 70%,rgba(10,10,10,.96) 100%)}
+        .featured-rank{position:absolute;top:14px;left:14px;z-index:3;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.72);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;backdrop-filter:blur(12px)}
         .featured-card-content{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:20px}
-        .featured-card-topline{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;flex-wrap:wrap}
-        .featured-card-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(229,9,20,.18);border:1px solid rgba(229,9,20,.3);font-size:9px;font-weight:900;padding:5px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.8px;color:#fff}
-        .featured-card-watch{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);font-size:9px;font-weight:800;padding:5px 10px;border-radius:999px;color:#ddd;backdrop-filter:blur(8px)}
+        .featured-card-topline{display:flex;justify-content:space-between;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+        .featured-card-badge{background:rgba(229,9,20,.18);border:1px solid rgba(229,9,20,.3);font-size:9px;font-weight:900;padding:5px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.8px}
+        .featured-card-watch{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);font-size:9px;font-weight:800;padding:5px 10px;border-radius:999px;color:#ddd}
         .featured-card-title{font-size:24px;font-weight:900;letter-spacing:-.6px;line-height:1.08;text-shadow:0 4px 20px rgba(0,0,0,.9)}
-        .featured-card-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:11px;color:#bbb;margin-top:10px}
+        .featured-card-meta{display:flex;gap:10px;font-size:11px;color:#bbb;margin-top:10px;flex-wrap:wrap}
         .featured-card-meta .dot{color:var(--primary);font-weight:900}
         .featured-card-desc{font-size:12px;color:#d2d2d2;line-height:1.65;margin-top:12px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:58px}
-        .featured-card-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-        .featured-mini-btn{padding:11px 16px;border-radius:12px;border:none;cursor:pointer;font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:all var(--fast)}
+        .featured-card-actions{display:flex;gap:10px;margin-top:16px}
+        .featured-mini-btn{padding:11px 16px;border-radius:12px;border:none;cursor:pointer;font-size:12px;font-weight:800;display:inline-flex;align-items:center;gap:7px;transition:all var(--fast)}
         .featured-mini-btn.play{background:linear-gradient(135deg,var(--primary),#c50710);color:#fff;box-shadow:0 8px 20px var(--primary-glow)}
         .featured-mini-btn.play:hover{transform:translateY(-2px)}
         .featured-mini-btn.info{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);color:#fff}
-        .featured-mini-btn.info:hover{background:rgba(255,255,255,.14)}
         .featured-empty{padding:28px 20px;border:1px dashed rgba(255,255,255,.1);border-radius:var(--r-md);text-align:center;color:#777;background:rgba(255,255,255,.02)}
-
-        .categories-bar{display:flex;gap:10px;overflow-x:auto;padding:0 2% 22px 2%;scrollbar-width:none;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+        .categories-bar{display:flex;gap:10px;overflow-x:auto;padding:0 2% 22px 2%;scrollbar-width:none;-webkit-overflow-scrolling:touch}
         .categories-bar::-webkit-scrollbar{display:none}
-        .category-chip{padding:10px 20px;border-radius:24px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.08);font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;scroll-snap-align:start;transition:all var(--fast)}
+        .category-chip{padding:10px 20px;border-radius:24px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.08);font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all var(--fast)}
         .category-chip:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)}
         .category-chip.active{background:var(--primary);border-color:var(--primary);box-shadow:0 4px 16px var(--primary-glow)}
-
         .section-row{margin-bottom:44px;padding-left:2%}
-        .section-title{font-size:22px;font-weight:800;margin-bottom:18px;display:flex;align-items:center;gap:10px;letter-spacing:-.3px}
-        .carousel-container{display:flex;gap:14px;overflow-x:auto;padding:12px 2% 16px 0;scrollbar-width:none;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+        .section-title{font-size:22px;font-weight:800;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+        .carousel-container{display:flex;gap:14px;overflow-x:auto;padding:12px 2% 16px 0;scrollbar-width:none;-webkit-overflow-scrolling:touch}
         .carousel-container::-webkit-scrollbar{display:none}
-
-        .media-card{flex:0 0 152px;height:225px;border-radius:var(--r-md);position:relative;overflow:hidden;background:var(--card);cursor:pointer;border:1.5px solid rgba(255,255,255,.04);transition:all var(--smooth);scroll-snap-align:start}
-        .media-card:hover,.media-card:focus{transform:scale(1.08);z-index:10;box-shadow:0 20px 40px rgba(0,0,0,.9);border-color:rgba(229,9,20,.5)}
-        .media-card:hover .media-card-overlay{opacity:1}
-        .media-card-poster{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease}
+        .media-card{flex:0 0 152px;height:225px;border-radius:var(--r-md);position:relative;overflow:hidden;background:var(--card);cursor:pointer;border:1.5px solid rgba(255,255,255,.04);transition:all var(--smooth)}
+        .media-card:hover{transform:scale(1.08);z-index:10;box-shadow:0 20px 40px rgba(0,0,0,.9);border-color:rgba(229,9,20,.5)}
+        .media-card-poster{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
         .media-card:hover .media-card-poster{transform:scale(1.05)}
         .media-card-poster-fallback{width:100%;height:100%;background:linear-gradient(135deg,#1a1a1a,#2a2a2a);display:flex;align-items:center;justify-content:center;font-size:32px}
         .media-card-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.98) 100%);padding:14px;display:flex;flex-direction:column;justify-content:flex-end;opacity:.85;transition:opacity var(--fast)}
+        .media-card:hover .media-card-overlay{opacity:1}
         .media-card-title{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .media-card-tag{font-size:9px;font-weight:800;color:var(--primary);text-transform:uppercase;margin-bottom:3px;letter-spacing:.5px}
-
-        .continue-card{flex:0 0 260px;height:155px;border-radius:var(--r-md);position:relative;overflow:hidden;background:var(--card);cursor:pointer;border:1.5px solid rgba(255,255,255,.06);transition:all var(--smooth);scroll-snap-align:start}
-        .continue-card:hover,.continue-card:focus{transform:scale(1.04);z-index:10;border-color:rgba(255,202,40,.3);box-shadow:0 10px 30px rgba(0,0,0,.6)}
+        .media-card-tag{font-size:9px;font-weight:800;color:var(--primary);text-transform:uppercase;margin-bottom:3px}
+        .continue-card{flex:0 0 260px;height:155px;border-radius:var(--r-md);position:relative;overflow:hidden;background:var(--card);cursor:pointer;border:1.5px solid rgba(255,255,255,.06);transition:all var(--smooth)}
+        .continue-card:hover{transform:scale(1.04);z-index:10;border-color:rgba(255,202,40,.3)}
         .continue-card img{width:100%;height:100%;object-fit:cover}
         .continue-info{position:absolute;inset:0;background:linear-gradient(180deg,transparent 15%,rgba(0,0,0,.97) 100%);padding:12px;display:flex;flex-direction:column;justify-content:flex-end}
         .continue-duration{font-size:10px;color:#ffca28;font-weight:700;margin-top:3px}
@@ -157,21 +137,15 @@
         .continue-ep-badge{font-size:9px;font-weight:800;color:var(--primary);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
         .continue-play-icon{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:rgba(229,9,20,.9);display:flex;align-items:center;justify-content:center;font-size:18px;opacity:0;transition:all var(--fast)}
         .continue-card:hover .continue-play-icon{opacity:1}
-
         .btn-primary{padding:13px 28px;border:none;border-radius:var(--r-sm);background:linear-gradient(135deg,var(--primary),#c50710);color:#fff;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:all var(--fast);box-shadow:0 4px 16px var(--primary-glow)}
-        .btn-primary:hover,.btn-primary:focus{transform:translateY(-2px);box-shadow:0 8px 25px var(--primary-glow)}
-        .btn-primary:active{transform:translateY(0)}
+        .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 25px var(--primary-glow)}
         .btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
-        .btn-outline{padding:13px 28px;border:1.5px solid rgba(255,255,255,.3);border-radius:var(--r-sm);background:rgba(255,255,255,.08);backdrop-filter:blur(10px);color:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:all var(--fast)}
-        .btn-outline:hover,.btn-outline:focus{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.5)}
-        .btn-outline:disabled{opacity:.5;cursor:not-allowed}
-        .btn-secondary{padding:10px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#fff;font-size:12px;font-weight:600;cursor:pointer;transition:all var(--fast)}
-        .btn-secondary:hover{background:rgba(255,255,255,.12)}
-        .btn-danger{padding:10px 16px;border-radius:8px;border:1px solid #c62828;background:rgba(198,40,40,.15);color:#ff5252;font-size:12px;font-weight:600;cursor:pointer;transition:all var(--fast)}
-        .btn-danger:hover{background:rgba(198,40,40,.3)}
-
-        .file-upload-box{display:block;border:2px dashed rgba(255,255,255,.15);border-radius:var(--r-sm);padding:16px;text-align:center;background:rgba(0,0,0,.3);cursor:pointer;margin-top:6px;transition:all var(--fast)}
-        .file-upload-box:hover{border-color:var(--primary);background:rgba(229,9,20,.05)}
+        .btn-outline{padding:13px 28px;border:1.5px solid rgba(255,255,255,.3);border-radius:var(--r-sm);background:rgba(255,255,255,.08);color:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:all var(--fast)}
+        .btn-outline:hover{background:rgba(255,255,255,.15)}
+        .btn-secondary{padding:10px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#fff;font-size:12px;font-weight:600;cursor:pointer}
+        .btn-danger{padding:10px 16px;border-radius:8px;border:1px solid #c62828;background:rgba(198,40,40,.15);color:#ff5252;font-size:12px;font-weight:600;cursor:pointer}
+        .file-upload-box{display:block;border:2px dashed rgba(255,255,255,.15);border-radius:var(--r-sm);padding:16px;text-align:center;background:rgba(0,0,0,.3);cursor:pointer;margin-top:6px}
+        .file-upload-box:hover{border-color:var(--primary)}
         .file-upload-label{font-size:11px;font-weight:700;color:#aaa;pointer-events:none}
         .file-preview-img{width:100%;max-height:160px;object-fit:contain;background:#000;border-radius:6px;margin-top:8px}
         .input-group{margin-bottom:16px;text-align:left}
@@ -180,55 +154,48 @@
         .input-group input:focus,.input-group select:focus,.input-group textarea:focus{border-color:var(--primary);box-shadow:0 0 0 4px var(--primary-glow);outline:none}
         .input-with-icon{position:relative}
         .input-with-icon input{padding-right:44px}
-        .input-icon-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:#666;cursor:pointer;padding:6px;font-size:16px;transition:color var(--fast)}
-        .input-icon-toggle:hover{color:#fff}
+        .input-icon-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:#666;cursor:pointer;padding:6px;font-size:16px}
         .genre-selector-container{background:#0f0f0f;border:1.5px solid #2a2a2a;border-radius:var(--r-sm);padding:12px;display:flex;flex-wrap:wrap;gap:8px;max-height:180px;overflow-y:auto}
         .genre-tag{padding:7px 16px;background:#1e1e1e;border:1px solid #333;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;color:#ccc;transition:all var(--fast)}
         .genre-tag:hover{border-color:var(--primary)}
         .genre-tag.selected{background:var(--primary);border-color:var(--primary);color:#fff}
         .genre-tag.selected::before{content:"✓ "}
         .genre-counter{font-size:10px;color:var(--primary);margin-top:6px;font-weight:700}
-
-        .creator-tabs{display:flex;gap:0;background:#0d0d0d;border-radius:var(--r-md);padding:4px;margin-bottom:20px;border:1px solid var(--border)}
+        .creator-tabs{display:flex;background:#0d0d0d;border-radius:var(--r-md);padding:4px;margin-bottom:20px;border:1px solid var(--border)}
         .creator-tab{flex:1;padding:11px 12px;text-align:center;font-size:12px;font-weight:800;color:#888;cursor:pointer;border-radius:10px;transition:all var(--fast);text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:6px}
         .creator-tab.active{background:var(--primary);color:#fff;box-shadow:0 4px 12px var(--primary-glow)}
         .creator-tab:not(.active):hover{background:rgba(255,255,255,.04);color:#fff}
-        .creator-tab-content{display:none}
-        .creator-tab-content.active{display:block;animation:tabFade .3s ease}
+        .creator-tab-content{display:none}.creator-tab-content.active{display:block;animation:tabFade .3s ease}
         @keyframes tabFade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-        .season-accordion{background:#141414;border:1px solid #262626;border-radius:var(--r-md);margin-bottom:12px;overflow:hidden;transition:border-color var(--fast)}
+        .season-accordion{background:#141414;border:1px solid #262626;border-radius:var(--r-md);margin-bottom:12px;overflow:hidden}
         .season-accordion.open{border-color:rgba(229,9,20,.4)}
-        .season-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;background:linear-gradient(135deg,#1a1a1a,#141414);transition:background var(--fast);user-select:none;gap:10px}
+        .season-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;background:linear-gradient(135deg,#1a1a1a,#141414);user-select:none;gap:10px}
         .season-header:hover{background:linear-gradient(135deg,#1f1f1f,#181818)}
         .season-header-left{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
         .season-toggle-icon{width:26px;height:26px;border-radius:8px;background:rgba(229,9,20,.15);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:14px;transition:transform var(--fast);flex-shrink:0}
         .season-accordion.open .season-toggle-icon{transform:rotate(90deg)}
-        .season-title{font-size:14px;font-weight:800}
-        .season-subtitle{font-size:10px;color:#888;margin-top:2px}
-        .season-header-actions{display:flex;gap:6px;align-items:center;flex-shrink:0}
-        .season-mini-btn{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#ccc;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all var(--fast)}
-        .season-mini-btn:hover{background:rgba(255,255,255,.12);color:#fff}
+        .season-title{font-size:14px;font-weight:800}.season-subtitle{font-size:10px;color:#888;margin-top:2px}
+        .season-header-actions{display:flex;gap:6px;flex-shrink:0}
+        .season-mini-btn{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#ccc;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px}
         .season-mini-btn.danger:hover{background:rgba(198,40,40,.3);color:#ff6b6b;border-color:#c62828}
         .season-body{display:none;padding:16px;border-top:1px solid #262626;background:#0f0f0f}
         .season-accordion.open .season-body{display:block}
-        .episode-accordion{background:#181818;border:1px solid #262626;border-radius:var(--r-sm);margin-bottom:10px;overflow:hidden;transition:border-color var(--fast)}
+        .episode-accordion{background:#181818;border:1px solid #262626;border-radius:var(--r-sm);margin-bottom:10px;overflow:hidden}
         .episode-accordion.open{border-color:rgba(229,9,20,.35)}
-        .episode-accordion-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer;user-select:none;gap:10px;transition:background var(--fast)}
+        .episode-accordion-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer;user-select:none;gap:10px}
         .episode-accordion-header:hover{background:rgba(255,255,255,.03)}
         .episode-accordion-header-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
         .ep-number-badge{width:32px;height:32px;border-radius:8px;background:rgba(229,9,20,.15);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0}
-        .ep-info-mini{flex:1;min-width:0}
-        .ep-info-mini-title{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .ep-info-mini-sub{font-size:10px;color:#888;margin-top:2px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-        .ep-info-mini-sub .ok-badge{color:#4caf50;font-weight:700}
-        .ep-info-mini-sub .warn-badge{color:#ff9800;font-weight:700}
-        .episode-accordion-actions{display:flex;gap:5px;align-items:center;flex-shrink:0}
+        .ep-info-mini{flex:1;min-width:0}.ep-info-mini-title{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .ep-info-mini-sub{font-size:10px;color:#888;margin-top:2px;display:flex;gap:8px;flex-wrap:wrap}
+        .ep-info-mini-sub .ok-badge{color:#4caf50;font-weight:700}.ep-info-mini-sub .warn-badge{color:#ff9800;font-weight:700}
+        .episode-accordion-actions{display:flex;gap:5px;flex-shrink:0}
         .episode-body{display:none;padding:14px;border-top:1px solid #262626;background:#101010}
         .episode-accordion.open .episode-body{display:block}
         .episode-accordion.open .ep-toggle-icon{transform:rotate(90deg)}
         .ep-toggle-icon{color:#888;font-size:12px;transition:transform var(--fast);width:20px;text-align:center}
-        .add-btn-block{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;width:100%;background:rgba(229,9,20,.06);border:2px dashed rgba(229,9,20,.3);color:var(--primary);font-size:13px;font-weight:800;border-radius:var(--r-sm);cursor:pointer;transition:all var(--fast);text-transform:uppercase;letter-spacing:.5px}
-        .add-btn-block:hover{background:rgba(229,9,20,.12);border-color:var(--primary);transform:translateY(-1px)}
+        .add-btn-block{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;width:100%;background:rgba(229,9,20,.06);border:2px dashed rgba(229,9,20,.3);color:var(--primary);font-size:13px;font-weight:800;border-radius:var(--r-sm);cursor:pointer;text-transform:uppercase;letter-spacing:.5px}
+        .add-btn-block:hover{background:rgba(229,9,20,.12);border-color:var(--primary)}
         .empty-list-state{padding:24px 16px;text-align:center;color:#666;font-size:12px;background:rgba(255,255,255,.02);border:1px dashed rgba(255,255,255,.08);border-radius:var(--r-sm);margin-bottom:12px}
         .empty-list-state .empty-icon{font-size:32px;display:block;margin-bottom:8px;opacity:.5}
         .source-builder-list{display:flex;flex-direction:column;gap:10px}
@@ -236,35 +203,29 @@
         .source-item-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
         .source-item-badge{font-size:10px;font-weight:800;color:var(--primary);text-transform:uppercase;letter-spacing:1px}
         .source-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-        .source-remove-btn{padding:7px 11px;border-radius:8px;border:1px solid #c62828;background:rgba(198,40,40,.15);color:#ff6b6b;font-size:11px;font-weight:700;cursor:pointer;transition:all var(--fast)}
-        .source-remove-btn:hover{background:rgba(198,40,40,.3)}
+        .source-remove-btn{padding:7px 11px;border-radius:8px;border:1px solid #c62828;background:rgba(198,40,40,.15);color:#ff6b6b;font-size:11px;font-weight:700;cursor:pointer}
         .source-empty-state{padding:12px;border-radius:8px;background:rgba(255,255,255,.02);border:1px dashed rgba(255,255,255,.12);color:#777;font-size:11px;text-align:center}
-        .source-preview-tag{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(229,9,20,.12);border:1px solid rgba(229,9,20,.22);border-radius:999px;font-size:10px;font-weight:800;color:var(--primary);margin-top:6px}
-        .save-bar{position:sticky;bottom:-24px;background:linear-gradient(180deg,transparent,var(--modal) 25%);margin:20px -24px -24px -24px;padding:20px 24px;z-index:10;border-top:1px solid var(--border)}
+        .source-preview-tag{display:inline-flex;gap:6px;padding:4px 10px;background:rgba(229,9,20,.12);border:1px solid rgba(229,9,20,.22);border-radius:999px;font-size:10px;font-weight:800;color:var(--primary);margin-top:6px}
+        .save-bar{position:sticky;bottom:-24px;background:linear-gradient(180deg,transparent,var(--modal) 25%);margin:20px -24px -24px;padding:20px 24px;z-index:10;border-top:1px solid var(--border)}
         .save-bar-actions{display:flex;gap:10px}
         .autosave-hint{font-size:10px;text-align:center;padding:6px;margin-top:8px;background:rgba(255,152,0,.06);border:1px solid rgba(255,152,0,.15);border-radius:6px;color:#ffb74d;font-weight:700}
-
         .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(16px) saturate(150%);-webkit-backdrop-filter:blur(16px) saturate(150%);display:flex;justify-content:center;align-items:center;z-index:1000;padding:12px;overflow-y:auto}
         .modal-body{background:var(--modal);border:1px solid rgba(255,255,255,.08);border-radius:var(--r-lg);width:100%;max-width:580px;max-height:92vh;overflow-y:auto;overscroll-behavior:contain;padding:24px;position:relative;margin:auto;box-shadow:var(--shadow-modal);animation:modalIn .3s ease}
         @keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(15px)}to{opacity:1;transform:scale(1) translateY(0)}}
-        .modal-close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.1);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;z-index:10;display:flex;align-items:center;justify-content:center;transition:all var(--fast)}
+        .modal-close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.1);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;z-index:10;display:flex;align-items:center;justify-content:center}
         .modal-close:hover{background:var(--primary);border-color:var(--primary)}
-
         .details-modal-body{padding:0;overflow:hidden;max-width:720px}
         .details-backdrop-area{position:relative;width:100%;height:280px;background:#0f0f0f center/cover}
-        .details-backdrop-area::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 0%,var(--modal) 100%)}
-        .details-content-area{padding:0 24px 24px 24px;margin-top:-70px;position:relative;z-index:2;max-height:55vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+        .details-backdrop-area::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent,var(--modal) 100%)}
+        .details-content-area{padding:0 24px 24px;margin-top:-70px;position:relative;z-index:2;max-height:55vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
         .details-poster-inline{width:115px;height:170px;border-radius:var(--r-md);object-fit:cover;border:3px solid var(--modal);background:#0a0a0a;display:block;margin-bottom:14px;box-shadow:0 8px 24px rgba(0,0,0,.6)}
-        .season-tab-container{display:flex;gap:8px;overflow-x:auto;margin-bottom:18px;padding:4px 0 8px 0;scrollbar-width:none;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+        .season-tab-container{display:flex;gap:8px;overflow-x:auto;margin-bottom:18px;padding:4px 0 8px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
         .season-tab-container::-webkit-scrollbar{display:none}
-        .season-tab{padding:10px 20px;border-radius:24px;background:#1e1e1e;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;border:1.5px solid #333;scroll-snap-align:start;transition:all var(--fast);flex-shrink:0}
-        .season-tab:hover{border-color:var(--primary)}
-        .season-tab.active{background:var(--primary);border-color:var(--primary)}
-        .episodes-scroll-area{max-height:45vh;overflow-y:auto;padding-right:4px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.1) transparent}
-        .episodes-scroll-area::-webkit-scrollbar{width:4px}
-        .episodes-scroll-area::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px}
+        .season-tab{padding:10px 20px;border-radius:24px;background:#1e1e1e;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;border:1.5px solid #333;flex-shrink:0;transition:all var(--fast)}
+        .season-tab:hover{border-color:var(--primary)}.season-tab.active{background:var(--primary);border-color:var(--primary)}
+        .episodes-scroll-area{max-height:45vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
         .episode-card{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.03);padding:14px;border-radius:var(--r-sm);cursor:pointer;margin-bottom:8px;border:1.5px solid rgba(255,255,255,.05);transition:all var(--fast)}
-        .episode-card:hover,.episode-card:focus{background:rgba(229,9,20,.08);border-color:rgba(229,9,20,.25);transform:translateX(4px)}
+        .episode-card:hover{background:rgba(229,9,20,.08);border-color:rgba(229,9,20,.25);transform:translateX(4px)}
         .episode-thumb{width:120px;height:68px;border-radius:8px;overflow:hidden;background:#000;flex-shrink:0;position:relative}
         .episode-thumb img{width:100%;height:100%;object-fit:cover}
         .episode-thumb .ep-play-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.4);opacity:0;transition:opacity var(--fast)}
@@ -272,52 +233,43 @@
         .ep-play-overlay span{font-size:22px}
         .ep-resume-badge{display:inline-flex;gap:4px;background:rgba(255,202,40,.12);border:1px solid rgba(255,202,40,.25);padding:3px 10px;border-radius:12px;font-size:9px;font-weight:800;color:#ffca28;margin-top:4px}
 
-        /* ═══ PLAYER — NOVO DESIGN ═══ */
-        #playerModal{padding:0!important;background:#000!important;backdrop-filter:none;z-index:3000;display:flex;align-items:stretch;justify-content:stretch}
-        .player-box{width:100vw!important;max-width:100vw!important;height:100vh!important;height:100dvh!important;max-height:none!important;background:#000;border-radius:0!important;position:fixed!important;inset:0!important;border:none!important;margin:0!important;padding:0!important;overflow:hidden!important;display:flex;flex-direction:column}
-        .player-box.hide-cursor{cursor:none}
-        .player-box.hide-cursor *{cursor:none!important}
-
-        /* Vídeo container — recebe TODOS os cliques normalmente */
-        .player-video-area{position:absolute;inset:0;width:100%;height:100%;background:#000;overflow:hidden;display:flex;align-items:center;justify-content:center;z-index:1}
-        .player-video-area iframe,.player-video-area video{width:100%!important;height:100%!important;border:none!important;display:block!important;background:#000;object-fit:contain}
-        .player-video-area.stretch iframe,.player-video-area.stretch video{object-fit:cover}
-
-        /* Barras — pointer-events:none no wrapper, auto nos filhos */
-        .player-topbar{position:absolute;top:0;left:0;right:0;padding:calc(16px + var(--safe-t)) calc(16px + var(--safe-r)) 50px calc(16px + var(--safe-l));background:linear-gradient(180deg,rgba(0,0,0,.96) 0%,rgba(0,0,0,.55) 60%,transparent 100%);z-index:10;transition:opacity .4s ease,transform .4s ease;pointer-events:none;display:flex;align-items:center;gap:12px}
-        .player-topbar>*{pointer-events:auto}
-        .player-topbar.bar-hidden{opacity:0;transform:translateY(-15px)}
-        .player-topbar.bar-hidden,.player-topbar.bar-hidden>*{pointer-events:none!important}
-
-        .player-bottombar{position:absolute;bottom:0;left:0;right:0;padding:50px calc(16px + var(--safe-r)) calc(20px + var(--safe-b)) calc(16px + var(--safe-l));background:linear-gradient(0deg,rgba(0,0,0,.96) 0%,rgba(0,0,0,.55) 60%,transparent 100%);z-index:10;transition:opacity .4s ease,transform .4s ease;pointer-events:none;display:flex;align-items:center;justify-content:space-between;gap:14px}
-        .player-bottombar>*{pointer-events:auto}
-        .player-bottombar.bar-hidden{opacity:0;transform:translateY(15px)}
-        .player-bottombar.bar-hidden,.player-bottombar.bar-hidden>*{pointer-events:none!important}
-
-        /* Botão flutuante fixo — SEMPRE visível, nunca some */
-        .player-float-btn{position:absolute;z-index:20;width:52px;height:52px;border-radius:50%;background:rgba(0,0,0,.65);border:1.5px solid rgba(255,255,255,.18);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:all var(--fast);opacity:.5}
-        .player-float-btn:hover,.player-float-btn:focus{opacity:1;background:var(--primary);border-color:var(--primary);transform:scale(1.1)}
-        .player-float-btn:active{transform:scale(.95)}
-        /* Posições */
-        .player-float-back{top:calc(16px + var(--safe-t));left:calc(16px + var(--safe-l))}
-        .player-float-menu{top:calc(16px + var(--safe-t));right:calc(16px + var(--safe-r))}
-
-        .player-btn-round{width:48px;height:48px;border-radius:50%;background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.15);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;transition:all var(--fast);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-        .player-btn-round:hover,.player-btn-round:focus{background:var(--primary);border-color:var(--primary);transform:scale(1.08)}
-        .player-btn-round.hidden{display:none}
-        .player-btn-round.active{background:var(--primary);border-color:var(--primary)}
-
-        .player-title-area{flex:1;min-width:0;overflow:hidden}
-        .player-title-main{font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 2px 10px rgba(0,0,0,.9);line-height:1.2}
+        /* ═══ PLAYER v11 ═══ */
+        #playerModal{padding:0!important;background:#000!important;backdrop-filter:none;z-index:3000}
+        .player-box{width:100vw!important;height:100vh!important;height:100dvh!important;max-width:none!important;max-height:none!important;background:#000;border-radius:0!important;position:fixed!important;inset:0!important;border:none!important;margin:0!important;padding:0!important;overflow:hidden!important}
+        .player-box.hide-cursor{cursor:none}.player-box.hide-cursor *{cursor:none!important}
+        .player-vid{position:absolute;inset:0;z-index:1;background:#000;display:flex;align-items:center;justify-content:center}
+        .player-vid iframe,.player-vid video{width:100%!important;height:100%!important;border:none!important;display:block!important;background:#000;object-fit:contain}
+        .player-vid.stretch iframe,.player-vid.stretch video{object-fit:cover}
+        .player-tap{position:absolute;inset:0;z-index:3}.player-tap.off{pointer-events:none}
+        .player-top{position:absolute;top:0;left:0;right:0;padding:calc(16px + var(--safe-t)) calc(16px + var(--safe-r)) 50px calc(16px + var(--safe-l));background:linear-gradient(180deg,rgba(0,0,0,.96) 0%,rgba(0,0,0,.5) 60%,transparent 100%);z-index:10;display:flex;align-items:center;gap:12px;transition:opacity .4s,visibility .4s;pointer-events:none}
+        .player-top>*{pointer-events:auto}.player-top.gone{opacity:0;visibility:hidden}.player-top.gone,.player-top.gone>*{pointer-events:none!important}
+        .player-bot{position:absolute;bottom:0;left:0;right:0;padding:50px calc(16px + var(--safe-r)) calc(20px + var(--safe-b)) calc(16px + var(--safe-l));background:linear-gradient(0deg,rgba(0,0,0,.96) 0%,rgba(0,0,0,.5) 60%,transparent 100%);z-index:10;display:flex;align-items:center;justify-content:space-between;gap:14px;transition:opacity .4s,visibility .4s;pointer-events:none}
+        .player-bot>*{pointer-events:auto}.player-bot.gone{opacity:0;visibility:hidden}.player-bot.gone,.player-bot.gone>*{pointer-events:none!important}
+        .player-back-always{position:absolute;top:calc(16px + var(--safe-t));left:calc(16px + var(--safe-l));z-index:20;width:48px;height:48px;border-radius:50%;background:rgba(0,0,0,.55);border:1.5px solid rgba(255,255,255,.15);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);opacity:.6;transition:all var(--fast)}
+        .player-back-always:hover,.player-back-always:focus{opacity:1;background:var(--primary);border-color:var(--primary);transform:scale(1.1)}
+        .player-btn-r{width:48px;height:48px;border-radius:50%;background:rgba(0,0,0,.65);border:1px solid rgba(255,255,255,.15);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;transition:all var(--fast);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+        .player-btn-r:hover{background:var(--primary);border-color:var(--primary);transform:scale(1.08)}
+        .player-btn-r.hidden{display:none}.player-btn-r.active{background:var(--primary);border-color:var(--primary)}
+        .player-title-area{flex:1;min-width:0;overflow:hidden;margin-left:56px}
+        .player-title-main{font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 2px 10px rgba(0,0,0,.9)}
         .player-title-sub-row{display:flex;align-items:center;gap:6px;margin-top:3px;flex-wrap:wrap}
-        .player-title-sub{font-size:11px;color:#bbb;font-weight:600;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .player-provider-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;background:rgba(229,9,20,.2);border:1px solid rgba(229,9,20,.45);border-radius:10px;font-size:9px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+        .player-title-sub{font-size:11px;color:#bbb;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .player-provider-pill{display:inline-flex;gap:4px;padding:2px 9px;background:rgba(229,9,20,.2);border:1px solid rgba(229,9,20,.45);border-radius:10px;font-size:9px;font-weight:800;text-transform:uppercase;white-space:nowrap}
         .player-provider-pill.hidden{display:none}
-        .player-bottom-label{font-size:11px;color:#888;font-weight:700;padding:6px 14px;background:rgba(0,0,0,.5);border-radius:20px;border:1px solid rgba(255,255,255,.08)}
-
+        .boost-pill{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.1);padding:8px 14px;border-radius:30px;backdrop-filter:blur(12px)}
+        .boost-pill input[type=range]{-webkit-appearance:none;appearance:none;width:100px;height:5px;border-radius:3px;background:rgba(255,255,255,.2);outline:none;cursor:pointer}
+        .boost-pill input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.6)}
+        .boost-pill input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;cursor:pointer;border:none}
+        .boost-val{font-size:11px;font-weight:800;min-width:38px;text-align:center;font-variant-numeric:tabular-nums}
+        .boost-icon{font-size:16px;cursor:pointer}
+        .ep-nav-btns{display:flex;gap:8px}
+        .ep-nav-btn{width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.15);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all var(--fast);backdrop-filter:blur(12px)}
+        .ep-nav-btn:hover{background:var(--primary);border-color:var(--primary)}
+        .ep-nav-btn:disabled{opacity:.3;cursor:not-allowed;background:rgba(0,0,0,.3)}
+        .ep-nav-btn.hidden{display:none}
         .player-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#000;z-index:5;flex-direction:column;gap:16px}
         .player-loading.hidden{display:none}
-        .player-loading-text{font-size:13px;color:#ccc;font-weight:700;text-align:center}
+        .player-loading-text{font-size:13px;color:#ccc;font-weight:700}
         .player-loading-sub{font-size:10px;color:#666;margin-top:3px}
         .player-spinner{width:52px;height:52px;border:3px solid rgba(255,255,255,.08);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
@@ -330,282 +282,165 @@
         .player-error-title{font-size:20px;font-weight:900;margin-bottom:8px}
         .player-error-desc{font-size:13px;color:#aaa;line-height:1.6;margin-bottom:20px}
         .player-error-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-        .player-source-selector{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:15;padding:20px}
+        .player-source-selector{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.85);backdrop-filter:blur(14px);z-index:15;padding:20px}
         .player-source-selector.hidden{display:none}
         .player-source-selector-card{width:min(92vw,520px);max-height:85vh;overflow-y:auto;background:rgba(15,15,15,.98);border:1px solid rgba(255,255,255,.1);border-radius:var(--r-lg);padding:22px;box-shadow:var(--shadow-modal)}
         .player-source-selector-title{font-size:20px;font-weight:900;margin-bottom:6px}
-        .player-source-selector-sub{font-size:12px;color:#aaa;line-height:1.5}
+        .player-source-selector-sub{font-size:12px;color:#aaa}
         .player-source-list{display:flex;flex-direction:column;gap:8px;margin:18px 0}
         .player-source-btn{width:100%;text-align:left;padding:14px 16px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#fff;cursor:pointer;transition:all var(--fast)}
-        .player-source-btn:hover,.player-source-btn:focus{background:rgba(229,9,20,.12);border-color:rgba(229,9,20,.4);transform:translateY(-1px)}
+        .player-source-btn:hover{background:rgba(229,9,20,.12);border-color:rgba(229,9,20,.4);transform:translateY(-1px)}
         .player-source-btn.current{background:rgba(229,9,20,.18);border-color:rgba(229,9,20,.5)}
-        .player-source-btn .source-btn-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
+        .player-source-btn .source-btn-top{display:flex;justify-content:space-between;gap:10px;margin-bottom:4px}
         .player-source-btn .source-btn-title{font-size:14px;font-weight:800}
-        .player-source-btn .source-btn-type{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;padding:3px 9px;border-radius:8px;background:rgba(255,255,255,.06)}
+        .player-source-btn .source-btn-type{font-size:10px;font-weight:800;text-transform:uppercase;padding:3px 9px;border-radius:8px;background:rgba(255,255,255,.06)}
         .player-source-btn .source-btn-url{font-size:11px;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .player-source-btn .current-tag{display:inline-block;margin-left:6px;padding:1px 8px;background:rgba(76,175,80,.2);border:1px solid rgba(76,175,80,.4);border-radius:6px;font-size:9px;color:#8bc34a;font-weight:800}
+        .player-source-btn .current-tag{margin-left:6px;padding:1px 8px;background:rgba(76,175,80,.2);border:1px solid rgba(76,175,80,.4);border-radius:6px;font-size:9px;color:#8bc34a;font-weight:800}
 
-        .admin-item{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:14px 18px;border-radius:var(--r-sm);margin-bottom:8px;transition:all var(--fast)}
+        .admin-item{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:14px 18px;border-radius:var(--r-sm);margin-bottom:8px}
         .admin-item:hover{background:rgba(255,255,255,.06)}
         .profile-card-header{position:relative;border-radius:var(--r-md);background:#222;height:150px;margin-bottom:55px;border:1px solid rgba(255,255,255,.08);overflow:hidden}
-        .profile-banner-bg{width:100%;height:100%;object-fit:cover;display:block}
+        .profile-banner-bg{width:100%;height:100%;object-fit:cover}
         .profile-avatar-overlay{position:absolute;bottom:-38px;left:50%;transform:translateX(-50%);width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#ff6b35);border:4px solid var(--modal);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;z-index:2}
         .profile-avatar-overlay img{width:100%;height:100%;object-fit:cover}
         .security-section{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:var(--r-md);padding:18px;margin-bottom:16px}
         .security-title{font-size:13px;font-weight:800;color:var(--primary);display:flex;align-items:center;gap:8px;margin-bottom:14px;text-transform:uppercase;letter-spacing:.5px}
         .security-quick-btn{width:100%;text-align:left;display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:var(--r-sm);cursor:pointer;color:#fff;transition:all var(--fast);margin-bottom:6px}
-        .security-quick-btn:hover,.security-quick-btn:focus{background:rgba(229,9,20,.08);border-color:rgba(229,9,20,.25)}
+        .security-quick-btn:hover{background:rgba(229,9,20,.08);border-color:rgba(229,9,20,.25)}
         .security-quick-btn .sq-icon{width:32px;height:32px;border-radius:8px;background:rgba(229,9,20,.15);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-        .security-quick-btn .sq-info{flex:1;min-width:0}
-        .security-quick-btn .sq-title{font-size:13px;font-weight:700}
-        .security-quick-btn .sq-desc{font-size:10px;color:#888;margin-top:2px}
-        .security-quick-btn .sq-arrow{color:#666;font-size:16px}
-        .security-quick-btn .sq-badge{background:rgba(229,9,20,.2);color:var(--primary);padding:2px 8px;border-radius:8px;font-size:10px;font-weight:800}
-        .device-item{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:var(--r-sm);padding:14px;margin-bottom:8px;transition:all var(--fast)}
+        .security-quick-btn .sq-info{flex:1;min-width:0}.security-quick-btn .sq-title{font-size:13px;font-weight:700}.security-quick-btn .sq-desc{font-size:10px;color:#888;margin-top:2px}
+        .security-quick-btn .sq-arrow{color:#666;font-size:16px}.security-quick-btn .sq-badge{background:rgba(229,9,20,.2);color:var(--primary);padding:2px 8px;border-radius:8px;font-size:10px;font-weight:800}
+        .device-item{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:var(--r-sm);padding:14px;margin-bottom:8px}
         .device-item:hover{background:rgba(255,255,255,.05)}
         .device-item.current-device{background:rgba(76,175,80,.06);border-color:rgba(76,175,80,.25)}
         .device-icon-big{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,var(--primary),#c50710);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
         .device-item.current-device .device-icon-big{background:linear-gradient(135deg,#4caf50,#2e7d32)}
-        .device-info{flex:1;min-width:0}
-        .device-name{font-size:13px;font-weight:800;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+        .device-info{flex:1;min-width:0}.device-name{font-size:13px;font-weight:800;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
         .device-current-tag{background:rgba(76,175,80,.2);color:#8bc34a;padding:2px 8px;border-radius:6px;font-size:9px;font-weight:800;border:1px solid rgba(76,175,80,.35)}
-        .device-meta{font-size:10px;color:#888;margin-top:3px;line-height:1.5}
-        .device-meta span{display:inline-block;margin-right:8px}
-        .device-remove-btn{background:rgba(198,40,40,.15);border:1px solid #c62828;color:#ff5252;width:34px;height:34px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all var(--fast);flex-shrink:0}
-        .device-remove-btn:hover{background:rgba(198,40,40,.3)}
+        .device-meta{font-size:10px;color:#888;margin-top:3px}.device-meta span{margin-right:8px}
+        .device-remove-btn{background:rgba(198,40,40,.15);border:1px solid #c62828;color:#ff5252;width:34px;height:34px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
         .suggestion-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:var(--r-sm);padding:16px;margin-bottom:10px}
-        .sg-header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-        .sg-user{font-size:12px;font-weight:800;color:var(--primary);display:flex;gap:6px;flex-wrap:wrap}
-        .sg-email{font-size:9px;color:#666;word-break:break-all}
-        .sg-date{font-size:9px;color:#555}
+        .sg-header{display:flex;justify-content:space-between;gap:10px}.sg-user{font-size:12px;font-weight:800;color:var(--primary);display:flex;gap:6px;flex-wrap:wrap}
+        .sg-email{font-size:9px;color:#666;word-break:break-all}.sg-date{font-size:9px;color:#555}
         .sg-text{font-size:13px;color:#ddd;margin-top:10px;line-height:1.6;word-break:break-word}
         .suggestion-checkbox{width:20px;height:20px;accent-color:var(--primary);cursor:pointer}
         .storage-bar-outer{width:100%;height:16px;background:#1a1a1a;border-radius:8px;overflow:hidden;border:1px solid #2a2a2a}
         .storage-bar-inner{height:100%;border-radius:8px;transition:width .8s cubic-bezier(.4,0,.2,1)}
         .storage-info{display:flex;justify-content:space-between;font-size:11px;color:#888;margin-top:8px;font-weight:700}
         .storage-detail-item{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px}
-        .storage-label{color:#888}
-        .storage-value{color:#fff;font-weight:700}
+        .storage-label{color:#888}.storage-value{color:#fff;font-weight:700}
         .storage-icon-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:var(--r-sm);padding:16px;text-align:center;flex:1}
         .storage-icon-card .sto-icon{font-size:28px;margin-bottom:6px;display:block}
         .storage-icon-card .sto-count{font-size:22px;font-weight:900;color:var(--primary)}
         .storage-icon-card .sto-label{font-size:10px;color:#888;margin-top:2px}
         #cropperModal{z-index:3500!important}
-        .device-preview-wrapper{display:flex;gap:8px;justify-content:space-between;margin-top:14px}
+        .device-preview-wrapper{display:flex;gap:8px;margin-top:14px}
         .device-box{background:#111;border:1px solid #333;border-radius:8px;padding:6px;text-align:center;flex:1}
         .device-box label{font-size:9px;font-weight:800;color:#aaa;margin-bottom:4px;display:block}
         .device-screen{overflow:hidden;border:1px solid #444;margin:0 auto;background:#000}
-        .device-mobile{width:45px;height:75px;border-radius:4px}
-        .device-pc{width:90px;height:55px;border-radius:4px}
+        .device-mobile{width:45px;height:75px;border-radius:4px}.device-pc{width:90px;height:55px;border-radius:4px}
         .device-tv{width:110px;height:60px;border-radius:4px;border:2px solid #555}
         .device-screen img{width:100%;height:100%;object-fit:cover}
         .cropper-container{max-width:100%!important;height:280px!important}
-
-        .auth-modal-body{max-width:440px;text-align:center;background:linear-gradient(180deg,#1a1a1a 0%,#0f0f0f 100%)}
+        .auth-modal-body{max-width:440px;text-align:center;background:linear-gradient(180deg,#1a1a1a,#0f0f0f)}
         .auth-divider{height:1px;background:var(--border);margin:20px 0;position:relative}
-        .auth-divider::after{content:'ou';position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:#0f0f0f;padding:0 12px;font-size:10px;color:#666;font-weight:700;letter-spacing:1px;text-transform:uppercase}
-        .auth-forgot-link{display:block;text-align:right;font-size:12px;color:#aaa;cursor:pointer;font-weight:700;margin-top:-6px;margin-bottom:14px;transition:color var(--fast)}
+        .auth-divider::after{content:'ou';position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:#0f0f0f;padding:0 12px;font-size:10px;color:#666;font-weight:700;text-transform:uppercase}
+        .auth-forgot-link{display:block;text-align:right;font-size:12px;color:#aaa;cursor:pointer;font-weight:700;margin-top:-6px;margin-bottom:14px}
         .auth-forgot-link:hover{color:var(--primary)}
-        .auth-back-link{display:inline-flex;align-items:center;gap:6px;color:#888;font-size:12px;cursor:pointer;font-weight:700;margin-top:12px;padding:8px 14px;border-radius:8px;transition:all var(--fast)}
+        .auth-back-link{display:inline-flex;align-items:center;gap:6px;color:#888;font-size:12px;cursor:pointer;font-weight:700;margin-top:12px;padding:8px 14px;border-radius:8px}
         .auth-back-link:hover{color:#fff;background:rgba(255,255,255,.05)}
-        .success-check-anim{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#4caf50,#2e7d32);display:flex;align-items:center;justify-content:center;margin:0 auto 16px auto;font-size:36px;box-shadow:0 8px 32px rgba(76,175,80,.35);animation:successPop .5s cubic-bezier(.4,0,.2,1)}
+        .success-check-anim{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#4caf50,#2e7d32);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:36px;box-shadow:0 8px 32px rgba(76,175,80,.35);animation:successPop .5s cubic-bezier(.4,0,.2,1)}
         @keyframes successPop{0%{transform:scale(0);opacity:0}70%{transform:scale(1.15);opacity:1}100%{transform:scale(1)}}
         .email-preview-box{background:rgba(33,150,243,.06);border:1px solid rgba(33,150,243,.2);border-radius:var(--r-sm);padding:12px 14px;font-size:12px;color:#90caf9;margin-bottom:14px;display:flex;align-items:center;gap:10px}
-        .email-preview-box .email-icon-lg{font-size:22px}
-        .email-preview-box .email-content{flex:1;min-width:0}
-        .email-preview-box .email-label{font-size:10px;color:#64b5f6;text-transform:uppercase;font-weight:700;letter-spacing:.5px}
+        .email-preview-box .email-icon-lg{font-size:22px}.email-preview-box .email-content{flex:1;min-width:0}
+        .email-preview-box .email-label{font-size:10px;color:#64b5f6;text-transform:uppercase;font-weight:700}
         .email-preview-box .email-address{font-weight:800;color:#fff;word-break:break-all}
-        .auth-signup-field{display:none}
-        .auth-modal-body.signup-mode .auth-signup-field{display:block}
+        .auth-signup-field{display:none}.auth-modal-body.signup-mode .auth-signup-field{display:block}
         .auth-modal-body.signup-mode #btnForgotPassword{display:none}
         .hidden{display:none!important}
         #msg{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:14px 28px;border-radius:14px;font-size:13px;font-weight:700;z-index:4000;max-width:420px;text-align:center;backdrop-filter:blur(10px);animation:toastIn .3s ease;border:1px solid rgba(255,255,255,.1)}
         @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-        .msg-success{background:rgba(46,125,50,.92);color:#fff}
-        .msg-error{background:rgba(198,40,40,.92);color:#fff}
-        .msg-info{background:rgba(33,150,243,.92);color:#fff}
+        .msg-success{background:rgba(46,125,50,.92);color:#fff}.msg-error{background:rgba(198,40,40,.92);color:#fff}.msg-info{background:rgba(33,150,243,.92);color:#fff}
 
-        @media(min-width:1920px){
-            .featured-grid{gap:18px}.featured-card{min-height:520px}.featured-card-title{font-size:30px}.featured-card-desc{font-size:14px}
-            .media-card{flex:0 0 230px;height:340px}.continue-card{flex:0 0 340px;height:200px}
-            .section-title{font-size:28px}.season-tab{padding:14px 28px;font-size:16px}
-            .episode-card{padding:18px;gap:18px}.episode-thumb{width:180px;height:100px}
-            .details-content-area{max-height:60vh;padding:0 36px 36px 36px}.details-backdrop-area{height:380px}
-            .sidebar-menu{width:340px}.sidebar-item{padding:16px 24px;font-size:16px}
-            .btn-primary,.btn-outline{padding:16px 36px;font-size:16px}
-            .player-btn-round,.player-float-btn{width:58px;height:58px;font-size:24px}
-            .player-title-main{font-size:19px}.storage-icon-card .sto-count{font-size:28px}
-        }
+        @media(min-width:1920px){.featured-grid{gap:18px}.featured-card{min-height:520px}.featured-card-title{font-size:30px}.media-card{flex:0 0 230px;height:340px}.continue-card{flex:0 0 340px;height:200px}.section-title{font-size:28px}.details-content-area{max-height:60vh;padding:0 36px 36px}.details-backdrop-area{height:380px}.sidebar-menu{width:340px}.sidebar-item{padding:16px 24px;font-size:16px}.btn-primary,.btn-outline{padding:16px 36px;font-size:16px}.player-btn-r,.player-back-always,.ep-nav-btn{width:58px;height:58px;font-size:24px}.player-title-main{font-size:19px}.boost-pill input[type=range]{width:150px}}
         @media(min-width:1200px) and (max-width:1919px){.media-card{flex:0 0 180px;height:268px}.continue-card{flex:0 0 300px;height:175px}}
         @media(min-width:768px) and (max-width:1199px){.featured-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.featured-card{min-height:360px}.media-card{flex:0 0 160px;height:240px}}
         @media(max-width:767px){.featured-grid{grid-template-columns:1fr 1fr}.featured-card{min-height:290px;border-radius:var(--r-lg)}.featured-card-title{font-size:18px}.featured-card-desc{-webkit-line-clamp:2;min-height:auto}.featured-card-content{padding:16px}.featured-mini-btn{padding:10px 12px;font-size:11px}}
-        @media(max-width:480px){
-            header{padding:0 12px;height:58px}header.scrolled{height:52px}.brand{font-size:16px}.brand-logo{width:24px;height:24px}
-            .search-box.active{width:200px}.search-results-dropdown{width:calc(100vw - 24px);right:-40px}
-            .featured-grid{grid-template-columns:1fr}.featured-card{min-height:300px}
-            .btn-primary,.btn-outline{padding:11px 20px;font-size:13px}
-            .details-backdrop-area{height:200px}.details-content-area{max-height:50vh;padding:0 18px 18px 18px}
-            .details-poster-inline{width:90px;height:135px}.media-card{flex:0 0 130px;height:195px}
-            .continue-card{flex:0 0 210px;height:130px}.episode-thumb{width:100px;height:58px}
-            .modal-body{padding:20px;border-radius:var(--r-md)}.app-container{padding-top:66px}
-            .source-grid{grid-template-columns:1fr}
-            .player-topbar{padding:calc(10px + var(--safe-t)) calc(12px + var(--safe-r)) 36px calc(12px + var(--safe-l));gap:8px}
-            .player-btn-round,.player-float-btn{width:44px;height:44px;font-size:17px}
-            .player-title-main{font-size:13px}.player-title-sub{font-size:10px}.player-provider-pill{font-size:8px;padding:1px 7px}
-            .player-bottombar{padding:36px calc(12px + var(--safe-r)) calc(14px + var(--safe-b)) calc(12px + var(--safe-l))}
-            .player-tip{bottom:calc(60px + var(--safe-b));font-size:11px;padding:8px 16px}
-            .creator-tab{font-size:10px;padding:9px 8px;gap:4px}.save-bar{margin:20px -20px -20px -20px;padding:20px}
-            .player-float-back{top:calc(10px + var(--safe-t));left:calc(10px + var(--safe-l))}
-            .player-float-menu{top:calc(10px + var(--safe-t));right:calc(10px + var(--safe-r))}
-        }
+        @media(max-width:480px){header{padding:0 12px;height:58px}header.scrolled{height:52px}.brand{font-size:16px}.brand-logo{width:24px;height:24px}.search-box.active{width:200px}.search-results-dropdown{width:calc(100vw - 24px);right:-40px}.featured-grid{grid-template-columns:1fr}.featured-card{min-height:300px}.btn-primary,.btn-outline{padding:11px 20px;font-size:13px}.details-backdrop-area{height:200px}.details-content-area{max-height:50vh;padding:0 18px 18px}.details-poster-inline{width:90px;height:135px}.media-card{flex:0 0 130px;height:195px}.continue-card{flex:0 0 210px;height:130px}.episode-thumb{width:100px;height:58px}.modal-body{padding:20px;border-radius:var(--r-md)}.app-container{padding-top:66px}.source-grid{grid-template-columns:1fr}.player-top{padding:calc(10px + var(--safe-t)) calc(12px + var(--safe-r)) 36px calc(12px + var(--safe-l));gap:8px}.player-btn-r,.player-back-always,.ep-nav-btn{width:42px;height:42px;font-size:16px}.player-title-main{font-size:13px}.player-title-sub{font-size:10px}.player-provider-pill{font-size:8px;padding:1px 7px}.player-bot{padding:36px calc(12px + var(--safe-r)) calc(14px + var(--safe-b)) calc(12px + var(--safe-l))}.player-tip{bottom:calc(60px + var(--safe-b));font-size:11px;padding:8px 16px}.player-title-area{margin-left:50px}.player-back-always{top:calc(10px + var(--safe-t));left:calc(10px + var(--safe-l))}.boost-pill{padding:6px 10px;gap:6px}.boost-pill input[type=range]{width:70px}.boost-val{font-size:10px;min-width:32px}.creator-tab{font-size:10px;padding:9px 8px;gap:4px}.save-bar{margin:20px -20px -20px -20px;padding:20px}}
         @media(max-width:360px){.featured-card{min-height:270px}.media-card{flex:0 0 115px;height:172px}}
-        @media(max-height:500px) and (orientation:landscape){
-            .player-topbar{padding:calc(6px + var(--safe-t)) calc(16px + var(--safe-r)) 24px calc(16px + var(--safe-l))}
-            .player-btn-round,.player-float-btn{width:38px;height:38px;font-size:15px}
-            .player-title-main{font-size:12px}.player-title-sub{font-size:9px}
-            .player-bottombar{padding:20px calc(16px + var(--safe-r)) calc(8px + var(--safe-b)) calc(16px + var(--safe-l))}
-        }
+        @media(max-height:500px) and (orientation:landscape){.player-top{padding:calc(6px + var(--safe-t)) calc(16px + var(--safe-r)) 24px calc(16px + var(--safe-l))}.player-btn-r,.player-back-always,.ep-nav-btn{width:36px;height:36px;font-size:14px}.player-title-main{font-size:12px}.player-title-sub{font-size:9px}.player-bot{padding:20px calc(16px + var(--safe-r)) calc(8px + var(--safe-b)) calc(16px + var(--safe-l))}.player-title-area{margin-left:44px}.boost-pill input[type=range]{width:80px}}
         body.tv-mode *:focus{outline:3px solid var(--primary)!important;outline-offset:4px!important;box-shadow:0 0 0 8px var(--primary-glow)!important}
-        body.tv-mode .media-card:focus,body.tv-mode .continue-card:focus,body.tv-mode .episode-card:focus,body.tv-mode .season-tab:focus,body.tv-mode .featured-card:focus{transform:scale(1.03);z-index:20}
-        body.tv-mode .sidebar-item:focus{background:rgba(229,9,20,.2)}
+        body.tv-mode .media-card:focus,body.tv-mode .continue-card:focus,body.tv-mode .episode-card:focus,body.tv-mode .featured-card:focus{transform:scale(1.03);z-index:20}
     </style>
 </head>
 <body>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    <aside class="sidebar-menu" id="sidebarMenu">
-        <div class="sidebar-header">
-            <div class="sidebar-brand"><svg viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="#141414"/><path d="M20 78 L20 22 L35 22 L50 55 L65 22 L80 22 L80 78 L68 78 L68 42 L56 68 L44 68 L32 42 L32 78 Z" fill="var(--primary)"/></svg>MASTERFLIX</div>
-            <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Fechar">✕</button>
-        </div>
-        <div class="sidebar-user">
-            <div class="sidebar-avatar" id="sidebarAvatar"><span id="sidebarAvatarText">U</span></div>
-            <div class="sidebar-user-info"><div class="sidebar-user-name" id="sidebarUserName">Usuário</div><div class="sidebar-user-email" id="sidebarUserEmail">email@exemplo.com</div></div>
-        </div>
-        <nav class="sidebar-nav">
-            <div class="sidebar-item active" data-nav="home" tabindex="0"><span class="icon">🏠</span> Início</div>
-            <div class="sidebar-item" data-nav="movies" tabindex="0"><span class="icon">🎬</span> Filmes</div>
-            <div class="sidebar-item" data-nav="series" tabindex="0"><span class="icon">📺</span> Séries</div>
-            <div class="sidebar-item" data-nav="continue" tabindex="0"><span class="icon">⏳</span> Continuar</div>
-            <div class="sidebar-divider"></div>
-            <div class="sidebar-item" data-nav="suggestions" tabindex="0"><span class="icon">💡</span> Sugestões</div>
-            <div class="sidebar-item" data-nav="profile" tabindex="0"><span class="icon">👤</span> Perfil</div>
-            <div class="sidebar-item hidden" id="sidebarAdminItem" data-nav="admin" tabindex="0"><span class="icon">⚙️</span> Gerenciar</div>
-            <div class="sidebar-item hidden" id="sidebarCreatorItem" data-nav="creator" tabindex="0"><span class="icon">➕</span> Publicar</div>
-            <div class="sidebar-item hidden" id="sidebarSuggestionsAdminItem" data-nav="suggestionsAdmin" tabindex="0"><span class="icon">📬</span> Sugestões/Bugs</div>
-            <div class="sidebar-item hidden" id="sidebarStorageItem" data-nav="storage" tabindex="0"><span class="icon">💾</span> Armazenamento</div>
-            <div class="sidebar-divider"></div>
-            <div class="sidebar-item" data-nav="logout" tabindex="0" style="color:#ff5252"><span class="icon">🚪</span> Sair</div>
-        </nav>
-        <div class="sidebar-footer">MasterFlix © 2026 — v9.0</div>
-    </aside>
+    <aside class="sidebar-menu" id="sidebarMenu"><div class="sidebar-header"><div class="sidebar-brand"><svg viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="#141414"/><path d="M20 78 L20 22 L35 22 L50 55 L65 22 L80 22 L80 78 L68 78 L68 42 L56 68 L44 68 L32 42 L32 78 Z" fill="var(--primary)"/></svg>MASTERFLIX</div><button type="button" class="sidebar-close-btn" id="sidebarCloseBtn">✕</button></div><div class="sidebar-user"><div class="sidebar-avatar" id="sidebarAvatar"><span id="sidebarAvatarText">U</span></div><div class="sidebar-user-info"><div class="sidebar-user-name" id="sidebarUserName">Usuário</div><div class="sidebar-user-email" id="sidebarUserEmail">email@exemplo.com</div></div></div><nav class="sidebar-nav"><div class="sidebar-item active" data-nav="home" tabindex="0"><span class="icon">🏠</span> Início</div><div class="sidebar-item" data-nav="movies" tabindex="0"><span class="icon">🎬</span> Filmes</div><div class="sidebar-item" data-nav="series" tabindex="0"><span class="icon">📺</span> Séries</div><div class="sidebar-item" data-nav="continue" tabindex="0"><span class="icon">⏳</span> Continuar</div><div class="sidebar-divider"></div><div class="sidebar-item" data-nav="suggestions" tabindex="0"><span class="icon">💡</span> Sugestões</div><div class="sidebar-item" data-nav="profile" tabindex="0"><span class="icon">👤</span> Perfil</div><div class="sidebar-item hidden" id="sidebarAdminItem" data-nav="admin" tabindex="0"><span class="icon">⚙️</span> Gerenciar</div><div class="sidebar-item hidden" id="sidebarCreatorItem" data-nav="creator" tabindex="0"><span class="icon">➕</span> Publicar</div><div class="sidebar-item hidden" id="sidebarSuggestionsAdminItem" data-nav="suggestionsAdmin" tabindex="0"><span class="icon">📬</span> Sugestões/Bugs</div><div class="sidebar-item hidden" id="sidebarStorageItem" data-nav="storage" tabindex="0"><span class="icon">💾</span> Armazenamento</div><div class="sidebar-divider"></div><div class="sidebar-item" data-nav="logout" tabindex="0" style="color:#ff5252"><span class="icon">🚪</span> Sair</div></nav><div class="sidebar-footer">MasterFlix © 2026 — v11</div></aside>
+    <header id="mainHeader"><div class="header-left"><button type="button" class="menu-toggle-btn" id="menuToggleBtn"><span class="bar"></span><span class="bar"></span><span class="bar"></span></button><div class="brand" id="brandLogoBtn" tabindex="0"><svg class="brand-logo" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="#141414"/><path d="M20 78 L20 22 L35 22 L50 55 L65 22 L80 22 L80 78 L68 78 L68 42 L56 68 L44 68 L32 42 L32 78 Z" fill="var(--primary)"/></svg>MASTERFLIX</div></div><div class="nav-actions"><div class="search-wrapper" id="searchWrapper"><div class="search-box" id="searchBox"><button type="button" class="search-icon-btn" id="searchIconBtn">🔍</button><input type="text" class="search-input-field" id="searchInput" placeholder="Pesquisar..." autocomplete="off"><button type="button" class="search-clear-btn" id="searchClearBtn">✕</button></div><div class="search-results-dropdown" id="searchResultsDropdown"></div></div><div class="user-avatar-btn" id="btnOpenProfile" tabindex="0"><span id="avatarText">U</span><img id="avatarImg" class="hidden" src="" alt=""></div></div></header>
 
-    <header id="mainHeader">
-        <div class="header-left">
-            <button type="button" class="menu-toggle-btn" id="menuToggleBtn" aria-label="Menu"><span class="bar"></span><span class="bar"></span><span class="bar"></span></button>
-            <div class="brand" id="brandLogoBtn" tabindex="0"><svg class="brand-logo" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="#141414"/><path d="M20 78 L20 22 L35 22 L50 55 L65 22 L80 22 L80 78 L68 78 L68 42 L56 68 L44 68 L32 42 L32 78 Z" fill="var(--primary)"/></svg>MASTERFLIX</div>
-        </div>
-        <div class="nav-actions">
-            <div class="search-wrapper" id="searchWrapper">
-                <div class="search-box" id="searchBox">
-                    <button type="button" class="search-icon-btn" id="searchIconBtn" aria-label="Pesquisar">🔍</button>
-                    <input type="text" class="search-input-field" id="searchInput" placeholder="Pesquisar..." autocomplete="off">
-                    <button type="button" class="search-clear-btn" id="searchClearBtn" aria-label="Limpar">✕</button>
-                </div>
-                <div class="search-results-dropdown" id="searchResultsDropdown"></div>
-            </div>
-            <div class="user-avatar-btn" id="btnOpenProfile" tabindex="0"><span id="avatarText">U</span><img id="avatarImg" class="hidden" src="" alt="Avatar"></div>
-        </div>
-    </header>
-
-    <div id="authOverlay" class="modal-overlay hidden">
-        <div class="modal-body auth-modal-body" id="authModalBody">
-            <div style="margin-bottom:24px"><div class="brand" style="font-size:28px;justify-content:center;margin-bottom:8px"><svg class="brand-logo" style="width:36px;height:36px" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="#141414"/><path d="M20 78 L20 22 L35 22 L50 55 L65 22 L80 22 L80 78 L68 78 L68 42 L56 68 L44 68 L32 42 L32 78 Z" fill="var(--primary)"/></svg>MASTERFLIX</div><p style="color:#888;font-size:13px" id="authSubtitle">Entre para continuar</p></div>
-            <form id="authForm" autocomplete="off"><input type="text" style="display:none" autocomplete="username"><input type="password" style="display:none" autocomplete="new-password"><div class="input-group auth-signup-field"><label for="authDisplayName">Nome</label><input type="text" id="authDisplayName" placeholder="Seu nome" autocomplete="off" maxlength="30"></div><div class="input-group"><label for="authEmail">E-mail</label><input type="email" id="authEmail" autocomplete="off" required></div><div class="input-group"><label for="authPassword">Senha</label><div class="input-with-icon"><input type="password" id="authPassword" autocomplete="new-password" required minlength="6"><button type="button" class="input-icon-toggle" id="btnTogglePassword" tabindex="-1">👁️</button></div></div><a id="btnForgotPassword" class="auth-forgot-link" tabindex="0">Esqueci a senha</a><button type="submit" class="btn-primary" id="btnAuthSubmit" style="width:100%;margin-top:4px">Entrar</button></form>
-            <div class="auth-divider"></div><p style="font-size:13px;color:#999;cursor:pointer;font-weight:600" id="toggleAuthMode">Não tem conta? <span style="color:var(--primary)">Criar</span></p>
-        </div>
-    </div>
-    <div id="forgotPasswordModal" class="modal-overlay hidden"><div class="modal-body auth-modal-body"><button type="button" class="modal-close" id="btnCloseForgot">&times;</button><div style="font-size:52px;margin-bottom:10px">🔐</div><h2 style="font-size:22px;font-weight:900;margin-bottom:6px">Recuperar Senha</h2><p style="color:#888;font-size:13px;margin-bottom:22px;line-height:1.6">Digite seu e-mail.</p><form id="forgotPasswordForm" autocomplete="off"><div class="input-group"><label for="forgotEmail">E-mail</label><input type="email" id="forgotEmail" placeholder="seu@email.com" autocomplete="off" required></div><button type="submit" class="btn-primary" id="btnSendResetEmail" style="width:100%;margin-top:6px">📨 Enviar Link</button></form><a class="auth-back-link" id="btnBackToLogin" tabindex="0">← Voltar</a></div></div>
-    <div id="forgotSuccessModal" class="modal-overlay hidden"><div class="modal-body auth-modal-body"><div class="success-check-anim">✓</div><h2 style="font-size:22px;font-weight:900;margin-bottom:8px">Enviado! 📬</h2><p style="color:#888;font-size:13px;margin-bottom:14px">Link enviado para:</p><div class="email-preview-box"><span class="email-icon-lg">📧</span><div class="email-content"><div class="email-label">Enviado para</div><div class="email-address" id="forgotSuccessEmail">—</div></div></div><p style="color:#666;font-size:11px;margin-bottom:18px;line-height:1.6">Verifique <strong>spam</strong>. Expira em 1h.</p><button type="button" class="btn-primary" id="btnForgotSuccessClose" style="width:100%">Entendi</button></div></div>
+    <div id="authOverlay" class="modal-overlay hidden"><div class="modal-body auth-modal-body" id="authModalBody"><div style="margin-bottom:24px"><div class="brand" style="font-size:28px;justify-content:center;margin-bottom:8px"><svg class="brand-logo" style="width:36px;height:36px" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="#141414"/><path d="M20 78 L20 22 L35 22 L50 55 L65 22 L80 22 L80 78 L68 78 L68 42 L56 68 L44 68 L32 42 L32 78 Z" fill="var(--primary)"/></svg>MASTERFLIX</div><p style="color:#888;font-size:13px" id="authSubtitle">Entre para continuar</p></div><form id="authForm" autocomplete="off"><input type="text" style="display:none" autocomplete="username"><input type="password" style="display:none" autocomplete="new-password"><div class="input-group auth-signup-field"><label>Nome</label><input type="text" id="authDisplayName" placeholder="Seu nome" autocomplete="off" maxlength="30"></div><div class="input-group"><label>E-mail</label><input type="email" id="authEmail" autocomplete="off" required></div><div class="input-group"><label>Senha</label><div class="input-with-icon"><input type="password" id="authPassword" autocomplete="new-password" required minlength="6"><button type="button" class="input-icon-toggle" id="btnTogglePassword" tabindex="-1">👁️</button></div></div><a id="btnForgotPassword" class="auth-forgot-link" tabindex="0">Esqueci a senha</a><button type="submit" class="btn-primary" id="btnAuthSubmit" style="width:100%;margin-top:4px">Entrar</button></form><div class="auth-divider"></div><p style="font-size:13px;color:#999;cursor:pointer;font-weight:600" id="toggleAuthMode">Não tem conta? <span style="color:var(--primary)">Criar</span></p></div></div>
+    <div id="forgotPasswordModal" class="modal-overlay hidden"><div class="modal-body auth-modal-body"><button type="button" class="modal-close" id="btnCloseForgot">&times;</button><div style="font-size:52px;margin-bottom:10px">🔐</div><h2 style="font-size:22px;font-weight:900;margin-bottom:6px">Recuperar Senha</h2><p style="color:#888;font-size:13px;margin-bottom:22px">Digite seu e-mail.</p><form id="forgotPasswordForm" autocomplete="off"><div class="input-group"><label>E-mail</label><input type="email" id="forgotEmail" placeholder="seu@email.com" required></div><button type="submit" class="btn-primary" id="btnSendResetEmail" style="width:100%;margin-top:6px">📨 Enviar</button></form><a class="auth-back-link" id="btnBackToLogin">← Voltar</a></div></div>
+    <div id="forgotSuccessModal" class="modal-overlay hidden"><div class="modal-body auth-modal-body"><div class="success-check-anim">✓</div><h2 style="font-size:22px;font-weight:900;margin-bottom:8px">Enviado! 📬</h2><p style="color:#888;font-size:13px;margin-bottom:14px">Link enviado para:</p><div class="email-preview-box"><span class="email-icon-lg">📧</span><div class="email-content"><div class="email-label">Enviado para</div><div class="email-address" id="forgotSuccessEmail">—</div></div></div><p style="color:#666;font-size:11px;margin-bottom:18px">Verifique <strong>spam</strong>. Expira em 1h.</p><button type="button" class="btn-primary" id="btnForgotSuccessClose" style="width:100%">Entendi</button></div></div>
     <div id="adminModal" class="modal-overlay hidden"><div class="modal-body"><button type="button" class="modal-close" id="btnCloseAdmin">&times;</button><h2 style="font-size:18px;margin-bottom:18px">⚙️ Gerenciar</h2><div style="display:flex;gap:8px;margin-bottom:16px"><input type="text" id="adminSearchInput" placeholder="Pesquisar..." autocomplete="off" style="flex:1;padding:10px 14px;background:#0f0f0f;border:1.5px solid #2a2a2a;color:#fff;border-radius:8px;font-size:13px"><button type="button" class="btn-primary" id="btnAddNewFromAdmin" style="font-size:12px;padding:10px 18px">+ Novo</button></div><div id="adminCatalogList" style="max-height:55vh;overflow-y:auto"></div></div></div>
-
-    <div id="profileModal" class="modal-overlay hidden"><div class="modal-body" style="max-width:500px"><button type="button" class="modal-close" id="btnCloseProfile">&times;</button><div class="profile-card-header"><img id="profileBannerImg" class="profile-banner-bg" src="https://placehold.co/600x200/1e1e1e/8c8c8c?text=Banner" alt="Banner"><div class="profile-avatar-overlay"><span id="profileAvatarBigText">U</span><img id="profileAvatarBigImg" class="hidden" src="" alt="Avatar"></div></div><div style="text-align:center;margin-bottom:20px"><h3 id="profileNameDisplay" style="font-size:20px;font-weight:800">Usuário</h3><p id="profileEmailDisplay" style="font-size:12px;color:#888"></p><p id="profileBioDisplay" style="font-size:12px;color:#ccc;margin-top:4px;font-style:italic">"Maratonando!"</p><span id="profileAdminBadge" class="hidden" style="background:linear-gradient(135deg,var(--primary),#ff4444);font-size:10px;padding:4px 12px;border-radius:6px;font-weight:800;margin-top:8px;display:inline-block">👑 Admin</span></div><div class="security-section"><div class="security-title">🔐 Segurança</div><button type="button" class="security-quick-btn" id="btnOpenDevicesModal"><span class="sq-icon">📱</span><div class="sq-info"><div class="sq-title">Dispositivos</div><div class="sq-desc">Gerenciar sessões</div></div><span class="sq-badge" id="devicesCountBadge">0</span><span class="sq-arrow">›</span></button><button type="button" class="security-quick-btn" id="btnChangePasswordFromProfile"><span class="sq-icon">🔑</span><div class="sq-info"><div class="sq-title">Alterar senha</div><div class="sq-desc">Link por e-mail</div></div><span class="sq-arrow">›</span></button></div><hr style="border:0;border-top:1px solid var(--border);margin:18px 0"><h4 style="font-size:13px;margin-bottom:14px;color:var(--primary)">⚙️ Personalizar</h4><div class="input-group"><label for="profileNameInput">Nome</label><input type="text" id="profileNameInput" autocomplete="off"></div><div class="input-group"><label for="profileBioInput">Bio</label><input type="text" id="profileBioInput" placeholder="Sua frase..." autocomplete="off"></div><div class="input-group"><label for="profileFavGenreInput">Gênero Favorito</label><select id="profileFavGenreInput"><option>Ação</option><option>Comédia</option><option>Drama</option><option>Terror</option><option>Animação</option><option>Ficção Científica</option><option>Lançamento</option><option>Documentário</option><option>Crime</option><option>Família</option><option>Dorama</option><option>Anime</option></select></div><div class="input-group"><label>Foto</label><label class="file-upload-box" for="profilePhotoFile"><span class="file-upload-label">📷 Escolher</span><input type="file" id="profilePhotoFile" accept="image/*" class="hidden"><img id="profilePhotoPreview" class="file-preview-img hidden" alt="Foto"></label></div><div class="input-group"><label>Banner</label><label class="file-upload-box" for="profileBannerFile"><span class="file-upload-label">🖼️ Escolher</span><input type="file" id="profileBannerFile" accept="image/*" class="hidden"><img id="profileBannerPreview" class="file-preview-img hidden" alt="Banner"></label></div><div class="input-group"><label for="themeColorPicker">Cor do Tema</label><input type="color" id="themeColorPicker" value="#e50914" style="height:44px;width:100%;border-radius:8px;border:1.5px solid #2a2a2a;background:#0f0f0f;cursor:pointer"></div><div style="display:flex;gap:10px;margin-top:20px"><button type="button" class="btn-primary" id="btnSaveProfile" style="flex:1">💾 Salvar</button><button type="button" class="btn-danger" id="btnLogout" style="flex:1">🚪 Sair</button></div></div></div>
+    <div id="profileModal" class="modal-overlay hidden"><div class="modal-body" style="max-width:500px"><button type="button" class="modal-close" id="btnCloseProfile">&times;</button><div class="profile-card-header"><img id="profileBannerImg" class="profile-banner-bg" src="https://placehold.co/600x200/1e1e1e/8c8c8c?text=Banner" alt=""><div class="profile-avatar-overlay"><span id="profileAvatarBigText">U</span><img id="profileAvatarBigImg" class="hidden" src="" alt=""></div></div><div style="text-align:center;margin-bottom:20px"><h3 id="profileNameDisplay" style="font-size:20px;font-weight:800">Usuário</h3><p id="profileEmailDisplay" style="font-size:12px;color:#888"></p><p id="profileBioDisplay" style="font-size:12px;color:#ccc;margin-top:4px;font-style:italic">"Maratonando!"</p><span id="profileAdminBadge" class="hidden" style="background:linear-gradient(135deg,var(--primary),#ff4444);font-size:10px;padding:4px 12px;border-radius:6px;font-weight:800;margin-top:8px;display:inline-block">👑 Admin</span></div><div class="security-section"><div class="security-title">🔐 Segurança</div><button type="button" class="security-quick-btn" id="btnOpenDevicesModal"><span class="sq-icon">📱</span><div class="sq-info"><div class="sq-title">Dispositivos</div><div class="sq-desc">Gerenciar sessões</div></div><span class="sq-badge" id="devicesCountBadge">0</span><span class="sq-arrow">›</span></button><button type="button" class="security-quick-btn" id="btnChangePasswordFromProfile"><span class="sq-icon">🔑</span><div class="sq-info"><div class="sq-title">Alterar senha</div><div class="sq-desc">Link por e-mail</div></div><span class="sq-arrow">›</span></button></div><hr style="border:0;border-top:1px solid var(--border);margin:18px 0"><h4 style="font-size:13px;margin-bottom:14px;color:var(--primary)">⚙️ Personalizar</h4><div class="input-group"><label>Nome</label><input type="text" id="profileNameInput" autocomplete="off"></div><div class="input-group"><label>Bio</label><input type="text" id="profileBioInput" placeholder="Sua frase..." autocomplete="off"></div><div class="input-group"><label>Gênero Favorito</label><select id="profileFavGenreInput"><option>Ação</option><option>Comédia</option><option>Drama</option><option>Terror</option><option>Animação</option><option>Ficção Científica</option><option>Lançamento</option><option>Documentário</option><option>Crime</option><option>Família</option><option>Dorama</option><option>Anime</option></select></div><div class="input-group"><label>Foto</label><label class="file-upload-box" for="profilePhotoFile"><span class="file-upload-label">📷 Escolher</span><input type="file" id="profilePhotoFile" accept="image/*" class="hidden"><img id="profilePhotoPreview" class="file-preview-img hidden" alt=""></label></div><div class="input-group"><label>Banner</label><label class="file-upload-box" for="profileBannerFile"><span class="file-upload-label">🖼️ Escolher</span><input type="file" id="profileBannerFile" accept="image/*" class="hidden"><img id="profileBannerPreview" class="file-preview-img hidden" alt=""></label></div><div class="input-group"><label>Cor do Tema</label><input type="color" id="themeColorPicker" value="#e50914" style="height:44px;width:100%;border-radius:8px;border:1.5px solid #2a2a2a;background:#0f0f0f;cursor:pointer"></div><div style="display:flex;gap:10px;margin-top:20px"><button type="button" class="btn-primary" id="btnSaveProfile" style="flex:1">💾 Salvar</button><button type="button" class="btn-danger" id="btnLogout" style="flex:1">🚪 Sair</button></div></div></div>
     <div id="devicesModal" class="modal-overlay hidden"><div class="modal-body" style="max-width:520px"><button type="button" class="modal-close" id="btnCloseDevices">&times;</button><div style="text-align:center;margin-bottom:8px"><div style="font-size:44px;margin-bottom:6px">📱</div><h2 style="font-size:20px;font-weight:900">Dispositivos</h2><p style="color:#888;font-size:12px;margin-top:4px" id="devicesInfoText">Carregando...</p></div><div id="devicesList" style="margin-top:20px;max-height:55vh;overflow-y:auto"></div><button type="button" class="btn-danger" id="btnLogoutAllDevices" style="width:100%;margin-top:16px">🚪 Encerrar outros</button></div></div>
-    <div id="suggestionModal" class="modal-overlay hidden"><div class="modal-body" style="max-width:460px"><button type="button" class="modal-close" id="btnCloseSuggestion">&times;</button><h2 style="font-size:18px;margin-bottom:8px">💡 Sugestões</h2><p style="font-size:11px;color:#888;margin-bottom:16px">Nos ajude a melhorar!</p><div class="input-group"><label for="suggestionType">Tipo</label><select id="suggestionType"><option value="suggestion">💡 Sugestão</option><option value="bug">🐛 Bug</option></select></div><div class="input-group"><label for="suggestionText">Descrição</label><textarea id="suggestionText" rows="5" placeholder="Descreva..." autocomplete="off"></textarea></div><button type="button" class="btn-primary" id="btnSendSuggestion" style="width:100%">📨 Enviar</button></div></div>
-    <div id="suggestionsAdminModal" class="modal-overlay hidden"><div class="modal-body" style="max-width:620px"><button type="button" class="modal-close" id="btnCloseSuggestionsAdmin">&times;</button><h2 style="font-size:18px;margin-bottom:8px">📬 Sugestões</h2><p style="font-size:11px;color:#888;margin-bottom:16px" id="suggestionsCountText">Carregando...</p><div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap"><button type="button" class="btn-secondary" id="btnToggleSelectMode" style="font-size:11px">☑️ Selecionar</button><button type="button" class="btn-danger hidden" id="btnDeleteSelectedSuggestions" style="font-size:11px">🗑️ Apagar</button><button type="button" class="btn-danger hidden" id="btnSelectAllSuggestions" style="font-size:11px">✅ Todos</button><button type="button" class="btn-secondary hidden" id="btnCancelSelectMode" style="font-size:11px">✕ Cancelar</button></div><div id="suggestionsAdminList" style="max-height:55vh;overflow-y:auto"></div></div></div>
+    <div id="suggestionModal" class="modal-overlay hidden"><div class="modal-body" style="max-width:460px"><button type="button" class="modal-close" id="btnCloseSuggestion">&times;</button><h2 style="font-size:18px;margin-bottom:8px">💡 Sugestões</h2><p style="font-size:11px;color:#888;margin-bottom:16px">Nos ajude!</p><div class="input-group"><label>Tipo</label><select id="suggestionType"><option value="suggestion">💡 Sugestão</option><option value="bug">🐛 Bug</option></select></div><div class="input-group"><label>Descrição</label><textarea id="suggestionText" rows="5" placeholder="Descreva..." autocomplete="off"></textarea></div><button type="button" class="btn-primary" id="btnSendSuggestion" style="width:100%">📨 Enviar</button></div></div>
+    <div id="suggestionsAdminModal" class="modal-overlay hidden"><div class="modal-body" style="max-width:620px"><button type="button" class="modal-close" id="btnCloseSuggestionsAdmin">&times;</button><h2 style="font-size:18px;margin-bottom:8px">📬 Sugestões</h2><p style="font-size:11px;color:#888;margin-bottom:16px" id="suggestionsCountText">Carregando...</p><div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap"><button type="button" class="btn-secondary" id="btnToggleSelectMode">☑️ Selecionar</button><button type="button" class="btn-danger hidden" id="btnDeleteSelectedSuggestions">🗑️ Apagar</button><button type="button" class="btn-danger hidden" id="btnSelectAllSuggestions">✅ Todos</button><button type="button" class="btn-secondary hidden" id="btnCancelSelectMode">✕ Cancelar</button></div><div id="suggestionsAdminList" style="max-height:55vh;overflow-y:auto"></div></div></div>
     <div id="storageModal" class="modal-overlay hidden"><div class="modal-body" style="max-width:520px"><button type="button" class="modal-close" id="btnCloseStorage">&times;</button><h2 style="font-size:18px;margin-bottom:18px">💾 Armazenamento</h2><div id="storageContent"><p style="text-align:center;color:#888">Calculando...</p></div></div></div>
 
     <main class="app-container">
-        <section class="featured-showcase" id="featuredShowcase">
-            <div class="featured-topbar"><div><div class="featured-kicker">🔥 Destaques</div><h1 class="featured-heading" id="featuredHeading">Em alta hoje</h1><p class="featured-sub" id="featuredSub">Os mais assistidos do dia.</p></div></div>
-            <div class="featured-grid" id="featuredGrid"><div class="featured-empty">Carregando...</div></div>
-        </section>
-        <div class="categories-bar" id="categoriesBar">
-            <div class="category-chip active" data-cat="Todos">Todos</div><div class="category-chip" data-cat="Filmes">🎬 Filmes</div><div class="category-chip" data-cat="Séries">📺 Séries</div><div class="category-chip" data-cat="Lançamento">✨ Lançamento</div><div class="category-chip" data-cat="Ação">Ação</div><div class="category-chip" data-cat="Aventura">Aventura</div><div class="category-chip" data-cat="Comédia">Comédia</div><div class="category-chip" data-cat="Drama">Drama</div><div class="category-chip" data-cat="Terror">Terror</div><div class="category-chip" data-cat="Suspense">Suspense</div><div class="category-chip" data-cat="Romance">Romance</div><div class="category-chip" data-cat="Ficção Científica">Ficção Científica</div><div class="category-chip" data-cat="Fantasia">Fantasia</div><div class="category-chip" data-cat="Animação">Animação</div><div class="category-chip" data-cat="Documentário">Documentário</div><div class="category-chip" data-cat="Crime">Crime</div><div class="category-chip" data-cat="Família">Família</div><div class="category-chip" data-cat="Anime">Anime</div><div class="category-chip" data-cat="Dorama">Dorama</div><div class="category-chip" data-cat="Musical">Musical</div><div class="category-chip" data-cat="Mistério">Mistério</div><div class="category-chip" data-cat="Super-Heróis">Super-Heróis</div>
-        </div>
+        <section class="featured-showcase"><div class="featured-topbar"><div><div class="featured-kicker">🔥 Destaques</div><h1 class="featured-heading" id="featuredHeading">Em alta hoje</h1><p class="featured-sub" id="featuredSub">Os mais assistidos.</p></div></div><div class="featured-grid" id="featuredGrid"><div class="featured-empty">Carregando...</div></div></section>
+        <div class="categories-bar"><div class="category-chip active" data-cat="Todos">Todos</div><div class="category-chip" data-cat="Filmes">🎬 Filmes</div><div class="category-chip" data-cat="Séries">📺 Séries</div><div class="category-chip" data-cat="Lançamento">✨ Lançamento</div><div class="category-chip" data-cat="Ação">Ação</div><div class="category-chip" data-cat="Aventura">Aventura</div><div class="category-chip" data-cat="Comédia">Comédia</div><div class="category-chip" data-cat="Drama">Drama</div><div class="category-chip" data-cat="Terror">Terror</div><div class="category-chip" data-cat="Suspense">Suspense</div><div class="category-chip" data-cat="Romance">Romance</div><div class="category-chip" data-cat="Ficção Científica">Ficção Científica</div><div class="category-chip" data-cat="Fantasia">Fantasia</div><div class="category-chip" data-cat="Animação">Animação</div><div class="category-chip" data-cat="Documentário">Documentário</div><div class="category-chip" data-cat="Crime">Crime</div><div class="category-chip" data-cat="Família">Família</div><div class="category-chip" data-cat="Anime">Anime</div><div class="category-chip" data-cat="Dorama">Dorama</div><div class="category-chip" data-cat="Musical">Musical</div><div class="category-chip" data-cat="Mistério">Mistério</div><div class="category-chip" data-cat="Super-Heróis">Super-Heróis</div></div>
         <div class="section-row hidden" id="continueRow"><div class="section-title"><span style="color:#ffca28">⏳ Continuar Assistindo</span></div><div class="carousel-container" id="continueCarousel"></div></div>
         <div class="section-row" id="moviesRow"><div class="section-title"><span>🎬 Filmes</span></div><div class="carousel-container" id="moviesCarousel"></div></div>
         <div class="section-row" id="seriesRow"><div class="section-title"><span>📺 Séries</span></div><div class="carousel-container" id="seriesCarousel"></div></div>
     </main>
 
-    <div id="creatorModal" class="modal-overlay hidden"><div class="modal-body" style="max-width:620px"><button type="button" class="modal-close" id="btnCloseCreator">&times;</button><h2 style="font-size:20px;margin-bottom:6px;font-weight:900" id="creatorTitle">Publicar</h2><p style="font-size:11px;color:#888;margin-bottom:18px" id="creatorSubtitle">Preencha os dados</p><form id="mediaForm" autocomplete="off"><input type="hidden" id="editMediaId"><div class="creator-tabs"><div class="creator-tab active" data-tab="info">📝 Info</div><div class="creator-tab" data-tab="media">🖼️ Imagens</div><div class="creator-tab" data-tab="content">🎞️ Conteúdo</div></div><div class="creator-tab-content active" data-tab-content="info"><div style="display:flex;gap:10px"><div class="input-group" style="flex:1"><label for="mediaType">Tipo</label><select id="mediaType"><option value="movie">🎬 Filme</option><option value="serie">📺 Série</option></select></div><div class="input-group" style="flex:1"><label for="mediaYear">Ano</label><input type="text" id="mediaYear" required autocomplete="off"></div></div><div class="input-group"><label for="mediaTitle">Título</label><input type="text" id="mediaTitle" required autocomplete="off"></div><div class="input-group"><label id="mediaDurationLabel" for="mediaDuration">Duração</label><input type="text" id="mediaDuration" autocomplete="off" placeholder="Ex: 2h 10m"></div><div class="input-group"><label>🎭 Gêneros</label><div class="genre-selector-container" id="genreSelectorContainer"></div><div class="genre-counter" id="genreCounter">Nenhum</div></div><div class="input-group"><label for="mediaDesc">Sinopse</label><textarea id="mediaDesc" rows="4" required autocomplete="off"></textarea></div></div><div class="creator-tab-content" data-tab-content="media"><div class="input-group"><label>📸 Capa</label><label class="file-upload-box" for="mediaCoverFile"><span class="file-upload-label">📸 Escolher</span><input type="file" id="mediaCoverFile" accept="image/*" class="hidden"><img id="mediaCoverPreview" class="file-preview-img hidden" alt="Capa"></label></div><div class="input-group"><label>🖼️ Backdrop</label><label class="file-upload-box" for="mediaBackdropFile"><span class="file-upload-label">🖼️ Escolher</span><input type="file" id="mediaBackdropFile" accept="image/*" class="hidden"><img id="mediaBackdropPreview" class="file-preview-img hidden" alt="Backdrop"></label></div></div><div class="creator-tab-content" data-tab-content="content"><div id="movieFileArea"><label style="font-size:12px;color:var(--primary);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;display:block">🎞️ Fontes de Vídeo</label><div id="movieSourcesList" class="source-builder-list"><div class="source-empty-state">Nenhuma fonte.</div></div><button type="button" class="add-btn-block" id="btnAddMovieSource" style="margin-top:10px">+ Adicionar Fonte</button></div><div id="seriesBuilderArea" class="hidden"><div id="seasonsList"></div><button type="button" class="add-btn-block" id="btnAddSeasonBtn" style="margin-top:14px">+ Nova Temporada</button><div class="autosave-hint">💡 Preencha e clique SALVAR.</div></div></div><div class="save-bar"><div class="save-bar-actions"><button type="button" class="btn-outline" id="btnCancelCreator" style="flex:1">Cancelar</button><button type="submit" class="btn-primary" style="flex:2">💾 Salvar</button></div></div></form></div></div>
+    <div id="creatorModal" class="modal-overlay hidden"><div class="modal-body" style="max-width:620px"><button type="button" class="modal-close" id="btnCloseCreator">&times;</button><h2 style="font-size:20px;margin-bottom:6px;font-weight:900" id="creatorTitle">Publicar</h2><p style="font-size:11px;color:#888;margin-bottom:18px" id="creatorSubtitle">Preencha os dados</p><form id="mediaForm" autocomplete="off"><input type="hidden" id="editMediaId"><div class="creator-tabs"><div class="creator-tab active" data-tab="info">📝 Info</div><div class="creator-tab" data-tab="media">🖼️ Imagens</div><div class="creator-tab" data-tab="content">🎞️ Conteúdo</div></div><div class="creator-tab-content active" data-tab-content="info"><div style="display:flex;gap:10px"><div class="input-group" style="flex:1"><label>Tipo</label><select id="mediaType"><option value="movie">🎬 Filme</option><option value="serie">📺 Série</option></select></div><div class="input-group" style="flex:1"><label>Ano</label><input type="text" id="mediaYear" required autocomplete="off"></div></div><div class="input-group"><label>Título</label><input type="text" id="mediaTitle" required autocomplete="off"></div><div class="input-group"><label id="mediaDurationLabel">Duração</label><input type="text" id="mediaDuration" autocomplete="off" placeholder="Ex: 2h 10m"></div><div class="input-group"><label>🎭 Gêneros</label><div class="genre-selector-container" id="genreSelectorContainer"></div><div class="genre-counter" id="genreCounter">Nenhum</div></div><div class="input-group"><label>Sinopse</label><textarea id="mediaDesc" rows="4" required autocomplete="off"></textarea></div></div><div class="creator-tab-content" data-tab-content="media"><div class="input-group"><label>📸 Capa</label><label class="file-upload-box" for="mediaCoverFile"><span class="file-upload-label">📸 Escolher</span><input type="file" id="mediaCoverFile" accept="image/*" class="hidden"><img id="mediaCoverPreview" class="file-preview-img hidden" alt=""></label></div><div class="input-group"><label>🖼️ Backdrop</label><label class="file-upload-box" for="mediaBackdropFile"><span class="file-upload-label">🖼️ Escolher</span><input type="file" id="mediaBackdropFile" accept="image/*" class="hidden"><img id="mediaBackdropPreview" class="file-preview-img hidden" alt=""></label></div></div><div class="creator-tab-content" data-tab-content="content"><div id="movieFileArea"><label style="font-size:12px;color:var(--primary);font-weight:800;text-transform:uppercase;margin-bottom:10px;display:block">🎞️ Fontes</label><div id="movieSourcesList" class="source-builder-list"><div class="source-empty-state">Nenhuma fonte.</div></div><button type="button" class="add-btn-block" id="btnAddMovieSource" style="margin-top:10px">+ Adicionar Fonte</button></div><div id="seriesBuilderArea" class="hidden"><div id="seasonsList"></div><button type="button" class="add-btn-block" id="btnAddSeasonBtn" style="margin-top:14px">+ Nova Temporada</button><div class="autosave-hint">💡 Preencha e clique SALVAR.</div></div></div><div class="save-bar"><div class="save-bar-actions"><button type="button" class="btn-outline" id="btnCancelCreator" style="flex:1">Cancelar</button><button type="submit" class="btn-primary" style="flex:2">💾 Salvar</button></div></div></form></div></div>
 
-    <div id="detailsModal" class="modal-overlay hidden"><div class="modal-body details-modal-body"><button type="button" class="modal-close" id="btnCloseDetails">&times;</button><div class="details-backdrop-area" id="detailBackdropArea"></div><div class="details-content-area" id="detailsContentArea"><img id="detailPoster" class="details-poster-inline" src="" alt="Poster"><h2 id="detailTitle" style="font-size:24px;font-weight:900;margin-bottom:8px"></h2><div style="font-size:12px;color:var(--primary);font-weight:700;margin-bottom:12px" id="detailMeta"></div><div id="detailGenres" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px"></div><p id="detailDesc" style="font-size:14px;color:#bbb;line-height:1.7;margin-bottom:20px"></p><div id="detailMovieArea" class="hidden"><button type="button" class="btn-primary" id="btnPlayMovieFile" style="width:100%;padding:15px">▶ Assistir</button></div><div id="detailSerieArea" class="hidden"><div class="season-tab-container" id="seasonTabs"></div><div class="episodes-scroll-area" id="episodesScrollArea"><div id="episodesListContainer"></div></div></div></div></div></div>
+    <div id="detailsModal" class="modal-overlay hidden"><div class="modal-body details-modal-body"><button type="button" class="modal-close" id="btnCloseDetails">&times;</button><div class="details-backdrop-area" id="detailBackdropArea"></div><div class="details-content-area" id="detailsContentArea"><img id="detailPoster" class="details-poster-inline" src="" alt=""><h2 id="detailTitle" style="font-size:24px;font-weight:900;margin-bottom:8px"></h2><div style="font-size:12px;color:var(--primary);font-weight:700;margin-bottom:12px" id="detailMeta"></div><div id="detailGenres" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px"></div><p id="detailDesc" style="font-size:14px;color:#bbb;line-height:1.7;margin-bottom:20px"></p><div id="detailMovieArea" class="hidden"><button type="button" class="btn-primary" id="btnPlayMovieFile" style="width:100%;padding:15px">▶ Assistir</button></div><div id="detailSerieArea" class="hidden"><div class="season-tab-container" id="seasonTabs"></div><div class="episodes-scroll-area"><div id="episodesListContainer"></div></div></div></div></div></div>
 
-    <!-- ═══ PLAYER v9 ═══ -->
+    <!-- PLAYER v11 -->
     <div id="playerModal" class="modal-overlay hidden">
         <div class="player-box" id="playerBox">
-            <!-- Área do vídeo — cliques passam direto pro iframe/video -->
-            <div class="player-video-area" id="playerVideoArea">
-                <div class="player-loading" id="playerLoading">
-                    <div class="player-spinner"></div>
-                    <div><div class="player-loading-text" id="playerLoadingText">Carregando...</div><div class="player-loading-sub" id="playerLoadingSub">Preparando player</div></div>
-                </div>
+            <div class="player-vid" id="playerVid">
+                <div class="player-loading" id="playerLoading"><div class="player-spinner"></div><div><div class="player-loading-text" id="playerLoadingText">Carregando...</div><div class="player-loading-sub" id="playerLoadingSub">Preparando</div></div></div>
             </div>
-
-            <!-- Botões flutuantes SEMPRE visíveis (semi-transparentes) -->
-            <button type="button" class="player-float-btn player-float-back" id="btnPlayerBack" aria-label="Voltar">←</button>
-            <button type="button" class="player-float-btn player-float-menu" id="btnPlayerMenu" aria-label="Menu">☰</button>
-
-            <!-- Barra de cima — aparece/some -->
-            <div class="player-topbar bar-hidden" id="playerTopbar">
-                <div style="width:52px"></div><!-- spacer pro float btn -->
+            <div class="player-tap" id="playerTap"></div>
+            <button type="button" class="player-back-always" id="btnPlayerBack">←</button>
+            <div class="player-top gone" id="playerTop">
                 <div class="player-title-area">
                     <div class="player-title-main" id="playerTitleDisplay">Carregando...</div>
-                    <div class="player-title-sub-row">
-                        <span class="player-title-sub" id="playerSubDisplay">MasterFlix</span>
-                        <span class="player-provider-pill hidden" id="playerProviderBadge"></span>
-                    </div>
+                    <div class="player-title-sub-row"><span class="player-title-sub" id="playerSubDisplay">MasterFlix</span><span class="player-provider-pill hidden" id="playerProviderBadge"></span></div>
                 </div>
                 <div style="display:flex;gap:8px">
-                    <button type="button" class="player-btn-round hidden" id="btnChangeSource" title="Trocar fonte">🔀</button>
-                    <button type="button" class="player-btn-round" id="btnToggleStretch" title="Esticar">⇱</button>
-                    <button type="button" class="player-btn-round" id="btnReloadPlayer" title="Recarregar">↻</button>
-                    <button type="button" class="player-btn-round" id="btnToggleFullscreen" title="Tela Cheia">⛶</button>
+                    <button type="button" class="player-btn-r hidden" id="btnChangeSource" title="Fontes">🔀</button>
+                    <button type="button" class="player-btn-r" id="btnStretch" title="Esticar">⇱</button>
+                    <button type="button" class="player-btn-r" id="btnReload" title="Recarregar">↻</button>
+                    <button type="button" class="player-btn-r" id="btnFS" title="Tela Cheia">⛶</button>
                 </div>
             </div>
-
-            <!-- Barra de baixo — aparece/some -->
-            <div class="player-bottombar bar-hidden" id="playerBottombar">
-                <div class="player-bottom-label">MasterFlix Player</div>
-                <div style="display:flex;gap:8px"></div>
+            <div class="player-bot gone" id="playerBot">
+                <div class="ep-nav-btns">
+                    <button type="button" class="ep-nav-btn hidden" id="btnPrevEp" title="Anterior">⏮</button>
+                    <button type="button" class="ep-nav-btn hidden" id="btnNextEp" title="Próximo">⏭</button>
+                </div>
+                <div class="boost-pill" id="boostPill">
+                    <span class="boost-icon" id="boostIcon">🔊</span>
+                    <input type="range" id="boostSlider" min="100" max="500" value="100" step="25">
+                    <span class="boost-val" id="boostVal">100%</span>
+                </div>
             </div>
-
-            <!-- Overlays -->
-            <div class="player-error-screen hidden" id="playerErrorScreen">
-                <div class="player-error-card"><div class="player-error-icon">⚠️</div><div class="player-error-title" id="playerErrorTitle">Erro</div><div class="player-error-desc" id="playerErrorDesc">Tente outra fonte.</div><div class="player-error-actions"><button type="button" class="btn-primary" id="btnErrorTryAnother">🔀 Trocar</button><button type="button" class="btn-outline" id="btnErrorReload">↻ Recarregar</button></div></div>
-            </div>
-            <div class="player-source-selector hidden" id="playerSourceSelector">
-                <div class="player-source-selector-card"><div class="player-source-selector-title">Escolha uma fonte</div><div class="player-source-selector-sub" id="playerSourceSelectorSub">Selecione para reproduzir.</div><div class="player-source-list" id="playerSourceList"></div><button type="button" class="btn-outline" id="btnCancelSourceSelection" style="width:100%">Cancelar</button></div>
-            </div>
+            <div class="player-error-screen hidden" id="playerErr"><div class="player-error-card"><div class="player-error-icon">⚠️</div><div class="player-error-title" id="playerErrTitle">Erro</div><div class="player-error-desc" id="playerErrDesc">Tente outra fonte.</div><div class="player-error-actions"><button type="button" class="btn-primary" id="btnErrTry">🔀 Trocar</button><button type="button" class="btn-outline" id="btnErrReload">↻ Recarregar</button></div></div></div>
+            <div class="player-source-selector hidden" id="playerSel"><div class="player-source-selector-card"><div class="player-source-selector-title">Escolha uma fonte</div><div class="player-source-selector-sub" id="playerSelSub">Selecione.</div><div class="player-source-list" id="playerSelList"></div><button type="button" class="btn-outline" id="btnCancelSel" style="width:100%">Cancelar</button></div></div>
             <div class="player-tip" id="playerTip"></div>
         </div>
     </div>
 
-    <div id="cropperModal" class="modal-overlay hidden"><div class="modal-body" style="max-width:520px"><button type="button" class="modal-close" id="btnCloseCropper">&times;</button><h3 style="font-size:16px;margin-bottom:14px;color:var(--primary)">✂️ Recortar</h3><div style="max-height:280px;background:#000;overflow:hidden;border-radius:var(--r-sm);border:1px solid #333;display:flex;justify-content:center;align-items:center"><img id="cropperImage" alt="Recortar" style="max-width:100%;display:block"></div><div class="device-preview-wrapper"><div class="device-box"><label>📱</label><div class="device-screen device-mobile"><img id="prevMobile" src="" alt=""></div></div><div class="device-box"><label>💻</label><div class="device-screen device-pc"><img id="prevPC" src="" alt=""></div></div><div class="device-box"><label>📺</label><div class="device-screen device-tv"><img id="prevTV" src="" alt=""></div></div></div><div style="display:flex;gap:10px;margin-top:16px"><button type="button" class="btn-primary" id="btnConfirmCrop" style="flex:1">✓ Confirmar</button></div></div></div>
+    <div id="cropperModal" class="modal-overlay hidden"><div class="modal-body" style="max-width:520px"><button type="button" class="modal-close" id="btnCloseCropper">&times;</button><h3 style="font-size:16px;margin-bottom:14px;color:var(--primary)">✂️ Recortar</h3><div style="max-height:280px;background:#000;overflow:hidden;border-radius:var(--r-sm);border:1px solid #333;display:flex;justify-content:center;align-items:center"><img id="cropperImage" alt="" style="max-width:100%;display:block"></div><div class="device-preview-wrapper"><div class="device-box"><label>📱</label><div class="device-screen device-mobile"><img id="prevMobile" src="" alt=""></div></div><div class="device-box"><label>💻</label><div class="device-screen device-pc"><img id="prevPC" src="" alt=""></div></div><div class="device-box"><label>📺</label><div class="device-screen device-tv"><img id="prevTV" src="" alt=""></div></div></div><div style="display:flex;gap:10px;margin-top:16px"><button type="button" class="btn-primary" id="btnConfirmCrop" style="flex:1">✓ Confirmar</button></div></div></div>
 
-    <template id="videoSourceItemTemplate"><div class="source-item-card"><div class="source-item-top"><span class="source-item-badge">Fonte</span><button type="button" class="source-remove-btn" data-action="remove-source">Remover</button></div><div class="source-grid"><div class="input-group"><label>Provedor</label><select class="source-type-select"><option value="">Selecione...</option><option value="mixdrop">MixDrop</option><option value="streamtape">StreamTape</option><option value="filemoon">FileMoon</option><option value="voe">VOE</option><option value="doodstream">DoodStream</option><option value="mp4upload">Mp4Upload</option><option value="okru">OK.ru</option><option value="drive">Google Drive</option><option value="yourupload">YourUpload</option><option value="youtube">YouTube</option><option value="vimeo">Vimeo</option><option value="direct">Direto (mp4/m3u8)</option><option value="other">Outro</option></select></div><div class="input-group"><label>Título</label><input type="text" class="source-title-input" placeholder="Ex: Dublado HD" autocomplete="off"></div></div><div class="input-group" style="margin-bottom:0"><label>Link</label><input type="text" class="source-url-input" placeholder="https://..." autocomplete="off"></div></div></template>
-    <template id="featuredCardTemplate"><article class="featured-card" tabindex="0"><div class="featured-card-bg"></div><div class="featured-card-overlay"></div><div class="featured-rank">#1</div><div class="featured-card-content"><div class="featured-card-topline"><span class="featured-card-badge">🔥 Destaque</span><span class="featured-card-watch">👁️ 0 views</span></div><h3 class="featured-card-title">Título</h3><div class="featured-card-meta"></div><p class="featured-card-desc">Descrição...</p><div class="featured-card-actions"><button type="button" class="featured-mini-btn play">▶ Assistir</button><button type="button" class="featured-mini-btn info">ℹ Detalhes</button></div></div></article></template>
-
+    <template id="videoSourceItemTemplate"><div class="source-item-card"><div class="source-item-top"><span class="source-item-badge">Fonte</span><button type="button" class="source-remove-btn" data-action="remove-source">Remover</button></div><div class="source-grid"><div class="input-group"><label>Provedor</label><select class="source-type-select"><option value="">Selecione...</option><option value="mixdrop">MixDrop</option><option value="streamtape">StreamTape</option><option value="filemoon">FileMoon</option><option value="voe">VOE</option><option value="doodstream">DoodStream</option><option value="mp4upload">Mp4Upload</option><option value="okru">OK.ru</option><option value="drive">Google Drive</option><option value="yourupload">YourUpload</option><option value="youtube">YouTube</option><option value="vimeo">Vimeo</option><option value="direct">Direto (mp4)</option><option value="other">Outro</option></select></div><div class="input-group"><label>Título</label><input type="text" class="source-title-input" placeholder="Ex: Dublado HD" autocomplete="off"></div></div><div class="input-group" style="margin-bottom:0"><label>Link</label><input type="text" class="source-url-input" placeholder="https://..." autocomplete="off"></div></div></template>
+    <template id="featuredCardTemplate"><article class="featured-card" tabindex="0"><div class="featured-card-bg"></div><div class="featured-card-overlay"></div><div class="featured-rank">#1</div><div class="featured-card-content"><div class="featured-card-topline"><span class="featured-card-badge">🔥</span><span class="featured-card-watch">👁️ 0</span></div><h3 class="featured-card-title">Título</h3><div class="featured-card-meta"></div><p class="featured-card-desc">Descrição...</p><div class="featured-card-actions"><button type="button" class="featured-mini-btn play">▶ Assistir</button><button type="button" class="featured-mini-btn info">ℹ Detalhes</button></div></div></article></template>
     <div id="msg" class="hidden"></div>
     <script type="module" src="app.js"></script>
 </body>
