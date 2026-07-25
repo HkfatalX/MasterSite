@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>MasterFlix - Filmes e Séries</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23141414'/%3E%3Cpath d='M20 78 L20 22 L35 22 L50 55 L65 22 L80 22 L80 78 L68 78 L68 42 L56 68 L44 68 L32 42 L32 78 Z' fill='%23e50914'/%3E%3C/svg%3E">
+    <meta name="theme-color" content="#e50914">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        :root{
+            --primary:#e50914;--primary-glow:rgba(229,9,20,.35);
+            --bg:#0a0a0a;--bg2:#141414;--card:#1a1a1a;--modal:#181818;
+            --text:#fff;--muted:#8c8c8c;--border:rgba(255,255,255,.08);
+            --green:#46d369;--warn:#ff9800;--info:#2196f3;
+            --r-sm:8px;--r-md:14px;--r-lg:20px;--r-xl:28px;
+            --shadow:0 8px 32px rgba(0,0,0,.6);--shadow-modal:0 25px 80px rgba(0,0,0,.9);
+            --fast:.2s cubic-bezier(.4,0,.2,1);--smooth:.35s cubic-bezier(.4,0,.2,1);
+            --safe-t:env(safe-area-inset-top,0px);--safe-b:env(safe-area-inset-bottom,0px);
+            --safe-l:env(safe-area-inset-left,0px);--safe-r:env(safe-area-inset-right,0px);
+        }
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-tap-highlight-color:transparent}
+        *:focus-visible{outline:3px solid var(--primary)!important;outline-offset:3px!important;z-index:100}
+        html,body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;width:100%;font-size:14px;touch-action:manipulation;scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+        body.no-scroll{overflow:hidden}
+        ::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:0 0}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:3px}
+
+        /* HEADER */
+        header{position:fixed;top:0;left:0;width:100%;height:68px;background:linear-gradient(180deg,rgba(0,0,0,.95) 0%,rgba(0,0,0,.6) 60%,transparent);display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:100;transition:all var(--smooth)}
+        header.scrolled{background:rgba(10,10,10,.98);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border);height:60px}
+        .header-left{display:flex;align-items:center;gap:14px;flex-shrink:0}
+        .menu-btn{width:42px;height:42px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--r-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;padding:11px 10px;transition:all var(--fast)}
+        .menu-btn:hover,.menu-btn:focus{background:var(--primary);border-color:var(--primary);transform:scale(1.05)}
+        .menu-btn .bar{width:100%;height:2px;background:#fff;border-radius:2px;transition:all .3s ease}
+        .menu-btn.active .bar:nth-child(1){transform:translateY(7px) rotate(45deg)}.menu-btn.active .bar:nth-child(2){opacity:0;transform:scaleX(0)}.menu-btn.active .bar:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+        .brand{font-size:22px;font-weight:900;color:var(--primary);cursor:pointer;text-transform:uppercase;display:flex;align-items:center;gap:8px;letter-spacing:-.5px;transition:all var(--fast)}.brand:hover{opacity:.85;transform:scale(.98)}.brand-logo{width:28px;height:28px}
+        .nav-actions{display:flex;align-items:center;gap:10px}
+
+        /* SEARCH */
+        .search-wrap{position:relative;display:flex;align-items:center}
+        .search-box{display:flex;align-items:center;background:rgba(255,255,255,.06);border:1.5px solid transparent;border-radius:24px;transition:all .4s cubic-bezier(.4,0,.2,1);overflow:hidden;width:42px;height:42px}
+        .search-box.open{width:320px;max-width:calc(100vw - 140px);border-color:rgba(255,255,255,.25);background:rgba(0,0,0,.85);backdrop-filter:blur(20px);box-shadow:0 4px 30px rgba(0,0,0,.5)}
+        .search-box.open:focus-within{border-color:var(--primary);box-shadow:0 0 0 4px var(--primary-glow),0 4px 30px rgba(0,0,0,.5)}
+        .s-icon{min-width:42px;height:42px;background:0 0;border:0;color:#fff;cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center;transition:all var(--fast)}.s-icon:hover{transform:scale(1.1)}
+        .s-input{flex:1;background:0 0;border:0;color:#fff;padding:0 4px;font-size:14px;font-weight:500;width:0;opacity:0;outline:0;transition:opacity .3s ease}.search-box.open .s-input{width:auto;opacity:1}
+        .s-clear{background:rgba(255,255,255,.1);border:0;color:#999;cursor:pointer;font-size:11px;display:none;width:26px;height:26px;border-radius:50%;margin-right:8px;transition:all var(--fast);align-items:center;justify-content:center}.s-clear:hover{background:rgba(255,255,255,.2);color:#fff}.search-box.open.has-text .s-clear{display:flex}
+        .search-drop{position:absolute;top:calc(100% + 10px);right:0;width:420px;max-width:calc(100vw - 24px);max-height:480px;overflow-y:auto;background:rgba(18,18,18,.98);backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,.1);border-radius:var(--r-md);display:none;z-index:200;box-shadow:var(--shadow-modal);animation:ddIn .25s ease}
+        @keyframes ddIn{from{opacity:0;transform:translateY(-8px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+        .search-drop.visible{display:block}
+        .sd-head{padding:14px 16px 10px;font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;border-bottom:1px solid rgba(255,255,255,.06)}
+        .sd-item{display:flex;align-items:center;gap:14px;padding:12px 16px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.04);transition:all var(--fast)}.sd-item:hover,.sd-item:focus{background:rgba(229,9,20,.1)}.sd-item:last-child{border-bottom:0}
+        .sd-thumb{width:48px;height:68px;border-radius:6px;object-fit:cover;background:#222;flex-shrink:0}
+        .sd-info{flex:1;min-width:0}.sd-title{font-size:14px;font-weight:700;line-height:1.3}.sd-title mark{background:0 0;color:var(--primary);font-weight:900}
+        .sd-meta{font-size:11px;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:6px}.sd-meta .badge{background:rgba(229,9,20,.15);color:var(--primary);padding:2px 8px;border-radius:4px;font-weight:800;font-size:9px;text-transform:uppercase}
+        .sd-empty{padding:40px 20px;text-align:center;color:var(--muted);font-size:13px}.sd-empty .ico{font-size:36px;margin-bottom:10px;display:block}
+
+        /* AVATAR */
+        .avatar-btn{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#ff6b35);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;cursor:pointer;overflow:hidden;border:2.5px solid rgba(255,255,255,.15);transition:all var(--fast)}.avatar-btn:hover,.avatar-btn:focus{border-color:var(--primary);transform:scale(1.08);box-shadow:0 0 0 4px var(--primary-glow)}.avatar-btn img{width:100%;height:100%;object-fit:cover}
+
+        /* SIDEBAR */
+        .sb-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(8px);z-index:998;opacity:0;visibility:hidden;transition:all var(--smooth)}.sb-overlay.on{opacity:1;visibility:visible}
+        .sidebar{position:fixed;top:0;left:0;width:290px;max-width:85vw;height:100vh;height:100dvh;background:linear-gradient(180deg,#161616,#0a0a0a);border-right:1px solid var(--border);z-index:999;transform:translateX(-100%);transition:transform .4s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}.sidebar.on{transform:translateX(0)}
+        .sb-header{padding:22px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+        .sb-brand{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:900;color:var(--primary);letter-spacing:-.3px}.sb-brand svg{width:30px;height:30px}
+        .sb-close{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#999;font-size:18px;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all var(--fast)}.sb-close:hover{background:var(--primary);color:#fff}
+        .sb-user{padding:20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.02)}
+        .sb-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#ff6b35);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;overflow:hidden;border:2px solid rgba(255,255,255,.15);flex-shrink:0}.sb-avatar img{width:100%;height:100%;object-fit:cover}
+        .sb-user-info{flex:1;min-width:0}.sb-user-name{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sb-user-email{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .sb-nav{flex:1;padding:14px 0;overflow-y:auto}
+        .sb-item{display:flex;align-items:center;gap:14px;padding:13px 22px;cursor:pointer;color:#ccc;font-size:14px;font-weight:600;border-left:3px solid transparent;transition:all var(--fast);position:relative}.sb-item:hover,.sb-item:focus{background:rgba(229,9,20,.08);color:#fff;border-left-color:var(--primary)}.sb-item.active{background:rgba(229,9,20,.12);color:#fff;border-left-color:var(--primary)}
+        .sb-item .icon{font-size:18px;width:26px;text-align:center}
+        .sb-divider{height:1px;background:var(--border);margin:8px 22px}
+        .sb-footer{padding:18px 22px;border-top:1px solid var(--border);font-size:10px;color:var(--muted);text-align:center;letter-spacing:.3px}
+
+        /* APP */
+        .app{padding-top:78px;padding-bottom:60px}
+
+        /* HERO */
+        .hero{position:relative;width:96%;max-width:1680px;margin:0 auto 36px;min-height:480px;height:58vh;max-height:680px;border-radius:var(--r-xl);overflow:hidden;background:var(--card)}
+        .hero-bg{position:absolute;inset:0;background-position:center top;background-size:cover;transition:background-image .6s ease}
+        .hero-ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,.15) 0%,rgba(10,10,10,.4) 50%,rgba(10,10,10,.92) 85%,var(--bg) 100%)}
+        .hero-side{position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,10,10,.7) 0%,transparent 50%)}
+        .hero-ct{position:absolute;bottom:0;left:0;right:0;padding:36px;z-index:3;max-width:700px}
+        .hero-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--primary),#ff4444);font-size:10px;font-weight:800;padding:6px 14px;border-radius:6px;margin-bottom:14px;text-transform:uppercase;letter-spacing:1px}
+        .hero-title{font-size:clamp(28px,5.5vw,56px);font-weight:900;margin-bottom:12px;line-height:1.05;letter-spacing:-1px;text-shadow:0 4px 20px rgba(0,0,0,.95)}
+        .hero-meta{display:flex;gap:10px;font-size:13px;color:#bbb;margin-bottom:12px;flex-wrap:wrap;align-items:center}.hero-meta .dot{color:var(--primary);font-weight:800}
+        .hero-desc{max-width:620px;color:#d0d0d0;font-size:14px;line-height:1.7;margin-bottom:22px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+        .hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+
+        /* CATEGORIES */
+        .cats{display:flex;gap:10px;overflow-x:auto;padding:0 2% 22px 2%;scrollbar-width:none;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}.cats::-webkit-scrollbar{display:none}
+        .cat{padding:10px 20px;border-radius:24px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.08);font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;scroll-snap-align:start;transition:all var(--fast)}.cat:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)}.cat.on{background:var(--primary);border-color:var(--primary);box-shadow:0 4px 16px var(--primary-glow)}
+
+        /* SECTIONS */
+        .section{margin-bottom:44px;padding-left:2%}.section-title{font-size:22px;font-weight:800;margin-bottom:18px;display:flex;align-items:center;gap:10px;letter-spacing:-.3px}
+        .carousel{display:flex;gap:14px;overflow-x:auto;padding:12px 2% 16px 0;scrollbar-width:none;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}.carousel::-webkit-scrollbar{display:none}
+
+        /* MEDIA CARD */
+        .mc{flex:0 0 152px;height:225px;border-radius:var(--r-md);position:relative;overflow:hidden;background:var(--card);cursor:pointer;border:1.5px solid rgba(255,255,255,.04);transition:all var(--smooth);scroll-snap-align:start}
+        .mc:hover,.mc:focus{transform:scale(1.08);z-index:10;box-shadow:0 20px 40px rgba(0,0,0,.9);border-color:rgba(229,9,20,.5)}.mc:hover .mc-ov{opacity:1}
+        .mc-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease}.mc:hover .mc-img{transform:scale(1.05)}
+        .mc-fb{width:100%;height:100%;background:linear-gradient(135deg,#1a1a1a,#2a2a2a);display:flex;align-items:center;justify-content:center;font-size:32px}
+        .mc-ov{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.98) 100%);padding:14px;display:flex;flex-direction:column;justify-content:flex-end;opacity:.85;transition:opacity var(--fast)}
+        .mc-tag{font-size:9px;font-weight:800;color:var(--primary);text-transform:uppercase;margin-bottom:3px;letter-spacing:.5px}.mc-name{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+        /* CONTINUE */
+        .cc{flex:0 0 260px;height:155px;border-radius:var(--r-md);position:relative;overflow:hidden;background:var(--card);cursor:pointer;border:1.5px solid rgba(255,255,255,.06);transition:all var(--smooth);scroll-snap-align:start}
+        .cc:hover,.cc:focus{transform:scale(1.04);z-index:10;border-color:rgba(255,202,40,.3);box-shadow:0 10px 30px rgba(0,0,0,.6)}.cc img{width:100%;height:100%;object-fit:cover}
+        .cc-info{position:absolute;inset:0;background:linear-gradient(180deg,transparent 15%,rgba(0,0,0,.97) 100%);padding:12px;display:flex;flex-direction:column;justify-content:flex-end}
+        .cc-dur{font-size:10px;color:#ffca28;font-weight:700;margin-top:3px}
+        .cc-rm{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.8);border:1px solid rgba(255,255,255,.15);color:#fff;cursor:pointer;opacity:0;transition:opacity var(--fast);z-index:6;font-size:12px;display:flex;align-items:center;justify-content:center}.cc:hover .cc-rm{opacity:1}
+        .cc-ep{font-size:9px;font-weight:800;color:var(--primary);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .cc-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:rgba(229,9,20,.9);display:flex;align-items:center;justify-content:center;font-size:18px;opacity:0;transition:all var(--fast)}.cc:hover .cc-play{opacity:1}
+
+        /* BUTTONS */
+        .btn-p{padding:13px 28px;border:0;border-radius:var(--r-sm);background:linear-gradient(135deg,var(--primary),#c50710);color:#fff;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:all var(--fast);box-shadow:0 4px 16px var(--primary-glow)}.btn-p:hover,.btn-p:focus{transform:translateY(-2px);box-shadow:0 8px 25px var(--primary-glow)}.btn-p:active{transform:translateY(0)}.btn-p:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+        .btn-o{padding:13px 28px;border:1.5px solid rgba(255,255,255,.3);border-radius:var(--r-sm);background:rgba(255,255,255,.08);backdrop-filter:blur(10px);color:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:all var(--fast)}.btn-o:hover,.btn-o:focus{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.5)}.btn-o:disabled{opacity:.5;cursor:not-allowed}
+        .btn-s{padding:10px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#fff;font-size:12px;font-weight:600;cursor:pointer;transition:all var(--fast)}.btn-s:hover{background:rgba(255,255,255,.12)}
+        .btn-d{padding:10px 16px;border-radius:8px;border:1px solid #c62828;background:rgba(198,40,40,.15);color:#ff5252;font-size:12px;font-weight:600;cursor:pointer;transition:all var(--fast)}.btn-d:hover{background:rgba(198,40,40,.3)}
+
+        /* FORMS */
+        .fu-box{display:block;border:2px dashed rgba(255,255,255,.15);border-radius:var(--r-sm);padding:16px;text-align:center;background:rgba(0,0,0,.3);cursor:pointer;margin-top:6px;transition:all var(--fast)}.fu-box:hover{border-color:var(--primary);background:rgba(229,9,20,.05)}
+        .fu-label{font-size:11px;font-weight:700;color:#aaa;pointer-events:none}.fu-prev{width:100%;max-height:160px;object-fit:contain;background:#000;border-radius:6px;margin-top:8px}
+        .ig{margin-bottom:16px;text-align:left}.ig label{display:block;font-size:11px;font-weight:700;color:#888;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+        .ig input,.ig select,.ig textarea{width:100%;padding:12px 16px;border-radius:var(--r-sm);border:1.5px solid #2a2a2a;background:#0f0f0f;color:#fff;font-size:14px;transition:all var(--fast)}
+        .ig input:focus,.ig select:focus,.ig textarea:focus{border-color:var(--primary);box-shadow:0 0 0 4px var(--primary-glow);outline:0}
+        .iw-icon{position:relative}.iw-icon input{padding-right:44px}.icon-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:0 0;border:0;color:#666;cursor:pointer;padding:6px;font-size:16px;transition:color var(--fast)}.icon-toggle:hover{color:#fff}
+        .genre-box{background:#0f0f0f;border:1.5px solid #2a2a2a;border-radius:var(--r-sm);padding:12px;display:flex;flex-wrap:wrap;gap:8px;max-height:160px;overflow-y:auto}
+        .g-tag{padding:7px 16px;background:#1e1e1e;border:1px solid #333;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;color:#ccc;transition:all var(--fast)}.g-tag:hover{border-color:var(--primary)}.g-tag.sel{background:var(--primary);border-color:var(--primary);color:#fff}.g-tag.sel::before{content:"✓ "}
+        .g-count{font-size:10px;color:var(--primary);margin-top:6px;font-weight:700}
+
+        /* CREATOR TABS */
+        .cr-tabs{display:flex;gap:0;background:#0d0d0d;border-radius:var(--r-md);padding:4px;margin-bottom:20px;border:1px solid var(--border)}
+        .cr-tab{flex:1;padding:11px 12px;text-align:center;font-size:12px;font-weight:800;color:#888;cursor:pointer;border-radius:10px;transition:all var(--fast);text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:6px}
+        .cr-tab.on{background:var(--primary);color:#fff;box-shadow:0 4px 12px var(--primary-glow)}.cr-tab:not(.on):hover{background:rgba(255,255,255,.04);color:#fff}
+        .cr-tc{display:none}.cr-tc.on{display:block;animation:tabIn .3s ease}@keyframes tabIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+        /* SEASON/EPISODE ACCORDION */
+        .s-acc{background:#141414;border:1px solid #262626;border-radius:var(--r-md);margin-bottom:12px;overflow:hidden;transition:border-color var(--fast)}.s-acc.open{border-color:rgba(229,9,20,.4)}
+        .s-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;background:linear-gradient(135deg,#1a1a1a,#141414);transition:background var(--fast);user-select:none;gap:10px}.s-head:hover{background:linear-gradient(135deg,#1f1f1f,#181818)}
+        .s-head-left{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+        .s-toggle{width:26px;height:26px;border-radius:8px;background:rgba(229,9,20,.15);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:14px;transition:transform var(--fast);flex-shrink:0}.s-acc.open .s-toggle{transform:rotate(90deg)}
+        .s-title{font-size:14px;font-weight:800;color:#fff}.s-sub{font-size:10px;color:#888;margin-top:2px}
+        .s-actions{display:flex;gap:6px;align-items:center;flex-shrink:0}
+        .s-mini{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#ccc;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all var(--fast)}.s-mini:hover{background:rgba(255,255,255,.12);color:#fff}.s-mini.danger:hover{background:rgba(198,40,40,.3);color:#ff6b6b;border-color:#c62828}
+        .s-body{display:none;padding:16px;border-top:1px solid #262626;background:#0f0f0f}.s-acc.open .s-body{display:block}
+        .e-acc{background:#181818;border:1px solid #262626;border-radius:var(--r-sm);margin-bottom:10px;overflow:hidden;transition:border-color var(--fast)}.e-acc.open{border-color:rgba(229,9,20,.35)}
+        .e-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer;user-select:none;gap:10px;transition:background var(--fast)}.e-head:hover{background:rgba(255,255,255,.03)}
+        .e-head-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+        .ep-num{width:32px;height:32px;border-radius:8px;background:rgba(229,9,20,.15);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0}
+        .ep-mini{flex:1;min-width:0}.ep-mini-t{font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .ep-mini-s{font-size:10px;color:#888;margin-top:2px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.ep-mini-s .ok{color:var(--green);font-weight:700}.ep-mini-s .warn{color:var(--warn);font-weight:700}
+        .e-actions{display:flex;gap:5px;align-items:center;flex-shrink:0}
+        .e-body{display:none;padding:14px;border-top:1px solid #262626;background:#101010}.e-acc.open .e-body{display:block}
+        .e-acc.open .e-toggle{transform:rotate(90deg)}.e-toggle{color:#888;font-size:12px;transition:transform var(--fast);width:20px;text-align:center}
+        .add-block{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;width:100%;background:rgba(229,9,20,.06);border:2px dashed rgba(229,9,20,.3);color:var(--primary);font-size:13px;font-weight:800;border-radius:var(--r-sm);cursor:pointer;transition:all var(--fast);text-transform:uppercase;letter-spacing:.5px}.add-block:hover{background:rgba(229,9,20,.12);border-color:var(--primary);transform:translateY(-1px)}
+        .empty-state{padding:24px 16px;text-align:center;color:#666;font-size:12px;background:rgba(255,255,255,.02);border:1px dashed rgba(255,255,255,.08);border-radius:var(--r-sm);margin-bottom:12px}.empty-state .e-ico{font-size:32px;display:block;margin-bottom:8px;opacity:.5}
+
+        /* SOURCE BUILDER */
+        .src-list{display:flex;flex-direction:column;gap:10px}.src-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:var(--r-sm);padding:12px}
+        .src-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.src-badge{font-size:10px;font-weight:800;color:var(--primary);text-transform:uppercase;letter-spacing:1px}
+        .src-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+        .src-rm{padding:7px 11px;border-radius:8px;border:1px solid #c62828;background:rgba(198,40,40,.15);color:#ff6b6b;font-size:11px;font-weight:700;cursor:pointer;transition:all var(--fast)}.src-rm:hover{background:rgba(198,40,40,.3)}
+        .src-empty{padding:12px;border-radius:8px;background:rgba(255,255,255,.02);border:1px dashed rgba(255,255,255,.12);color:#777;font-size:11px;text-align:center}
+        .src-tag{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(229,9,20,.12);border:1px solid rgba(229,9,20,.22);border-radius:999px;font-size:10px;font-weight:800;color:var(--primary);margin-top:6px}
+
+        /* SAVE BAR */
+        .save-bar{position:sticky;bottom:-24px;background:linear-gradient(180deg,transparent,var(--modal) 25%);padding:20px 24px;margin:20px -24px -24px;z-index:10;border-top:1px solid var(--border)}.save-bar-actions{display:flex;gap:10px}
+        .autosave{font-size:10px;text-align:center;padding:6px;margin-top:8px;background:rgba(255,152,0,.06);border:1px solid rgba(255,152,0,.15);border-radius:6px;color:#ffb74d;font-weight:700}
+
+        /* MODALS */
+        .modal{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(16px) saturate(150%);-webkit-backdrop-filter:blur(16px) saturate(150%);display:flex;justify-content:center;align-items:center;z-index:1000;padding:12px;overflow-y:auto}
+        .m-body{background:var(--modal);border:1px solid rgba(255,255,255,.08);border-radius:var(--r-lg);width:100%;max-width:580px;max-height:92vh;overflow-y:auto;overscroll-behavior:contain;padding:24px;position:relative;margin:auto;box-shadow:var(--shadow-modal);animation:mIn .3s ease}
+        @keyframes mIn{from{opacity:0;transform:scale(.95) translateY(15px)}to{opacity:1;transform:scale(1) translateY(0)}}
+        .m-close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.1);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;z-index:10;display:flex;align-items:center;justify-content:center;transition:all var(--fast)}.m-close:hover{background:var(--primary);border-color:var(--primary)}
+
+        /* DETAILS */
+        .det-body{padding:0;overflow:hidden;max-width:720px}
+        .det-bg{position:relative;width:100%;height:280px;background:#0f0f0f center/cover}.det-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 0%,var(--modal) 100%)}
+        .det-ct{padding:0 24px 24px;margin-top:-70px;position:relative;z-index:2;max-height:55vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+        .det-poster{width:115px;height:170px;border-radius:var(--r-md);object-fit:cover;border:3px solid var(--modal);background:#0a0a0a;display:block;margin-bottom:14px;box-shadow:0 8px 24px rgba(0,0,0,.6)}
+        .s-tab-wrap{display:flex;gap:8px;overflow-x:auto;margin-bottom:18px;padding:4px 0 8px;scrollbar-width:none;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}.s-tab-wrap::-webkit-scrollbar{display:none}
+        .s-tab{padding:10px 20px;border-radius:24px;background:#1e1e1e;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;border:1.5px solid #333;scroll-snap-align:start;transition:all var(--fast);flex-shrink:0}.s-tab:hover{border-color:var(--primary)}.s-tab.on{background:var(--primary);border-color:var(--primary)}
+        .ep-scroll{max-height:45vh;overflow-y:auto;padding-right:4px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.1) transparent}.ep-scroll::-webkit-scrollbar{width:4px}.ep-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px}
+        .ep-card{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.03);padding:14px;border-radius:var(--r-sm);cursor:pointer;margin-bottom:8px;border:1.5px solid rgba(255,255,255,.05);transition:all var(--fast)}.ep-card:hover,.ep-card:focus{background:rgba(229,9,20,.08);border-color:rgba(229,9,20,.25);transform:translateX(4px)}
+        .ep-thumb{width:120px;height:68px;border-radius:8px;overflow:hidden;background:#000;flex-shrink:0;position:relative}.ep-thumb img{width:100%;height:100%;object-fit:cover}
+        .ep-thumb .ep-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.4);opacity:0;transition:opacity var(--fast)}.ep-card:hover .ep-play{opacity:1}.ep-play span{font-size:22px}
+        .ep-resume{display:inline-flex;gap:4px;background:rgba(255,202,40,.12);border:1px solid rgba(255,202,40,.25);padding:3px 10px;border-radius:12px;font-size:9px;font-weight:800;color:#ffca28;margin-top:4px}
+
+        /* ═══════════════════════════════════════════════════════ */
+        /* PLAYER — LIMPO, SEM BUGS, VIDEO PREENCHE A TELA       */
+        /* ═══════════════════════════════════════════════════════ */
+        #playerModal{padding:0!important;background:#000!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;z-index:3000}
+        .p-box{position:fixed!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;background:#000;border-radius:0!important;border:0!important;margin:0!important;padding:0!important;overflow:hidden!important}
+
+        /* video container */
+        .p-video{position:absolute;inset:0;width:100%;height:100%;background:#000;overflow:hidden;z-index:1}
+        .p-video iframe,.p-video video{position:absolute;top:0;left:0;width:100%!important;height:100%!important;border:0!important;display:block!important;background:#000}
+
+        /* loading */
+        .p-load{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#000;z-index:5;flex-direction:column;gap:16px}
+        .p-load.off{display:none}
+        .p-spin{width:52px;height:52px;border:3px solid rgba(255,255,255,.08);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+        .p-load-text{font-size:14px;color:#ccc;font-weight:700;text-align:center}.p-load-sub{font-size:11px;color:#666;margin-top:4px;text-align:center}
+
+        /* top bar */
+        .p-top{position:absolute;top:0;left:0;right:0;padding:calc(16px + var(--safe-t)) calc(20px + var(--safe-r)) 50px calc(20px + var(--safe-l));background:linear-gradient(180deg,rgba(0,0,0,.85) 0%,rgba(0,0,0,.35) 65%,transparent);z-index:20;display:flex;align-items:center;gap:14px;transition:opacity .4s ease,visibility .4s ease;pointer-events:none}
+        .p-top>*{pointer-events:auto}
+        .p-top.hide{opacity:0;visibility:hidden}
+        .p-btn{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.1);border:0;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;transition:all var(--fast);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}.p-btn:hover,.p-btn:focus{background:var(--primary);transform:scale(1.1)}
+        .p-title-area{flex:1;min-width:0;overflow:hidden}
+        .p-title{font-size:16px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 2px 10px rgba(0,0,0,.9);line-height:1.3}
+        .p-sub{font-size:12px;color:#aaa;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+        .p-provider{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;background:rgba(229,9,20,.2);border:1px solid rgba(229,9,20,.45);border-radius:10px;font-size:10px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;margin-top:4px}
+        .p-actions{display:flex;gap:8px;flex-shrink:0}
+
+        /* error */
+        .p-err{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.96);z-index:30;padding:20px}.p-err.off{display:none}
+        .p-err-card{max-width:480px;text-align:center}.p-err-icon{font-size:52px;margin-bottom:14px}.p-err-title{font-size:20px;font-weight:900;margin-bottom:8px}.p-err-desc{font-size:13px;color:#aaa;line-height:1.6;margin-bottom:20px}.p-err-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+        /* source selector */
+        .p-src{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:25;padding:20px}.p-src.off{display:none}
+        .p-src-card{width:min(92vw,520px);max-height:85vh;overflow-y:auto;background:rgba(15,15,15,.98);border:1px solid rgba(255,255,255,.1);border-radius:var(--r-lg);padding:22px;box-shadow:var(--shadow-modal)}
+        .p-src-title{font-size:20px;font-weight:900;margin-bottom:6px;letter-spacing:-.4px}.p-src-sub{font-size:12px;color:#aaa;line-height:1.5}
+        .p-src-list{display:flex;flex-direction:column;gap:8px;margin:18px 0}
+        .p-src-btn{width:100%;text-align:left;padding:14px 16px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#fff;cursor:pointer;transition:all var(--fast)}.p-src-btn:hover,.p-src-btn:focus{background:rgba(229,9,20,.12);border-color:rgba(229,9,20,.4);transform:translateY(-1px)}.p-src-btn.cur{background:rgba(229,9,20,.18);border-color:rgba(229,9,20,.5)}
+        .p-src-btn .st{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}.p-src-btn .sn{font-size:14px;font-weight:800}.p-src-btn .sp{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;padding:3px 9px;border-radius:8px;background:rgba(255,255,255,.06)}.p-src-btn .su{font-size:11px;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .p-src-btn .cur-tag{display:inline-block;margin-left:6px;padding:1px 8px;background:rgba(70,211,105,.2);border:1px solid rgba(70,211,105,.4);border-radius:6px;font-size:9px;color:var(--green);font-weight:800}
+
+        /* ADMIN */
+        .admin-item{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:14px 18px;border-radius:var(--r-sm);margin-bottom:8px;transition:all var(--fast)}.admin-item:hover{background:rgba(255,255,255,.06)}
+
+        /* PROFILE */
+        .pf-header{position:relative;border-radius:var(--r-md);background:#222;height:150px;margin-bottom:55px;border:1px solid rgba(255,255,255,.08);overflow:hidden}.pf-banner{width:100%;height:100%;object-fit:cover;display:block}
+        .pf-avatar{position:absolute;bottom:-38px;left:50%;transform:translateX(-50%);width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#ff6b35);border:4px solid var(--modal);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;z-index:2}.pf-avatar img{width:100%;height:100%;object-fit:cover}
+        .sec-box{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:var(--r-md);padding:18px;margin-bottom:16px}.sec-title{font-size:13px;font-weight:800;color:var(--primary);display:flex;align-items:center;gap:8px;margin-bottom:14px;text-transform:uppercase;letter-spacing:.5px}
+        .sec-btn{width:100%;text-align:left;display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:var(--r-sm);cursor:pointer;color:#fff;transition:all var(--fast);margin-bottom:6px}.sec-btn:hover,.sec-btn:focus{background:rgba(229,9,20,.08);border-color:rgba(229,9,20,.25)}
+        .sec-btn .sq-i{width:32px;height:32px;border-radius:8px;background:rgba(229,9,20,.15);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}.sec-btn .sq-info{flex:1;min-width:0}.sec-btn .sq-t{font-size:13px;font-weight:700}.sec-btn .sq-d{font-size:10px;color:#888;margin-top:2px}.sec-btn .sq-a{color:#666;font-size:16px}
+
+        /* SUGGESTIONS */
+        .sug-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:var(--r-sm);padding:16px;margin-bottom:10px}
+        .sg-h{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.sg-u{font-size:12px;font-weight:800;color:var(--primary);display:flex;gap:6px;flex-wrap:wrap}.sg-e{font-size:9px;color:#666;word-break:break-all}.sg-d{font-size:9px;color:#555}.sg-t{font-size:13px;color:#ddd;margin-top:10px;line-height:1.6;word-break:break-word}
+        .sug-chk{width:20px;height:20px;accent-color:var(--primary);cursor:pointer}
+
+        /* STORAGE */
+        .sto-outer{width:100%;height:16px;background:#1a1a1a;border-radius:8px;overflow:hidden;border:1px solid #2a2a2a}.sto-inner{height:100%;border-radius:8px;transition:width .8s cubic-bezier(.4,0,.2,1)}
+        .sto-info{display:flex;justify-content:space-between;font-size:11px;color:#888;margin-top:8px;font-weight:700}
+        .sto-det{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px}.sto-l{color:#888}.sto-v{color:#fff;font-weight:700}
+        .sto-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:var(--r-sm);padding:16px;text-align:center;flex:1}.sto-card .si{font-size:28px;margin-bottom:6px;display:block}.sto-card .sc{font-size:22px;font-weight:900;color:var(--primary)}.sto-card .sl{font-size:10px;color:#888;margin-top:2px}
+
+        /* CROPPER */
+        #cropperModal{z-index:3500!important}.d-prev{display:flex;gap:8px;justify-content:space-between;margin-top:14px}
+        .d-box{background:#111;border:1px solid #333;border-radius:8px;padding:6px;text-align:center;flex:1}.d-box label{font-size:9px;font-weight:800;color:#aaa;margin-bottom:4px;display:block}
+        .d-scr{overflow:hidden;border:1px solid #444;margin:0 auto;background:#000}.d-mob{width:45px;height:75px;border-radius:4px}.d-pc{width:90px;height:55px;border-radius:4px}.d-tv{width:110px;height:60px;border-radius:4px;border:2px solid #555}.d-scr img{width:100%;height:100%;object-fit:cover}
+        .cropper-container{max-width:100%!important;height:280px!important}
+
+        /* AUTH */
+        .auth-body{max-width:440px;text-align:center;background:linear-gradient(180deg,#1a1a1a,#0f0f0f)}
+        .auth-div{height:1px;background:var(--border);margin:20px 0;position:relative}.auth-div::after{content:'ou';position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:#0f0f0f;padding:0 12px;font-size:10px;color:#666;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+        .auth-forgot{display:block;text-align:right;font-size:12px;color:#aaa;cursor:pointer;font-weight:700;margin-top:-6px;margin-bottom:14px;transition:color var(--fast)}.auth-forgot:hover{color:var(--primary)}
+        .auth-back{display:inline-flex;align-items:center;gap:6px;color:#888;font-size:12px;cursor:pointer;font-weight:700;margin-top:12px;padding:8px 14px;border-radius:8px;transition:all var(--fast)}.auth-back:hover{color:#fff;background:rgba(255,255,255,.05)}
+        .success-anim{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--green),#2e7d32);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:36px;box-shadow:0 8px 32px rgba(70,211,105,.35);animation:sPop .5s cubic-bezier(.4,0,.2,1)}@keyframes sPop{0%{transform:scale(0);opacity:0}70%{transform:scale(1.15);opacity:1}100%{transform:scale(1)}}
+        .email-box{background:rgba(33,150,243,.06);border:1px solid rgba(33,150,243,.2);border-radius:var(--r-sm);padding:12px 14px;font-size:12px;color:#90caf9;margin-bottom:14px;display:flex;align-items:center;gap:10px}.email-box .e-i{font-size:22px}.email-box .e-c{flex:1;min-width:0}.email-box .e-l{font-size:10px;color:#64b5f6;text-transform:uppercase;font-weight:700;letter-spacing:.5px}.email-box .e-a{font-weight:800;color:#fff;word-break:break-all}
+        .auth-sf{display:none}.auth-body.signup .auth-sf{display:block}.auth-body.signup #btnForgot{display:none}
+
+        /* TOAST */
+        .hidden{display:none!important}
+        #msg{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:14px 28px;border-radius:14px;font-size:13px;font-weight:700;z-index:4000;max-width:420px;text-align:center;backdrop-filter:blur(10px);animation:tIn .3s ease;border:1px solid rgba(255,255,255,.1)}@keyframes tIn{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+        .msg-ok{background:rgba(46,125,50,.92);color:#fff}.msg-err{background:rgba(198,40,40,.92);color:#fff}.msg-info{background:rgba(33,150,243,.92);color:#fff}
+
+        /* RESPONSIVE */
+        @media(min-width:1920px){.mc{flex:0 0 230px;height:340px}.cc{flex:0 0 340px;height:200px}.hero{height:65vh;min-height:600px}.hero-title{font-size:64px}.hero-desc{font-size:16px;max-width:700px}.hero-ct{padding:48px}.section-title{font-size:28px}.s-tab{padding:14px 28px;font-size:16px}.ep-card{padding:18px;gap:18px}.ep-thumb{width:180px;height:100px}.det-ct{max-height:60vh;padding:0 36px 36px}.det-bg{height:380px}.sidebar{width:340px}.sb-item{padding:16px 24px;font-size:16px}.btn-p,.btn-o{padding:16px 36px;font-size:16px}.p-btn{width:52px;height:52px;font-size:22px}.p-title{font-size:20px}.sto-card .sc{font-size:28px}}
+        @media(min-width:1200px) and (max-width:1919px){.mc{flex:0 0 180px;height:268px}.cc{flex:0 0 300px;height:175px}}
+        @media(min-width:768px) and (max-width:1199px){.mc{flex:0 0 160px;height:240px}}
+        @media(max-width:480px){header{padding:0 12px;height:58px}header.scrolled{height:52px}.brand{font-size:16px}.brand-logo{width:24px;height:24px}.search-box.open{width:200px}.search-drop{width:calc(100vw - 24px);right:-40px}.hero{min-height:380px;height:50vh;border-radius:var(--r-lg)}.hero-ct{padding:24px}.btn-p,.btn-o{padding:11px 20px;font-size:13px}.det-bg{height:200px}.det-ct{max-height:50vh;padding:0 18px 18px}.det-poster{width:90px;height:135px}.mc{flex:0 0 130px;height:195px}.cc{flex:0 0 210px;height:130px}.ep-thumb{width:100px;height:58px}.m-body{padding:20px;border-radius:var(--r-md)}.app{padding-top:66px}.src-grid{grid-template-columns:1fr}.p-top{padding:calc(12px + var(--safe-t)) calc(14px + var(--safe-r)) 40px calc(14px + var(--safe-l));gap:10px}.p-btn{width:38px;height:38px;font-size:16px}.p-title{font-size:14px}.p-sub{font-size:11px}.cr-tab{font-size:10px;padding:9px 8px;gap:4px}.save-bar{margin:20px -20px -20px;padding:20px}}
+        @media(max-width:360px){.hero{min-height:320px}.mc{flex:0 0 115px;height:172px}}
+        @media(max-height:500px) and (orientation:landscape){.p-top{padding:calc(8px + var(--safe-t)) calc(16px + var(--safe-r)) 24px calc(16px + var(--safe-l))}.p-btn{width:36px;height:36px;font-size:15px}.p-title{font-size:13px}.p-sub{font-size:10px}}
+
+        /* TV */
+        body.tv *:focus{outline:3px solid var(--primary)!important;outline-offset:4px!important;box-shadow:0 0 0 8px var(--primary-glow)!important}body.tv .mc:focus,body.tv .cc:focus,body.tv .ep-card:focus,body.tv .s-tab:focus{transform:scale(1.08);z-index:20}body.tv .sb-item:focus{background:rgba(229,9,20,.2)}body.tv .p-src-btn:focus{transform:scale(1.02)}
+    </style>
+</head>
+<body>
+    <div class="sb-overlay" id="sbOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sb-header">
+            <div class="sb-brand"><svg viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="#141414"/><path d="M20 78 L20 22 L35 22 L50 55 L65 22 L80 22 L80 78 L68 78 L68 42 L56 68 L44 68 L32 42 L32 78 Z" fill="var(--primary)"/></svg>MASTERFLIX</div>
+            <button type="button" class="sb-close" id="sbClose">✕</button>
+        </div>
+        <div class="sb-user">
+            <div class="sb-avatar" id="sbAvatar"><span id="sbAvatarText">U</span></div>
+            <div class="sb-user-info"><div class="sb-user-name" id="sbName">Usuário</div><div class="sb-user-email" id="sbEmail">email@exemplo.com</div></div>
+        </div>
+        <nav class="sb-nav">
+            <div class="sb-item active" data-nav="home" tabindex="0"><span class="icon">🏠</span> Início</div>
+            <div class="sb-item" data-nav="movies" tabindex="0"><span class="icon">🎬</span> Filmes</div>
+            <div class="sb-item" data-nav="series" tabindex="0"><span class="icon">📺</span> Séries</div>
+            <div class="sb-item" data-nav="continue" tabindex="0"><span class="icon">⏳</span> Continuar</div>
+            <div class="sb-divider"></div>
+            <div class="sb-item" data-nav="suggestions" tabindex="0"><span class="icon">💡</span> Sugestões</div>
+            <div class="sb-item" data-nav="profile" tabindex="0"><span class="icon">👤</span> Perfil</div>
+            <div class="sb-item hidden" id="navAdmin" data-nav="admin" tabindex="0"><span class="icon">⚙️</span> Gerenciar</div>
+            <div class="sb-item hidden" id="navCreator" data-nav="creator" tabindex="0"><span class="icon">➕</span> Publicar</div>
+            <div class="sb-item hidden" id="navSugAdmin" data-nav="sugAdmin" tabindex="0"><span class="icon">📬</span> Sugestões/Bugs</div>
+            <div class="sb-item hidden" id="navStorage" data-nav="storage" tabindex="0"><span class="icon">💾</span> Armazenamento</div>
+            <div class="sb-divider"></div>
+            <div class="sb-item" data-nav="logout" tabindex="0" style="color:#ff5252"><span class="icon">🚪</span> Sair</div>
+        </nav>
+        <div class="sb-footer">MasterFlix © 2026 — v9.0</div>
+    </aside>
+
+    <header id="header">
+        <div class="header-left">
+            <button type="button" class="menu-btn" id="menuBtn"><span class="bar"></span><span class="bar"></span><span class="bar"></span></button>
+            <div class="brand" id="brandBtn"><svg class="brand-logo" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="#141414"/><path d="M20 78 L20 22 L35 22 L50 55 L65 22 L80 22 L80 78 L68 78 L68 42 L56 68 L44 68 L32 42 L32 78 Z" fill="var(--primary)"/></svg>MASTERFLIX</div>
+        </div>
+        <div class="nav-actions">
+            <div class="search-wrap" id="searchWrap">
+                <div class="search-box" id="searchBox">
+                    <button type="button" class="s-icon" id="sBtn">🔍</button>
+                    <input type="text" class="s-input" id="sInput" placeholder="Pesquisar..." autocomplete="off">
+                    <button type="button" class="s-clear" id="sClear">✕</button>
+                </div>
+                <div class="search-drop" id="sDrop"></div>
+            </div>
+            <div class="avatar-btn" id="avatarBtn" tabindex="0"><span id="avatarText">U</span><img id="avatarImg" class="hidden" src="" alt="Avatar"></div>
+        </div>
+    </header>
+
+    <div id="authModal" class="modal hidden">
+        <div class="m-body auth-body" id="authBody">
+            <div style="margin-bottom:24px">
+                <div class="brand" style="font-size:28px;justify-content:center;margin-bottom:8px"><svg class="brand-logo" style="width:36px;height:36px" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="#141414"/><path d="M20 78 L20 22 L35 22 L50 55 L65 22 L80 22 L80 78 L68 78 L68 42 L56 68 L44 68 L32 42 L32 78 Z" fill="var(--primary)"/></svg>MASTERFLIX</div>
+                <p style="color:#888;font-size:13px" id="authSub">Entre na sua conta para continuar</p>
+            </div>
+            <form id="authForm" autocomplete="off">
+                <input type="text" style="display:none" autocomplete="username"><input type="password" style="display:none" autocomplete="new-password">
+                <div class="ig auth-sf"><label for="authName">Nome de exibição</label><input type="text" id="authName" placeholder="Como quer ser chamado?" autocomplete="off" maxlength="30"></div>
+                <div class="ig"><label for="authEmail">E-mail</label><input type="email" id="authEmail" autocomplete="off" required></div>
+                <div class="ig"><label for="authPass">Senha</label><div class="iw-icon"><input type="password" id="authPass" autocomplete="new-password" required minlength="6"><button type="button" class="icon-toggle" id="togglePass">👁️</button></div></div>
+                <a id="btnForgot" class="auth-forgot">Esqueci a senha</a>
+                <button type="submit" class="btn-p" id="authSubmit" style="width:100%;margin-top:4px">Entrar na Conta</button>
+            </form>
+            <div class="auth-div"></div>
+            <p style="font-size:13px;color:#999;cursor:pointer;font-weight:600" id="toggleAuth">Não tem conta? <span style="color:var(--primary)">Crie agora</span></p>
+        </div>
+    </div>
+
+    <div id="forgotModal" class="modal hidden">
+        <div class="m-body auth-body">
+            <button type="button" class="m-close" id="closeForgot">&times;</button>
+            <div style="font-size:52px;margin-bottom:10px">🔐</div>
+            <h2 style="font-size:22px;font-weight:900;margin-bottom:6px">Recuperar Senha</h2>
+            <p style="color:#888;font-size:13px;margin-bottom:22px;line-height:1.6">Digite seu e-mail e enviaremos um link.</p>
+            <form id="forgotForm" autocomplete="off">
+                <div class="ig"><label for="forgotEmail">E-mail cadastrado</label><input type="email" id="forgotEmail" placeholder="seu@email.com" autocomplete="off" required></div>
+                <button type="submit" class="btn-p" id="sendReset" style="width:100%;margin-top:6px">📨 Enviar Link</button>
+            </form>
+            <a class="auth-back" id="backLogin">← Voltar para o login</a>
+        </div>
+    </div>
+
+    <div id="forgotOkModal" class="modal hidden">
+        <div class="m-body auth-body">
+            <div class="success-anim">✓</div>
+            <h2 style="font-size:22px;font-weight:900;margin-bottom:8px">E-mail Enviado! 📬</h2>
+            <p style="color:#888;font-size:13px;margin-bottom:14px;line-height:1.6">Enviamos um link de recuperação para:</p>
+            <div class="email-box"><span class="e-i">📧</span><div class="e-c"><div class="e-l">Enviado para</div><div class="e-a" id="forgotOkEmail">—</div></div></div>
+            <p style="color:#666;font-size:11px;margin-bottom:18px;line-height:1.6">Verifique também <strong>spam</strong>. O link expira em 1 hora.</p>
+            <button type="button" class="btn-p" id="forgotOkClose" style="width:100%">Entendi</button>
+        </div>
+    </div>
+
+    <div id="adminModal" class="modal hidden">
+        <div class="m-body">
+            <button type="button" class="m-close" id="closeAdmin">&times;</button>
+            <h2 style="font-size:18px;margin-bottom:18px">⚙️ Gerenciar Catálogo</h2>
+            <div style="display:flex;gap:8px;margin-bottom:16px"><input type="text" id="adminSearch" placeholder="Pesquisar..." autocomplete="off" style="flex:1;padding:10px 14px;background:#0f0f0f;border:1.5px solid #2a2a2a;color:#fff;border-radius:8px;font-size:13px"><button type="button" class="btn-p" id="adminAdd" style="font-size:12px;padding:10px 18px">+ Novo</button></div>
+            <div id="adminList" style="max-height:55vh;overflow-y:auto"></div>
+        </div>
+    </div>
+
+    <div id="profileModal" class="modal hidden">
+        <div class="m-body" style="max-width:500px">
+            <button type="button" class="m-close" id="closeProfile">&times;</button>
+            <div class="pf-header"><img id="pfBanner" class="pf-banner" src="https://placehold.co/600x200/1e1e1e/8c8c8c?text=Banner" alt="Banner"><div class="pf-avatar"><span id="pfAvatarText">U</span><img id="pfAvatarImg" class="hidden" src="" alt="Avatar"></div></div>
+            <div style="text-align:center;margin-bottom:20px"><h3 id="pfName" style="font-size:20px;font-weight:800">Usuário</h3><p id="pfEmail" style="font-size:12px;color:#888"></p><p id="pfBio" style="font-size:12px;color:#ccc;margin-top:4px;font-style:italic">"Maratonando!"</p><span id="pfAdmin" class="hidden" style="background:linear-gradient(135deg,var(--primary),#ff4444);font-size:10px;padding:4px 12px;border-radius:6px;font-weight:800;margin-top:8px;display:inline-block">👑 Admin</span></div>
+            <div class="sec-box"><div class="sec-title">🔐 Segurança</div><button type="button" class="sec-btn" id="changePass"><span class="sq-i">🔑</span><div class="sq-info"><div class="sq-t">Alterar senha</div><div class="sq-d">Enviaremos um link para seu e-mail</div></div><span class="sq-a">›</span></button></div>
+            <hr style="border:0;border-top:1px solid var(--border);margin:18px 0">
+            <h4 style="font-size:13px;margin-bottom:14px;color:var(--primary)">⚙️ Personalizar</h4>
+            <div class="ig"><label for="pfNameIn">Nome</label><input type="text" id="pfNameIn" autocomplete="off"></div>
+            <div class="ig"><label for="pfBioIn">Biografia</label><input type="text" id="pfBioIn" placeholder="Sua frase..." autocomplete="off"></div>
+            <div class="ig"><label for="pfGenre">Gênero Favorito</label><select id="pfGenre"><option>Ação</option><option>Comédia</option><option>Drama</option><option>Terror</option><option>Animação</option><option>Ficção Científica</option></select></div>
+            <div class="ig"><label>Foto</label><label class="fu-box" for="pfPhotoFile"><span class="fu-label">📷 Escolher</span><input type="file" id="pfPhotoFile" accept="image/*" class="hidden"><img id="pfPhotoPreview" class="fu-prev hidden" alt=""></label></div>
+            <div class="ig"><label>Banner</label><label class="fu-box" for="pfBannerFile"><span class="fu-label">🖼️ Escolher</span><input type="file" id="pfBannerFile" accept="image/*" class="hidden"><img id="pfBannerPreview" class="fu-prev hidden" alt=""></label></div>
+            <div class="ig"><label for="themeColor">Cor do Tema</label><input type="color" id="themeColor" value="#e50914" style="height:44px;width:100%;border-radius:8px;border:1.5px solid #2a2a2a;background:#0f0f0f;cursor:pointer"></div>
+            <div style="display:flex;gap:10px;margin-top:20px"><button type="button" class="btn-p" id="saveProfile" style="flex:1">💾 Salvar</button><button type="button" class="btn-d" id="logoutBtn" style="flex:1">🚪 Sair</button></div>
+        </div>
+    </div>
+
+    <div id="sugModal" class="modal hidden">
+        <div class="m-body" style="max-width:460px">
+            <button type="button" class="m-close" id="closeSug">&times;</button>
+            <h2 style="font-size:18px;margin-bottom:8px">💡 Sugestões</h2>
+            <p style="font-size:11px;color:#888;margin-bottom:16px">Nos ajude a melhorar!</p>
+            <div class="ig"><label for="sugType">Tipo</label><select id="sugType"><option value="suggestion">💡 Sugestão</option><option value="bug">🐛 Bug</option></select></div>
+            <div class="ig"><label for="sugText">Descrição</label><textarea id="sugText" rows="5" placeholder="Descreva..." autocomplete="off"></textarea></div>
+            <button type="button" class="btn-p" id="sendSug" style="width:100%">📨 Enviar</button>
+        </div>
+    </div>
+
+    <div id="sugAdminModal" class="modal hidden">
+        <div class="m-body" style="max-width:620px">
+            <button type="button" class="m-close" id="closeSugAdmin">&times;</button>
+            <h2 style="font-size:18px;margin-bottom:8px">📬 Sugestões</h2>
+            <p style="font-size:11px;color:#888;margin-bottom:16px" id="sugCount">Carregando...</p>
+            <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+                <button type="button" class="btn-s" id="sugSelMode">☑️ Selecionar</button>
+                <button type="button" class="btn-d hidden" id="sugDelSel">🗑️ Apagar</button>
+                <button type="button" class="btn-d hidden" id="sugSelAll">✅ Todos</button>
+                <button type="button" class="btn-s hidden" id="sugCancelSel">✕ Cancelar</button>
+            </div>
+            <div id="sugAdminList" style="max-height:55vh;overflow-y:auto"></div>
+        </div>
+    </div>
+
+    <div id="storageModal" class="modal hidden">
+        <div class="m-body" style="max-width:520px">
+            <button type="button" class="m-close" id="closeStorage">&times;</button>
+            <h2 style="font-size:18px;margin-bottom:18px">💾 Armazenamento</h2>
+            <div id="storageCt"><p style="text-align:center;color:#888">Calculando...</p></div>
+        </div>
+    </div>
+
+    <main class="app">
+        <div class="hero" id="hero">
+            <div class="hero-bg" id="heroBg"></div><div class="hero-ov"></div><div class="hero-side"></div>
+            <div class="hero-ct">
+                <span class="hero-badge">🔥 Destaque</span>
+                <h1 class="hero-title" id="heroTitle">Carregando...</h1>
+                <div class="hero-meta" id="heroMeta"></div>
+                <p class="hero-desc" id="heroDesc">Aguarde enquanto os títulos são carregados.</p>
+                <div class="hero-actions"><button type="button" class="btn-p" id="heroPlay">▶ Assistir</button><button type="button" class="btn-o" id="heroInfo">ℹ Mais Info</button></div>
+            </div>
+        </div>
+        <div class="cats" id="catsBar">
+            <div class="cat on" data-cat="Todos">Todos</div><div class="cat" data-cat="Filmes">🎬 Filmes</div><div class="cat" data-cat="Séries">📺 Séries</div><div class="cat" data-cat="Ação">Ação</div><div class="cat" data-cat="Comédia">Comédia</div><div class="cat" data-cat="Drama">Drama</div><div class="cat" data-cat="Terror">Terror</div><div class="cat" data-cat="Animação">Animação</div><div class="cat" data-cat="Ficção Científica">Ficção Científica</div><div class="cat" data-cat="Romance">Romance</div><div class="cat" data-cat="Aventura">Aventura</div><div class="cat" data-cat="Fantasia">Fantasia</div><div class="cat" data-cat="Suspense">Suspense</div>
+        </div>
+        <div class="section hidden" id="continueRow"><div class="section-title"><span style="color:#ffca28">⏳ Continuar Assistindo</span></div><div class="carousel" id="continueList"></div></div>
+        <div class="section" id="moviesRow"><div class="section-title"><span>🎬 Filmes</span></div><div class="carousel" id="moviesList"></div></div>
+        <div class="section" id="seriesRow"><div class="section-title"><span>📺 Séries</span></div><div class="carousel" id="seriesList"></div></div>
+    </main>
+
+    <div id="creatorModal" class="modal hidden">
+        <div class="m-body" style="max-width:620px">
+            <button type="button" class="m-close" id="closeCreator">&times;</button>
+            <h2 style="font-size:20px;margin-bottom:6px;font-weight:900" id="crTitle">Publicar</h2>
+            <p style="font-size:11px;color:#888;margin-bottom:18px" id="crSub">Preencha os dados abaixo</p>
+            <form id="mediaForm" autocomplete="off">
+                <input type="hidden" id="editId">
+                <div class="cr-tabs"><div class="cr-tab on" data-tab="info">📝 Info</div><div class="cr-tab" data-tab="media">🖼️ Imagens</div><div class="cr-tab" data-tab="content">🎞️ Conteúdo</div></div>
+                <div class="cr-tc on" data-tc="info">
+                    <div style="display:flex;gap:10px"><div class="ig" style="flex:1"><label for="mType">Tipo</label><select id="mType"><option value="movie">🎬 Filme</option><option value="serie">📺 Série</option></select></div><div class="ig" style="flex:1"><label for="mYear">Ano</label><input type="text" id="mYear" required autocomplete="off"></div></div>
+                    <div class="ig"><label for="mTitle">Título</label><input type="text" id="mTitle" required autocomplete="off"></div>
+                    <div class="ig"><label id="mDurLabel" for="mDur">Duração</label><input type="text" id="mDur" autocomplete="off" placeholder="Ex: 2h 10m"></div>
+                    <div class="ig"><label>🎭 Gêneros</label><div class="genre-box" id="genreBox"></div><div class="g-count" id="gCount">Nenhum</div></div>
+                    <div class="ig"><label for="mDesc">Sinopse</label><textarea id="mDesc" rows="4" required autocomplete="off"></textarea></div>
+                </div>
+                <div class="cr-tc" data-tc="media">
+                    <div class="ig"><label>📸 Capa</label><label class="fu-box" for="mCoverFile"><span class="fu-label">📸 Escolher capa</span><input type="file" id="mCoverFile" accept="image/*" class="hidden"><img id="mCoverPrev" class="fu-prev hidden" alt=""></label></div>
+                    <div class="ig"><label>🖼️ Backdrop</label><label class="fu-box" for="mBdFile"><span class="fu-label">🖼️ Escolher backdrop</span><input type="file" id="mBdFile" accept="image/*" class="hidden"><img id="mBdPrev" class="fu-prev hidden" alt=""></label></div>
+                </div>
+                <div class="cr-tc" data-tc="content">
+                    <div id="movieArea"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px"><label style="margin-bottom:0;font-size:12px;color:var(--primary);font-weight:800;text-transform:uppercase;letter-spacing:.5px">🎞️ Fontes de Vídeo</label></div><div id="mSrcList" class="src-list"><div class="src-empty">Nenhuma fonte adicionada ainda.</div></div><button type="button" class="add-block" id="addMovieSrc" style="margin-top:10px">+ Adicionar Fonte</button></div>
+                    <div id="seriesArea" class="hidden"><div id="seasonsList"></div><button type="button" class="add-block" id="addSeason" style="margin-top:14px">+ Nova Temporada</button><div class="autosave">💡 Alterações salvas automaticamente no formulário. Clique SALVAR para publicar.</div></div>
+                </div>
+                <div class="save-bar"><div class="save-bar-actions"><button type="button" class="btn-o" id="cancelCreator" style="flex:1">Cancelar</button><button type="submit" class="btn-p" style="flex:2">💾 Salvar</button></div></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="detailsModal" class="modal hidden">
+        <div class="m-body det-body">
+            <button type="button" class="m-close" id="closeDetails">&times;</button>
+            <div class="det-bg" id="detBg"></div>
+            <div class="det-ct" id="detCt">
+                <img id="detPoster" class="det-poster" src="" alt="Poster">
+                <h2 id="detTitle" style="font-size:24px;font-weight:900;margin-bottom:8px"></h2>
+                <div style="font-size:12px;color:var(--primary);font-weight:700;margin-bottom:12px" id="detMeta"></div>
+                <div id="detGenres" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px"></div>
+                <p id="detDesc" style="font-size:14px;color:#bbb;line-height:1.7;margin-bottom:20px"></p>
+                <div id="detMovie" class="hidden"><button type="button" class="btn-p" id="playMovie" style="width:100%;padding:15px">▶ Assistir Filme</button></div>
+                <div id="detSerie" class="hidden"><div class="s-tab-wrap" id="sTabs"></div><div class="ep-scroll" id="epScroll"><div id="epList"></div></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PLAYER -->
+    <div id="playerModal" class="modal hidden">
+        <div class="p-box" id="pBox">
+            <div class="p-video" id="pVideo">
+                <div class="p-load" id="pLoad"><div class="p-spin"></div><div><div class="p-load-text" id="pLoadText">Carregando vídeo...</div><div class="p-load-sub" id="pLoadSub">Preparando adaptador</div></div></div>
+            </div>
+            <div class="p-top" id="pTop">
+                <button type="button" class="p-btn" id="pClose">←</button>
+                <div class="p-title-area"><div class="p-title" id="pTitle">Carregando...</div><div class="p-sub" id="pSub">MasterFlix</div><div class="p-provider hidden" id="pBadge"></div></div>
+                <div class="p-actions">
+                    <button type="button" class="p-btn hidden" id="pSwitch" title="Trocar fonte">🔀</button>
+                    <button type="button" class="p-btn" id="pReload" title="Recarregar">↻</button>
+                    <button type="button" class="p-btn" id="pFs" title="Tela Cheia">⛶</button>
+                </div>
+            </div>
+            <div class="p-err off" id="pErr"><div class="p-err-card"><div class="p-err-icon">⚠️</div><div class="p-err-title" id="pErrTitle">Erro</div><div class="p-err-desc" id="pErrDesc">Tente outra fonte.</div><div class="p-err-actions"><button type="button" class="btn-p" id="pErrSwitch">🔀 Trocar Fonte</button><button type="button" class="btn-o" id="pErrReload">↻ Recarregar</button></div></div></div>
+            <div class="p-src off" id="pSrc"><div class="p-src-card"><div class="p-src-title">Escolha uma fonte</div><div class="p-src-sub" id="pSrcSub">Selecione o provedor desejado.</div><div class="p-src-list" id="pSrcList"></div><button type="button" class="btn-o" id="pSrcCancel" style="width:100%">Cancelar</button></div></div>
+        </div>
+    </div>
+
+    <div id="cropperModal" class="modal hidden">
+        <div class="m-body" style="max-width:520px">
+            <button type="button" class="m-close" id="closeCropper">&times;</button>
+            <h3 style="font-size:16px;margin-bottom:14px;color:var(--primary)">✂️ Recortar</h3>
+            <div style="max-height:280px;background:#000;overflow:hidden;border-radius:var(--r-sm);border:1px solid #333;display:flex;justify-content:center;align-items:center"><img id="cropImg" alt="Recortar" style="max-width:100%;display:block"></div>
+            <div class="d-prev"><div class="d-box"><label>📱 CEL</label><div class="d-scr d-mob"><img id="prevMob" src="" alt=""></div></div><div class="d-box"><label>💻 PC</label><div class="d-scr d-pc"><img id="prevPc" src="" alt=""></div></div><div class="d-box"><label>📺 TV</label><div class="d-scr d-tv"><img id="prevTv" src="" alt=""></div></div></div>
+            <div style="display:flex;gap:10px;margin-top:16px"><button type="button" class="btn-p" id="confirmCrop" style="flex:1">✓ Confirmar</button></div>
+        </div>
+    </div>
+
+    <template id="srcTmpl">
+        <div class="src-card">
+            <div class="src-top"><span class="src-badge">Fonte</span><button type="button" class="src-rm" data-action="rm-src">Remover</button></div>
+            <div class="src-grid">
+                <div class="ig"><label>Provedor</label><select class="src-type"><option value="">Selecione...</option><option value="mixdrop">MixDrop</option><option value="streamtape">StreamTape</option><option value="filemoon">FileMoon</option><option value="voe">VOE</option><option value="doodstream">DoodStream</option><option value="mp4upload">Mp4Upload</option><option value="okru">OK.ru</option><option value="drive">Google Drive</option><option value="yourupload">YourUpload</option><option value="youtube">YouTube</option><option value="vimeo">Vimeo</option><option value="superflix">SuperFlix</option><option value="embedplayer">EmbedPlayer</option><option value="warezcdn">WarezCDN</option><option value="streamsb">StreamSB</option><option value="upstream">Upstream</option><option value="vidoza">Vidoza</option><option value="direct">Direto (mp4/m3u8)</option><option value="embed">Embed Genérico</option></select></div>
+                <div class="ig"><label>Título visível</label><input type="text" class="src-label" placeholder="Ex: Dublado HD" autocomplete="off"></div>
+            </div>
+            <div class="ig" style="margin-bottom:0"><label>Link do vídeo</label><input type="text" class="src-url" placeholder="https://..." autocomplete="off"></div>
+        </div>
+    </template>
+
+    <div id="msg" class="hidden"></div>
+    <script type="module" src="app.js"></script>
+</body>
+  </html>
