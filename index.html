@@ -11,7 +11,7 @@
       --bg-card: #18191c;
       --bg-input: #202225;
       --accent: #f59e0b;
-      --accent-glow: rgba(245, 158, 11, 0.3);
+      --accent-glow: rgba(245, 158, 11, 0.25);
       --accent-hover: #d97706;
       --danger: #ed4245;
       --success: #3ba55d;
@@ -40,7 +40,7 @@
     }
     .animate-fade { animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-    /* Sistema de Toasts Modernos */
+    /* Sistema de Toasts */
     #toastContainer { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
     .toast { background: var(--bg-card); border: 1px solid var(--border); color: var(--text); padding: 14px 20px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); font-size: 0.9rem; pointer-events: auto; display: flex; align-items: center; gap: 10px; animation: fadeIn 0.3s ease; }
     .toast.success { border-left: 4px solid var(--success); }
@@ -63,14 +63,12 @@
     /* --- LAYOUT PRINCIPAL --- */
     #mainApp { display: flex; flex: 1; min-height: 100vh; position: relative; }
 
-    /* Overlay para fechar o menu ao clicar fora em telas menores */
     #sidebarOverlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 99; backdrop-filter: blur(2px);
       opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
     }
     #sidebarOverlay.active { opacity: 1; pointer-events: auto; }
 
-    /* Sidebar Discord Style */
     sidebar {
       width: 280px; background-color: var(--bg-surface); border-right: 1px solid var(--border);
       display: flex; flex-direction: column; padding: 20px; position: fixed; top: 0; bottom: 0; left: 0;
@@ -88,11 +86,9 @@
     .sidebar-menu-btn { width: 100%; text-align: left; background: var(--bg-card); color: var(--text); border: 1px solid var(--border); padding: 10px 14px; border-radius: 8px; margin-bottom: 6px; font-weight: 600; box-shadow: none; display: flex; align-items: center; gap: 10px; cursor: pointer; }
     .sidebar-menu-btn:hover { background: #2f3136; border-color: var(--text-muted); transform: none; }
 
-    /* Conteúdo Principal */
     content-area { flex: 1; padding: 25px; max-width: 1400px; width: 100%; margin-left: 0; }
     @media (max-width: 900px) { content-area { padding: 15px; } }
 
-    /* Header */
     header {
       display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; gap: 15px;
       background-color: var(--bg-surface); padding: 14px 20px; border-radius: 12px; border: 1px solid var(--border);
@@ -112,7 +108,6 @@
     .status-open { background: rgba(59, 165, 93, 0.15); color: var(--success); border: 1px solid rgba(59, 165, 93, 0.3); }
     .status-closed { background: rgba(237, 66, 69, 0.15); color: var(--danger); border: 1px solid rgba(237, 66, 69, 0.3); }
 
-    /* Avisos Modernos */
     .alert-box { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 10px; padding: 14px; margin-bottom: 20px; font-size: 0.85rem; line-height: 1.4; color: #fbbf24; }
     .alert-box a { color: var(--text); text-decoration: underline; font-weight: 700; }
 
@@ -122,6 +117,14 @@
     .card:hover { transform: translateY(-2px); border-color: rgba(245, 158, 11, 0.4); }
     .card h3 { font-size: 1.05rem; margin-bottom: 6px; font-weight: 700; }
     .price-tag { color: var(--accent); font-weight: 800; font-size: 1.15rem; margin-bottom: 10px; }
+
+    /* FAQ e Novas Seções Úteis */
+    .section-title-custom { font-size: 1.1rem; font-weight: 700; color: var(--accent); margin: 25px 0 12px 0; display: flex; align-items: center; gap: 8px; }
+    .faq-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 25px; }
+    .faq-item { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; cursor: pointer; }
+    .faq-question { font-weight: 600; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center; }
+    .faq-answer { font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; display: none; line-height: 1.4; }
+    .faq-item.active .faq-answer { display: block; }
 
     /* Modais */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); z-index: 4000; display: flex; justify-content: center; align-items: center; padding: 15px; }
@@ -134,7 +137,7 @@
     .back-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-card); border: 1px solid var(--border); padding: 6px 12px; border-radius: 8px; color: var(--text); font-weight: 600; cursor: pointer; margin-bottom: 15px; }
     .back-btn:hover { border-color: var(--accent); }
 
-    /* --- SISTEMA DE CHAT ESTILO DISCORD / WHATSAPP PERFEITO --- */
+    /* Chat Estilo Discord */
     .discord-chat-layout { display: flex; height: 500px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-top: 10px; }
     .discord-channels { width: 180px; background: #18191c; border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 10px; gap: 4px; overflow-y: auto; }
     .discord-channel-item { padding: 8px 10px; border-radius: 6px; font-size: 0.85rem; color: var(--text-muted); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px; }
@@ -280,6 +283,18 @@
 
         <h2 id="sectionTitle" style="margin-bottom: 14px; font-size: 1.2rem; font-weight: 700;">Mapas do Roblox</h2>
         <div id="dynamicGrid" class="grid"></div>
+
+        <div class="section-title-custom">❓ Perguntas Frequentes (FAQ)</div>
+        <div class="faq-container">
+          <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">Como funciona a entrega de Robux? <span>▼</span></div>
+            <div class="faq-answer">A entrega é feita via fundos de grupo do Roblox. Você entra no nosso grupo oficial, aguarda o prazo de segurança de 14 dias exigido pelo Roblox e o pagamento é liberado diretamente na sua conta.</div>
+          </div>
+          <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">Quanto tempo demora para aprovar o PIX? <span>▼</span></div>
+            <div class="faq-answer">Assim que você fizer o PIX para a chave informada e enviar o comprovante na nossa Central de Conversas, nossa equipe verifica e aprova o pedido em poucos minutos!</div>
+          </div>
+        </div>
       </div>
     </content-area>
   </div>
@@ -297,7 +312,13 @@
         <div style="margin-top: 4px; font-size: 1.1rem; font-weight: 800; color: var(--accent);" id="checkoutItemPrice">R$ 0,00</div>
       </div>
 
-      <label style="font-size: 0.8rem; color: var(--text-muted);">Seu Nome de Usuário Exato no Roblox (Não o de exibição):</label>
+      <label style="font-size: 0.8rem; color: var(--text-muted);">Cupom de Desconto (Opcional):</label>
+      <div style="display: flex; gap: 6px; margin-bottom: 12px;">
+        <input type="text" id="couponInput" placeholder="Ex: FATAL10" style="margin:0; text-transform: uppercase;">
+        <button class="btn-secondary" style="width: 100px; margin:0;" onclick="applyCoupon()">Aplicar</button>
+      </div>
+
+      <label style="font-size: 0.8rem; color: var(--text-muted);">Seu Nome de Usuário Exato no Roblox:</label>
       <input type="text" id="checkoutRobloxUsername" placeholder="Ex: MeuNickRoblox" required style="margin-bottom: 12px;" autocomplete="off">
 
       <div style="background: rgba(245, 158, 11, 0.06); border: 1px dashed var(--accent); padding: 12px; border-radius: 8px; margin-bottom: 12px; text-align: center;">
@@ -466,12 +487,15 @@
       }, 3500);
     };
 
-    // Controle do menu lateral melhorado com overlay
     window.toggleSidebar = function() {
       const sidebar = document.getElementById('sidebarDrawer');
       const overlay = document.getElementById('sidebarOverlay');
       sidebar.classList.toggle('open');
       overlay.classList.toggle('active');
+    };
+
+    window.toggleFaq = function(el) {
+      el.classList.toggle('active');
     };
 
     window.openAdminModal = function() {
@@ -723,7 +747,6 @@
       updateGpBrlPreview();
     }
 
-    // Calculadora corrigida para não travar enquanto o usuário digita (ex: digitar 60)
     const robuxQtyInput = document.getElementById('robuxQtyInput');
     const robuxTotalDisplay = document.getElementById('robuxTotalDisplay');
 
@@ -739,6 +762,7 @@
     robuxQtyInput.addEventListener('input', calcRobuxCost);
 
     let pendingCheckoutItem = null;
+    let appliedDiscount = 0;
 
     document.getElementById('btnBuyRobuxCustom').addEventListener('click', () => {
       if (!storeConfig.stockActive) { showToast("Loja sem estoque!", "error"); return; }
@@ -748,8 +772,11 @@
       
       pendingCheckoutItem = {
         name: `${qty} Robux (Via Grupo)`,
-        price: total
+        price: total,
+        rawPrice: parseFloat(total)
       };
+      appliedDiscount = 0;
+      document.getElementById('couponInput').value = '';
       openCheckoutModal(pendingCheckoutItem);
     });
 
@@ -764,10 +791,31 @@
       document.getElementById('checkoutModal').classList.add('hidden');
     };
 
+    window.applyCoupon = function() {
+      const code = document.getElementById('couponInput').value.trim().toUpperCase();
+      if (!pendingCheckoutItem) return;
+
+      if (code === "FATAL10") {
+        appliedDiscount = 0.10; // 10% off
+        const discounted = (pendingCheckoutItem.rawPrice * (1 - appliedDiscount)).toFixed(2);
+        document.getElementById('checkoutItemPrice').textContent = `R$ ${discounted.replace('.', ',')} (Com 10% de Desconto)`;
+        showToast("Cupom aplicado com sucesso!");
+      } else {
+        showToast("Cupom inválido!", "error");
+      }
+    };
+
     document.getElementById('btnConfirmCheckout').addEventListener('click', async () => {
       const robloxNick = document.getElementById('checkoutRobloxUsername').value.trim();
       if (!robloxNick) { showToast("Digite seu nome de usuário do Roblox!", "error"); return; }
       if (!pendingCheckoutItem) return;
+
+      let finalPrice = pendingCheckoutItem.rawPrice;
+      if (appliedDiscount > 0) {
+        finalPrice = (finalPrice * (1 - appliedDiscount)).toFixed(2);
+      } else {
+        finalPrice = finalPrice.toFixed(2);
+      }
 
       try {
         await addDoc(collection(db, "pedidos"), {
@@ -775,7 +823,7 @@
           comprador: currentUserData ? currentUserData.displayName : "Cliente",
           robloxNick: robloxNick,
           item: pendingCheckoutItem.name,
-          valor: pendingCheckoutItem.price,
+          valor: finalPrice,
           data: serverTimestamp(),
           status: "Pendente (Aguardando Comprovante)"
         });
@@ -796,7 +844,7 @@
           senderRole: "client",
           senderName: currentUserData ? currentUserData.displayName : "Cliente",
           senderAvatar: currentUserData ? currentUserData.photoUrl : "https://via.placeholder.com/150",
-          text: `Olá! Fiz o pedido de ${pendingCheckoutItem.name} no valor de R$ ${pendingCheckoutItem.price}. Meu nick do Roblox é: ${robloxNick}.`,
+          text: `Olá! Fiz o pedido de ${pendingCheckoutItem.name} no valor de R$ ${finalPrice}. Meu nick do Roblox é: ${robloxNick}.`,
           timestamp: serverTimestamp()
         });
 
@@ -1181,8 +1229,11 @@
 
           pendingCheckoutItem = {
             name: `${name} (${robux} Robux)`,
-            price: price
+            price: price,
+            rawPrice: parseFloat(price)
           };
+          appliedDiscount = 0;
+          document.getElementById('couponInput').value = '';
           openCheckoutModal(pendingCheckoutItem);
         });
       });
