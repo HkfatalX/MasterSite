@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MasterAddon (MSTRADN) - Mods, Addons e Mapas para Minecraft</title>
+  <title>MasterAddon (MSTRADN) - Addons, Mapas e Skins para Minecraft</title>
   <style>
     :root {
       --bg-base: #0f172a;
@@ -118,13 +118,17 @@
 
     /* MODAIS */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); z-index: 4000; display: flex; justify-content: center; align-items: center; padding: 12px; }
-    .modal-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; width: 100%; max-width: 620px; box-shadow: 0 20px 40px rgba(0,0,0,0.8); max-height: 94vh; overflow-y: auto; }
+    .modal-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; width: 100%; max-width: 650px; box-shadow: 0 20px 40px rgba(0,0,0,0.8); max-height: 94vh; overflow-y: auto; }
     
     .file-upload-box { border: 2px dashed var(--border); border-radius: 8px; padding: 12px; text-align: center; cursor: pointer; background: var(--bg-input); margin: 6px 0; transition: 0.2s; }
     .file-upload-box:hover { border-color: var(--accent); }
     .profile-preview { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); margin-bottom: 6px; display: inline-block; }
 
-    /* CHAT DE SUPORTE */
+    /* PREVIEW DE SKIN 3D/2D NO CANVASS */
+    .skin-preview-container { display: flex; flex-direction: column; align-items: center; background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-top: 10px; }
+    .skin-canvas { image-rendering: pixelated; width: 120px; height: 160px; background: #111827; border-radius: 6px; border: 1px solid var(--border); }
+
+    /* CHAT DE COMUNIDADE */
     .discord-chat-layout { display: flex; height: 440px; max-height: 70vh; background: var(--bg-input); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 8px; }
     .discord-channels { width: 150px; background: #111827; border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 8px; gap: 4px; overflow-y: auto; flex-shrink: 0; }
     .discord-channel-item { padding: 8px; border-radius: 6px; font-size: 0.8rem; color: var(--text-muted); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px; }
@@ -190,7 +194,7 @@
           <img id="userAvatar" src="" alt="Avatar" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
           <div style="overflow: hidden;">
             <strong id="userDisplayName" style="display: block; font-size: 0.9rem; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;"></strong>
-            <span style="background: var(--accent); color: black; font-size: 0.65rem; font-weight: 800; padding: 1px 5px; border-radius: 4px;">MEMBRO</span>
+            <span style="background: var(--accent); color: black; font-size: 0.65rem; font-weight: 800; padding: 1px 5px; border-radius: 4px;">CRIADOR</span>
           </div>
         </div>
         <button class="sidebar-menu-btn" onclick="openProfileModal()">⚙️ Meu Perfil</button>
@@ -198,8 +202,8 @@
 
       <div class="sidebar-block">
         <h4>Publicar para Todos</h4>
-        <button class="sidebar-menu-btn" onclick="openUploadModal()">➕ Publicar Addon / Mapa</button>
-        <button class="sidebar-menu-btn" onclick="openConversationsModal()">💬 Suporte & Comunidade</button>
+        <button class="sidebar-menu-btn" onclick="openUploadModal()">➕ Publicar Addon / Mapa / Skin</button>
+        <button class="sidebar-menu-btn" onclick="openConversationsModal()">💬 Comunidade & Suporte</button>
       </div>
 
       <button id="btnLogout" class="btn-danger" style="margin-top: auto; padding: 8px; font-size: 0.85rem;">Sair da Conta</button>
@@ -215,16 +219,16 @@
         </button>
         <div class="search-container">
           <span class="search-icon">🔍</span>
-          <input type="text" id="searchInput" placeholder="Pesquisar mods, addons, mapas..." autocomplete="off">
+          <input type="text" id="searchInput" placeholder="Pesquisar mods, addons, .mcaddon, mapas..." autocomplete="off">
         </div>
       </header>
 
       <div class="categories-bar">
         <div class="cat-pill active" onclick="filterCategory('all', this)">🔥 Todos</div>
-        <div class="cat-pill" onclick="filterCategory('Addons', this)">🧩 Addons / Mods</div>
-        <div class="cat-pill" onclick="filterCategory('Maps', this)">🗺️ Mapas</div>
+        <div class="cat-pill" onclick="filterCategory('Addons', this)">🧩 Addons (.mcaddon/.mcpack)</div>
+        <div class="cat-pill" onclick="filterCategory('Maps', this)">🗺️ Mapas (.mcworld/.mctemplate)</div>
         <div class="cat-pill" onclick="filterCategory('Textures', this)">🎨 Texturas</div>
-        <div class="cat-pill" onclick="filterCategory('Skins', this)">👤 Skins</div>
+        <div class="cat-pill" onclick="filterCategory('Skins', this)">👤 Skins (.png)</div>
       </div>
 
       <h2 id="sectionTitle" style="margin-bottom: 14px; font-size: 1.2rem; font-weight: 700;">Publicações Recentes</h2>
@@ -235,19 +239,38 @@
   <div id="postDetailModal" class="modal-overlay hidden">
     <div class="modal-card animate-fade">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h3 id="modalPostTitle" style="color: var(--accent);">Título do Addon</h3>
+        <h3 id="modalPostTitle" style="color: var(--accent);">Título</h3>
         <button class="btn-secondary" style="width: auto; padding: 4px 10px; margin:0;" onclick="closePostModal()">✕</button>
       </div>
+
+      <div id="modalSkinPreviewContainer" class="hidden skin-preview-container" style="margin-bottom: 15px;">
+        <div style="font-size: 0.8rem; color: var(--accent); font-weight: bold; margin-bottom: 6px;">👤 Preview da Skin em Tempo Real:</div>
+        <canvas id="modalSkinCanvas" class="skin-canvas" width="64" height="64"></canvas>
+      </div>
+
       <img id="modalPostImage" src="" alt="Thumbnail" style="width: 100%; height: 210px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--border);">
-      <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">Por criador: <strong id="modalPostAuthor" style="color: var(--text);"></strong></div>
+      <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">Por: <strong id="modalPostAuthor" style="color: var(--text);"></strong> | Formato: <span id="modalPostExtTag" style="color: var(--accent); font-weight: bold;"></span></div>
       <p id="modalPostDesc" style="font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px; color: var(--text);"></p>
       
-      <div style="background: var(--bg-input); padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 12px;">
-        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">Link Externo (MediaFire / Google Drive):</div>
-        <a id="modalPostDownloadLinkText" href="#" target="_blank" style="color: var(--accent); font-size: 0.85rem; word-break: break-all; display: block; margin-bottom: 10px;">Link</a>
-        <a id="modalPostDownloadBtn" href="#" target="_blank" style="text-decoration: none; display: block;">
-          <button style="font-size: 0.95rem; padding: 10px; margin:0;">📥 Baixar via Link Externo</button>
+      <div id="singleDownloadSection" class="hidden" style="background: var(--bg-input); padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 12px;">
+        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">Link de Download Externo (MediaFire / Drive):</div>
+        <a id="modalSingleLink" href="#" target="_blank" style="color: var(--accent); font-size: 0.85rem; word-break: break-all; display: block; margin-bottom: 10px;">Link</a>
+        <a id="modalSingleBtn" href="#" target="_blank" style="text-decoration: none; display: block;">
+          <button style="font-size: 0.95rem; padding: 10px; margin:0;">📥 Baixar Arquivo</button>
         </a>
+      </div>
+
+      <div id="dualDownloadSection" class="hidden" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px;">
+        <div style="background: var(--bg-input); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
+          <div style="font-size: 0.75rem; color: var(--accent); font-weight: bold; margin-bottom: 4px;">🧩 Behavior Pack (.mcpack):</div>
+          <a id="modalBehaviorLink" href="#" target="_blank" style="color: var(--text-muted); font-size: 0.8rem; word-break: break-all; display: block; margin-bottom: 8px;">Link</a>
+          <a id="modalBehaviorBtn" href="#" target="_blank" style="text-decoration: none;"><button style="font-size: 0.85rem; padding: 8px; margin:0;">Baixar Behavior</button></a>
+        </div>
+        <div style="background: var(--bg-input); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
+          <div style="font-size: 0.75rem; color: var(--accent); font-weight: bold; margin-bottom: 4px;">🎨 Resource Pack (.mcpack):</div>
+          <a id="modalResourceLink" href="#" target="_blank" style="color: var(--text-muted); font-size: 0.8rem; word-break: break-all; display: block; margin-bottom: 8px;">Link</a>
+          <a id="modalResourceBtn" href="#" target="_blank" style="text-decoration: none;"><button style="font-size: 0.85rem; padding: 8px; margin:0;">Baixar Resource</button></a>
+        </div>
       </div>
     </div>
   </div>
@@ -255,29 +278,53 @@
   <div id="uploadModal" class="modal-overlay hidden">
     <div class="modal-card animate-fade">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h3 style="color: var(--accent);">➕ Publicar no MSTRADN</h3>
+        <h3 style="color: var(--accent);">➕ Publicar no MasterAddon</h3>
         <button class="btn-secondary" style="width: auto; padding: 4px 10px; margin:0;" onclick="closeUploadModal()">✕</button>
       </div>
-      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">Envie o link de download direto (MediaFire, Google Drive, etc.). Nenhum arquivo pesado é armazenado no servidor.</p>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">Publique seu addon, mapa, textura ou skin usando links externos (MediaFire, Google Drive, etc.).</p>
       
       <form id="uploadForm">
-        <input type="text" id="upTitle" placeholder="Título do Addon / Mapa / Textura" required autocomplete="off">
-        <select id="upCategory" required>
-          <option value="Addons">Addons / Mods</option>
-          <option value="Maps">Mapas</option>
-          <option value="Textures">Texturas</option>
-          <option value="Skins">Skins</option>
+        <input type="text" id="upTitle" placeholder="Título (Ex: MikeCraft.addon ou SuperMap.mcworld)" required autocomplete="off">
+        
+        <select id="upCategory" required onchange="handleCategoryChange()">
+          <option value="Addons">Addons (.mcaddon / .mcpack)</option>
+          <option value="Maps">Mapas (.mcworld / .mctemplate)</option>
+          <option value="Textures">Texturas (.zip / .mcpack)</option>
+          <option value="Skins">Skins (.png)</option>
         </select>
-        <textarea id="upDesc" placeholder="Descrição explicando as funcionalidades..." rows="3" required></textarea>
+
+        <textarea id="upDesc" placeholder="Descrição explicando como o mod/mapa funciona..." rows="3" required></textarea>
         
-        <input type="url" id="upDownloadLink" placeholder="Link de Download (Ex: https://www.mediafire.com/...)" required autocomplete="off">
+        <div id="singleLinkGroup">
+          <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 6px;">Link de Download:</label>
+          <input type="url" id="upDownloadLink" placeholder="https://www.mediafire.com/file/..." autocomplete="off">
+        </div>
+
+        <div id="dualLinkGroup" class="hidden" style="background: var(--bg-input); padding: 10px; border-radius: 8px; border: 1px solid var(--border); margin-top: 6px;">
+          <div style="font-size: 0.75rem; color: var(--accent); font-weight: bold; margin-bottom: 4px;">Configuração de Pacote Duplo (.mcpack):</div>
+          <input type="url" id="upBehaviorLink" placeholder="Link do Behavior Pack (.mcpack)" autocomplete="off">
+          <input type="url" id="upResourceLink" placeholder="Link do Resource Pack (.mcpack)" autocomplete="off" style="margin-bottom:0;">
+        </div>
         
-        <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 6px;">Imagem de Capa (Thumbnail):</label>
+        <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 8px;">Imagem de Capa (Thumbnail):</label>
         <div class="file-upload-box" onclick="document.getElementById('upImageFile').click()">
           <div id="upImageText" style="font-size: 0.8rem; color: var(--text-muted);">📁 Escolher Imagem de Capa</div>
           <input type="file" id="upImageFile" accept="image/*" class="hidden" required>
         </div>
-        <button type="submit" style="margin-top: 12px;">Publicar para Todos</button>
+
+        <div id="skinUploadSection" class="hidden" style="margin-top: 8px;">
+          <label style="font-size: 0.8rem; color: var(--accent); display: block; margin-bottom: 4px;">Arquivo da Skin (.png para testar preview):</label>
+          <div class="file-upload-box" onclick="document.getElementById('upSkinFile').click()">
+            <div id="upSkinText" style="font-size: 0.8rem; color: var(--text-muted);">📁 Selecionar Arquivo .png da Skin</div>
+            <input type="file" id="upSkinFile" accept="image/png" class="hidden">
+          </div>
+          <div class="skin-preview-container" style="margin-top: 6px;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">Preview do Boneco/Cabeça:</div>
+            <canvas id="uploadSkinCanvas" class="skin-canvas" width="64" height="64"></canvas>
+          </div>
+        </div>
+
+        <button type="submit" style="margin-top: 14px;">Publicar para Todos</button>
       </form>
     </div>
   </div>
@@ -288,7 +335,7 @@
         <h3 style="color: var(--accent); font-size: 1.1rem;">💬 Comunidade MasterAddon</h3>
         <button class="btn-secondary" style="width: auto; padding: 4px 10px; margin:0;" onclick="closeConversationsModal()">✕</button>
       </div>
-      <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px;">Converse com outros criadores e membros.</p>
+      <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px;">Converse com outros criadores sobre addons e mapas.</p>
 
       <div class="discord-chat-layout">
         <div id="discordChannelList" class="discord-channels">
@@ -335,7 +382,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, getDoc, setDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCGD9DZDFp0w9baW8jiqgGGfkasAvqreY0",
@@ -399,6 +446,28 @@
     };
     window.closeProfileModal = function() { document.getElementById('profileModal').classList.add('hidden'); };
 
+    window.handleCategoryChange = function() {
+      const cat = document.getElementById('upCategory').value;
+      const skinSec = document.getElementById('skinUploadSection');
+      const dualGroup = document.getElementById('dualLinkGroup');
+      const singleGroup = document.getElementById('singleLinkGroup');
+
+      if (cat === 'Skins') {
+        skinSec.classList.remove('hidden');
+        singleGroup.classList.add('hidden');
+        dualGroup.classList.add('hidden');
+      } else {
+        skinSec.classList.add('hidden');
+        singleGroup.classList.remove('hidden');
+        // Se for addons, permitimos opcionalmente duplo pack (.mcpack)
+        if (cat === 'Addons') {
+          dualGroup.classList.remove('hidden');
+        } else {
+          dualGroup.classList.add('hidden');
+        }
+      }
+    };
+
     function processImageFile(fileInputId, previewImgId = null, textLabelId = null) {
       return new Promise((resolve) => {
         const fileInput = document.getElementById(fileInputId);
@@ -418,7 +487,7 @@
             ctx.drawImage(img, 0, 0, width, height);
             const base64 = canvas.toDataURL('image/jpeg', 0.8);
             if (previewImgId) document.getElementById(previewImgId).src = base64;
-            if (textLabelId) document.getElementById(textLabelId).textContent = "Imagem carregada ✅";
+            if (textLabelId) document.getElementById(textLabelId).textContent = "Carregado ✅";
             resolve(base64);
           };
           img.src = event.target.result;
@@ -429,12 +498,36 @@
 
     let newProfilePhotoBase64 = null;
     let newPostPhotoBase64 = null;
+    let newSkinFileBase64 = null;
 
     document.getElementById('editPhotoFile').addEventListener('change', async () => {
       newProfilePhotoBase64 = await processImageFile('editPhotoFile', 'modalProfilePreview', 'uploadBoxText');
     });
     document.getElementById('upImageFile').addEventListener('change', async () => {
       newPostPhotoBase64 = await processImageFile('upImageFile', null, 'upImageText');
+    });
+
+    document.getElementById('upSkinFile').addEventListener('change', () => {
+      const file = document.getElementById('upSkinFile').files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        newSkinFileBase64 = e.target.result;
+        document.getElementById('upSkinText').textContent = "Skin .png Carregada ✅";
+        
+        // Desenhar preview na canvas
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.getElementById('uploadSkinCanvas');
+          const ctx = canvas.getContext('2d');
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.imageSmoothingEnabled = false;
+          // Desenhar cabeça da skin (coordenada típica do minecraft skin 64x64: cabeça em 8,8 tamanho 8x8)
+          ctx.drawImage(img, 8, 8, 8, 8, 16, 16, 32, 32);
+        };
+        img.src = newSkinFileBase64;
+      };
+      reader.readAsDataURL(file);
     });
 
     document.getElementById('btnSaveProfile').addEventListener('click', async () => {
@@ -509,19 +602,24 @@
       const category = document.getElementById('upCategory').value;
       const desc = document.getElementById('upDesc').value.trim();
       const downloadLink = document.getElementById('upDownloadLink').value.trim();
+      const behaviorLink = document.getElementById('upBehaviorLink').value.trim();
+      const resourceLink = document.getElementById('upResourceLink').value.trim();
 
       if (!newPostPhotoBase64) { showToast("Envie a imagem de capa!", "error"); return; }
 
       try {
         await addDoc(collection(db, "posts"), {
-          title, category, desc, downloadLink,
+          title, category, desc, downloadLink, behaviorLink, resourceLink,
           image: newPostPhotoBase64,
+          skinData: newSkinFileBase64 || null,
           author: currentUserData ? currentUserData.displayName : "Criador",
           createdAt: serverTimestamp()
         });
         document.getElementById('uploadForm').reset();
         newPostPhotoBase64 = null;
+        newSkinFileBase64 = null;
         document.getElementById('upImageText').textContent = "📁 Escolher Imagem de Capa";
+        document.getElementById('upSkinText').textContent = "📁 Selecionar Arquivo .png da Skin";
         showToast("Publicado com sucesso!");
         closeUploadModal();
       } catch (err) { showToast("Erro: " + err.message, "error"); }
@@ -587,9 +685,51 @@
       document.getElementById('modalPostImage').src = post.image;
       document.getElementById('modalPostAuthor').textContent = post.author;
       document.getElementById('modalPostDesc').textContent = post.desc;
-      document.getElementById('modalPostDownloadLinkText').textContent = post.downloadLink;
-      document.getElementById('modalPostDownloadLinkText').href = post.downloadLink;
-      document.getElementById('modalPostDownloadBtn').href = post.downloadLink;
+      document.getElementById('modalPostExtTag').textContent = post.category;
+
+      const skinContainer = document.getElementById('modalSkinPreviewContainer');
+      const singleSection = document.getElementById('singleDownloadSection');
+      const dualSection = document.getElementById('dualDownloadSection');
+
+      if (post.category === 'Skins' && post.skinData) {
+        skinContainer.classList.remove('hidden');
+        const canvas = document.getElementById('modalSkinCanvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        img.onload = function() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.imageSmoothingEnabled = false;
+          ctx.drawImage(img, 8, 8, 8, 8, 16, 16, 32, 32);
+        };
+        img.src = post.skinData;
+      } else {
+        skinContainer.classList.add('hidden');
+      }
+
+      // Checar se tem duplo link (.mcpack behavior + resource)
+      if (post.behaviorLink || post.resourceLink) {
+        singleSection.classList.add('hidden');
+        dualSection.classList.remove('hidden');
+        
+        const bLink = post.behaviorLink || '#';
+        const rLink = post.resourceLink || '#';
+
+        document.getElementById('modalBehaviorLink').textContent = bLink;
+        document.getElementById('modalBehaviorLink').href = bLink;
+        document.getElementById('modalBehaviorBtn').href = bLink;
+
+        document.getElementById('modalResourceLink').textContent = rLink;
+        document.getElementById('modalResourceLink').href = rLink;
+        document.getElementById('modalResourceBtn').href = rLink;
+      } else {
+        dualSection.classList.add('hidden');
+        singleSection.classList.remove('hidden');
+        const link = post.downloadLink || '#';
+        document.getElementById('modalSingleLink').textContent = link;
+        document.getElementById('modalSingleLink').href = link;
+        document.getElementById('modalSingleBtn').href = link;
+      }
+
       document.getElementById('postDetailModal').classList.remove('hidden');
     };
 
