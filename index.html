@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>MasterAddon - Premium Experience</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
@@ -14,35 +14,34 @@
       --bg-dark: #09090b;
       --bg-panel: rgba(24, 24, 27, 0.7);
       --bg-input: #18181b;
-      --primary: #10b981; /* Verde Esmeralda Minecraft */
+      --primary: #10b981;
       --primary-glow: rgba(16, 185, 129, 0.3);
       --primary-hover: #059669;
-      --secondary: #3b82f6; /* Azul Diamante */
+      --secondary: #3b82f6;
       --text: #fafafa;
       --text-muted: #a1a1aa;
       --border: rgba(255, 255, 255, 0.1);
       --radius: 16px;
-      --glass: backdrop-filter: blur(12px);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
     
-    body { 
-      background-color: var(--bg-dark); color: var(--text); min-height: 100vh;
+    body, html { 
+      background-color: var(--bg-dark); color: var(--text); 
+      width: 100%; min-height: 100vh; overflow-x: hidden;
       background-image: 
         radial-gradient(circle at 15% 50%, rgba(16, 185, 129, 0.08), transparent 25%),
         radial-gradient(circle at 85% 30%, rgba(59, 130, 246, 0.08), transparent 25%);
-      background-attachment: fixed; overflow-x: hidden;
+      background-attachment: fixed;
     }
 
-    /* SCROLLBAR CUSTOMIZADA */
-    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: var(--bg-dark); }
     ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
 
     .hidden { display: none !important; }
 
-    /* COMPONENTES DE UI */
+    /* COMPONENTES GERAIS */
     input, select, textarea {
       width: 100%; padding: 14px 18px; margin: 8px 0; border-radius: 12px;
       border: 1px solid var(--border); background: var(--bg-input); color: var(--text);
@@ -58,122 +57,158 @@
     button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px var(--primary-glow); filter: brightness(1.1); }
     button:active { transform: translateY(0); }
     
-    .btn-outline {
-      background: transparent; border: 1px solid var(--border); color: var(--text); box-shadow: none;
-    }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); box-shadow: none; }
     .btn-outline:hover { background: rgba(255,255,255,0.05); border-color: var(--text-muted); }
-    
     .btn-danger { background: linear-gradient(135deg, #ef4444, #b91c1c); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2); }
 
-    /* TOASTS */
+    /* TOASTS (AVISOS) */
     #toastContainer { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
     .toast {
       background: var(--bg-panel); backdrop-filter: blur(10px); border-radius: 12px; padding: 16px 24px;
       border-left: 4px solid var(--primary); color: var(--text); font-weight: 500;
       box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 12px;
-      animation: slideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      animation: slideIn 0.3s ease forwards;
     }
     .toast.error { border-left-color: #ef4444; }
     @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-    /* AUTENTICAÇÃO TELA */
+    /* TELA DE AUTENTICAÇÃO */
     #authScreen {
       position: fixed; inset: 0; z-index: 3000; display: flex; justify-content: center; align-items: center; padding: 20px;
-      background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+      background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
     }
     .auth-card {
       background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 40px; width: 100%; max-width: 450px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); text-align: center;
+      padding: 30px; width: 100%; max-width: 400px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); text-align: center;
     }
-    .auth-card h1 { font-size: 2rem; color: var(--primary); margin-bottom: 5px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    .tab-switch { display: flex; gap: 8px; margin: 25px 0; background: var(--bg-input); padding: 6px; border-radius: 14px; }
+    .auth-card h1 { font-size: 1.8rem; color: var(--primary); margin-bottom: 5px; }
+    .tab-switch { display: flex; gap: 8px; margin: 20px 0; background: var(--bg-input); padding: 6px; border-radius: 14px; }
     .tab-btn { flex: 1; background: transparent; color: var(--text-muted); box-shadow: none; border-radius: 10px; padding: 10px; font-size: 0.9rem; }
     .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 10px var(--primary-glow); }
 
-    /* LAYOUT PRINCIPAL */
-    #mainApp { display: flex; min-height: 100vh; position: relative; }
+    /* LAYOUT PRINCIPAL (CORRIGIDO PARA CELULAR) */
+    #mainApp { display: flex; width: 100%; min-height: 100vh; position: relative; }
 
-    /* SIDEBAR MODERNA */
+    #sidebarOverlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 99; backdrop-filter: blur(2px);
+      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    }
+    #sidebarOverlay.active { opacity: 1; pointer-events: auto; }
+
     sidebar {
-      width: 280px; background: var(--bg-panel); border-right: 1px solid var(--border);
-      backdrop-filter: blur(20px); padding: 24px; display: flex; flex-direction: column;
-      position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      width: 280px; flex-shrink: 0; background: var(--bg-panel); border-right: 1px solid var(--border);
+      backdrop-filter: blur(20px); padding: 20px; display: flex; flex-direction: column;
+      position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; transition: transform 0.3s ease;
     }
-    @media (max-width: 900px) {
-      sidebar { transform: translateX(-100%); width: 300px; }
-      sidebar.open { transform: translateX(0); }
-    }
-    .profile-widget { background: var(--bg-input); padding: 16px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
-    .profile-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
+    .brand { font-size: 1.2rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 8px; margin-bottom: 25px;}
+
+    .profile-widget { background: var(--bg-input); padding: 15px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+    .profile-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); flex-shrink: 0; }
     .profile-info { overflow: hidden; text-align: left; }
-    .profile-info h4 { font-size: 0.95rem; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; margin-bottom: 2px; }
-    .badge-creator { background: var(--primary-glow); color: var(--primary); font-size: 0.65rem; padding: 3px 8px; border-radius: 6px; border: 1px solid var(--primary); font-weight: 800; }
+    .profile-info h4 { font-size: 0.9rem; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; margin-bottom: 2px; }
+    .badge-creator { background: var(--primary-glow); color: var(--primary); font-size: 0.65rem; padding: 3px 8px; border-radius: 6px; border: 1px solid var(--primary); font-weight: 800; display: inline-block;}
     
-    .nav-btn { background: transparent; color: var(--text-muted); text-align: left; padding: 14px 18px; box-shadow: none; border-radius: 10px; margin-bottom: 8px; text-transform: none; font-weight: 600; display: flex; align-items: center; gap: 12px; }
-    .nav-btn:hover { background: rgba(255,255,255,0.05); color: var(--text); transform: translateX(5px); }
+    .nav-btn { background: transparent; color: var(--text-muted); text-align: left; padding: 12px 16px; box-shadow: none; border-radius: 10px; margin-bottom: 8px; text-transform: none; font-weight: 600; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
+    .nav-btn:hover { background: rgba(255,255,255,0.05); color: var(--text); transform: translateX(4px); }
     .nav-btn.publish { background: rgba(16, 185, 129, 0.1); color: var(--primary); border: 1px dashed var(--primary); }
 
     /* CONTEÚDO CENTRAL */
-    content-area { flex: 1; margin-left: 280px; padding: 30px; max-width: 1400px; }
-    @media (max-width: 900px) { content-area { margin-left: 0; padding: 20px; } }
+    content-area { 
+      flex: 1; 
+      margin-left: 280px; 
+      padding: 25px; 
+      min-width: 0; /* CRÍTICO: Impede que o flexbox estoure a tela no celular */
+    }
 
-    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; gap: 20px; }
-    .search-box { flex: 1; max-width: 500px; position: relative; }
-    .search-box input { padding-left: 45px; background: rgba(24, 24, 27, 0.5); border: 1px solid var(--border); backdrop-filter: blur(10px); }
-    .search-icon { position: absolute; left: 16px; top: 22px; color: var(--text-muted); }
-    
-    .hamburger { display: none; background: var(--bg-panel); border: 1px solid var(--border); border-radius: 12px; width: 50px; height: 50px; font-size: 1.5rem; color: var(--text); cursor: pointer; box-shadow: none; }
-    @media (max-width: 900px) { .hamburger { display: block; padding: 0; } }
+    /* RESPONSIVIDADE MOBILE (MENOR QUE 900PX) */
+    @media (max-width: 900px) {
+      sidebar { transform: translateX(-100%); width: 280px; }
+      sidebar.open { transform: translateX(0); }
+      content-area { margin-left: 0; padding: 15px; width: 100%; }
+    }
 
-    /* PÍLULAS DE FILTRO ESPECÍFICAS */
-    .filter-track { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 30px; }
-    .filter-track::-webkit-scrollbar { height: 4px; }
+    /* HEADER / PESQUISA */
+    header { display: flex; align-items: center; margin-bottom: 20px; gap: 15px; width: 100%; }
+    .hamburger { display: none; background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; width: 45px; height: 45px; font-size: 1.5rem; color: var(--text); cursor: pointer; box-shadow: none; align-items: center; justify-content: center; flex-shrink: 0; padding: 0; }
+    @media (max-width: 900px) { .hamburger { display: flex; } }
+
+    .search-box { flex: 1; position: relative; }
+    .search-box input { margin: 0; padding: 12px 12px 12px 42px; background: rgba(24, 24, 27, 0.5); border: 1px solid var(--border); backdrop-filter: blur(10px); font-size: 0.9rem; }
+    .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.1rem; }
+
+    /* FILTROS DE CATEGORIA (SCROLL HORIZONTAL PERFEITO) */
+    .filter-track { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 25px; -webkit-overflow-scrolling: touch; }
     .filter-pill {
-      background: var(--bg-panel); border: 1px solid var(--border); padding: 10px 20px; border-radius: 30px;
-      white-space: nowrap; cursor: pointer; font-weight: 600; font-size: 0.9rem; color: var(--text-muted); transition: 0.3s;
+      background: var(--bg-panel); border: 1px solid var(--border); padding: 8px 18px; border-radius: 30px;
+      white-space: nowrap; cursor: pointer; font-weight: 600; font-size: 0.85rem; color: var(--text-muted); transition: 0.3s; flex-shrink: 0;
     }
     .filter-pill:hover { border-color: var(--text); color: var(--text); }
-    .filter-pill.active { background: var(--primary); color: #000; border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
+    .filter-pill.active { background: var(--primary); color: #000; border-color: var(--primary); box-shadow: 0 0 10px var(--primary-glow); }
 
     /* GRID PREMIUM */
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
     .card {
-      background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
-      display: flex; flex-direction: column; transition: 0.3s; cursor: pointer; backdrop-filter: blur(10px);
+      background: var(--bg-panel); border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+      display: flex; flex-direction: column; transition: 0.3s; cursor: pointer;
     }
-    .card:hover { transform: translateY(-8px); border-color: var(--primary); box-shadow: 0 15px 30px rgba(0,0,0,0.4); }
-    .card-img-wrapper { position: relative; width: 100%; height: 180px; }
+    .card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
+    .card-img-wrapper { position: relative; width: 100%; height: 160px; }
     .card-img { width: 100%; height: 100%; object-fit: cover; }
-    .card-tag { position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); border: 1px solid var(--border); color: var(--primary); font-size: 0.7rem; font-weight: 800; padding: 4px 10px; border-radius: 8px; text-transform: uppercase; }
-    .card-body { padding: 20px; display: flex; flex-direction: column; flex: 1; }
-    .card-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }
-    .card-author { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; margin-top: auto; padding-top: 15px; border-top: 1px solid var(--border); }
+    .card-tag { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.8); border: 1px solid var(--border); color: var(--primary); font-size: 0.65rem; font-weight: 800; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; }
+    .card-body { padding: 15px; display: flex; flex-direction: column; flex: 1; }
+    .card-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; line-height: 1.3; }
+    .card-author { font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border); }
 
-    /* MODAIS COM GLASSMORPHISM */
+    /* MODAIS */
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
-      z-index: 4000; display: flex; justify-content: center; align-items: center; padding: 20px;
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
+      z-index: 4000; display: flex; justify-content: center; align-items: center; padding: 15px;
     }
     .modal-content {
-      background: var(--bg-input); border: 1px solid var(--border); border-radius: 20px; padding: 30px;
-      width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; position: relative;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+      background: var(--bg-input); border: 1px solid var(--border); border-radius: 16px; padding: 25px;
+      width: 100%; max-width: 550px; max-height: 90vh; overflow-y: auto; position: relative;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
     }
-    .close-modal { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; color: white; transition: 0.2s; box-shadow: none; padding:0; }
-    .close-modal:hover { background: #ef4444; transform: rotate(90deg); }
+    .close-modal { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.1); border-radius: 8px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; color: white; padding:0; font-size: 1.2rem; }
+    .close-modal:hover { background: #ef4444; }
 
-    /* UPLOAD BOX ESTILIZADO */
     .upload-box {
-      border: 2px dashed var(--border); border-radius: 14px; padding: 20px; text-align: center;
+      border: 2px dashed var(--border); border-radius: 12px; padding: 15px; text-align: center;
       cursor: pointer; background: rgba(255,255,255,0.02); transition: 0.3s; margin: 10px 0;
     }
     .upload-box:hover { border-color: var(--primary); background: rgba(16, 185, 129, 0.05); }
-    
-    .dynamic-section { background: var(--bg-dark); padding: 15px; border-radius: 12px; border: 1px solid var(--border); margin: 15px 0; }
-    .section-title { font-size: 0.8rem; color: var(--primary); text-transform: uppercase; font-weight: 800; margin-bottom: 10px; letter-spacing: 1px; }
-
-    /* Detalhes do Post no Modal */
+    .dynamic-section { background: var(--bg-dark); padding: 12px; border-radius: 10px; border: 1px solid var(--border); margin: 12px 0; }
+    .section-title { font-size: 0.8rem; color: var(--primary); text-transform: uppercase; font-weight: 800; margin-bottom: 8px; }
     .dl-btn { text-decoration: none; display: block; margin-top: 8px; }
+
+    /* CHAT (CONVERSAS) */
+    .discord-chat-layout { display: flex; height: 450px; max-height: 65vh; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-top: 10px; }
+    .discord-channels { width: 140px; background: #111113; border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 10px; gap: 4px; overflow-y: auto; flex-shrink: 0; }
+    .discord-channel-item { padding: 8px; border-radius: 8px; font-size: 0.8rem; color: var(--text-muted); cursor: pointer; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .discord-channel-item:hover { background: #1f1f23; color: var(--text); }
+    .discord-channel-item.active { background: #27272a; color: white; }
+
+    .discord-chat-main { flex: 1; display: flex; flex-direction: column; background: var(--bg-input); min-width: 0; }
+    .discord-chat-header { padding: 12px 15px; background: var(--bg-surface); border-bottom: 1px solid var(--border); font-size: 0.9rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+    .discord-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+    
+    .chat-msg-group { display: flex; gap: 10px; }
+    .chat-msg-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+    .chat-msg-content { flex: 1; min-width: 0; }
+    .chat-msg-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 2px; }
+    .chat-msg-author { font-weight: 700; font-size: 0.85rem; color: #fff; }
+    .chat-msg-time { font-size: 0.65rem; color: var(--text-muted); }
+    .chat-msg-text { font-size: 0.85rem; color: var(--text); word-break: break-word; line-height: 1.4; }
+    .chat-msg-image { max-width: 100%; max-height: 200px; border-radius: 8px; margin-top: 6px; cursor: pointer; object-fit: cover; }
+    
+    .discord-input-area { padding: 10px; background: var(--bg-surface); border-top: 1px solid var(--border); display: flex; gap: 8px; }
+    .discord-input-area input { margin: 0; font-size: 0.85rem; padding: 10px 14px; border-radius: 8px; }
+
+    /* Ajuste Chat Celular */
+    @media (max-width: 600px) {
+      .discord-channels { width: 100px; padding: 6px; }
+      .discord-channel-item { font-size: 0.75rem; padding: 8px 6px; }
+    }
   </style>
 </head>
 <body>
@@ -183,7 +218,7 @@
   <div id="authScreen">
     <div class="auth-card">
       <h1>🚀 MasterAddon</h1>
-      <p style="color: var(--text-muted); font-size: 0.9rem;">A plataforma definitiva para criadores.</p>
+      <p style="color: var(--text-muted); font-size: 0.85rem;">Sua plataforma premium de mods.</p>
       
       <div class="tab-switch">
         <button id="tabLoginBtn" class="tab-btn active" onclick="switchAuthTab('login')">Entrar</button>
@@ -207,8 +242,10 @@
 
   <div id="mainApp" class="hidden">
     
+    <div id="sidebarOverlay" onclick="closeSidebar()"></div>
+
     <sidebar id="sidebar">
-      <h2 style="color: var(--primary); margin-bottom: 25px; display: flex; align-items: center; gap: 10px;">🚀 MasterAddon</h2>
+      <h2 class="brand">🚀 MasterAddon</h2>
       
       <div class="profile-widget">
         <img id="userAvatar" src="https://via.placeholder.com/150" class="profile-img">
@@ -219,19 +256,19 @@
       </div>
 
       <button class="nav-btn" onclick="openProfileModal()">⚙️ Editar Meu Perfil</button>
-      <div style="height: 1px; background: var(--border); margin: 15px 0;"></div>
+      <div style="height: 1px; background: var(--border); margin: 10px 0;"></div>
       <button class="nav-btn publish" onclick="openUploadModal()">➕ Publicar Conteúdo</button>
-      <button class="nav-btn" onclick="alert('Sistema de chat em manutenção para melhorias de UI!')">💬 Suporte & Chat</button>
+      <button class="nav-btn" onclick="openConversationsModal()">💬 Conversas</button>
       
       <button class="btn-outline btn-danger" style="margin-top: auto;" onclick="handleLogout()">Sair da Conta</button>
     </sidebar>
 
     <content-area>
       <header>
-        <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+        <button class="hamburger" onclick="toggleSidebar()">☰</button>
         <div class="search-box">
           <span class="search-icon">🔍</span>
-          <input type="text" id="searchInput" placeholder="Pesquisar addons, mapas, criadores..." oninput="renderPosts()">
+          <input type="text" id="searchInput" placeholder="Pesquisar addons, mapas..." oninput="renderPosts()">
         </div>
       </header>
 
@@ -245,7 +282,7 @@
         <div class="filter-pill" onclick="setFilter('Skin', this)">👤 Skins</div>
       </div>
 
-      <h2 style="margin-bottom: 20px; font-weight: 700;">Explorar Banco de Dados</h2>
+      <h2 style="margin-bottom: 20px; font-weight: 700; font-size: 1.2rem;">Explorar Banco de Dados</h2>
       <div id="postsGrid" class="grid">
         </div>
     </content-area>
@@ -255,12 +292,12 @@
     <div class="modal-content">
       <button class="close-modal" onclick="closeModals()">✕</button>
       <h2 style="color: var(--primary); margin-bottom: 5px;">➕ Nova Publicação</h2>
-      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Selecione o formato exato do seu projeto.</p>
+      <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 15px;">Selecione o formato exato do seu projeto.</p>
       
       <input type="text" id="upTitle" placeholder="Título (Ex: Mega Furniture Mod)">
-      <textarea id="upDesc" placeholder="Descrição completa detalhando o projeto..." rows="3"></textarea>
+      <textarea id="upDesc" placeholder="Descrição completa..." rows="3"></textarea>
 
-      <label style="font-size: 0.85rem; color: var(--text-muted); margin-left: 5px;">Formato do Arquivo:</label>
+      <label style="font-size: 0.8rem; color: var(--text-muted); margin-left: 5px;">Formato do Arquivo:</label>
       <select id="upFormat" onchange="handleFormatChange()">
         <option value="" disabled selected>-- Selecione o Formato --</option>
         <option value=".mcaddon">📦 Addon Único (.mcaddon)</option>
@@ -275,55 +312,52 @@
         <div class="section-title">Link de Download Oficial</div>
         <input type="url" id="upLinkMain" placeholder="Ex: https://mediafire.com/file/...">
         
-        <div class="section-title" style="margin-top: 15px;">Link Alternativo (Opcional)</div>
-        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px;">Ideal para Linkvertise, vídeo tutorial ou site do criador.</p>
+        <div class="section-title" style="margin-top: 10px;">Link Alternativo (Opcional)</div>
         <input type="url" id="upLinkAlt" placeholder="Link extra ou encurtador...">
       </div>
 
       <div id="boxDualLink" class="dynamic-section hidden">
-        <div class="section-title">Configuração de Pacotes (.mcpack)</div>
-        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px;">Adicione os links separados para Comportamento e Textura.</p>
-        <input type="url" id="upBehavior" placeholder="Link do Behavior Pack (Obrigatório)">
-        <input type="url" id="upResource" placeholder="Link do Resource Pack (Obrigatório)">
-        <input type="url" id="upDualAlt" placeholder="Link Alternativo / Vídeo (Opcional)" style="margin-top: 10px; border-color: var(--secondary);">
+        <div class="section-title">Pacotes (.mcpack)</div>
+        <input type="url" id="upBehavior" placeholder="Link do Behavior Pack">
+        <input type="url" id="upResource" placeholder="Link do Resource Pack">
+        <input type="url" id="upDualAlt" placeholder="Link Alternativo (Opcional)">
       </div>
 
       <div id="boxSkinUpload" class="dynamic-section hidden">
-        <div class="section-title">Upload Direto da Skin</div>
-        <p style="font-size: 0.75rem; color: var(--text-muted);">Skins são leves, então o upload do arquivo é direto para gerar a preview.</p>
-        <div class="upload-box" onclick="document.getElementById('upSkinFile').click()">
+        <div class="section-title">Upload da Skin (.png)</div>
+        <div class="upload-box" onclick="document.getElementById('upSkinFile').click()" style="padding: 10px;">
           <span id="skinFileName">📁 Selecionar Arquivo (.png)</span>
           <input type="file" id="upSkinFile" accept="image/png" class="hidden" onchange="handleSkinPreview(event)">
         </div>
         <div style="text-align: center; margin-top: 10px;">
-          <canvas id="skinCanvas" width="64" height="64" style="image-rendering: pixelated; width: 100px; height: 100px; border-radius: 8px; border: 1px solid var(--primary); background: #000;"></canvas>
+          <canvas id="skinCanvas" width="64" height="64" style="image-rendering: pixelated; width: 80px; height: 80px; border-radius: 8px; border: 1px solid var(--primary); background: #000;"></canvas>
         </div>
       </div>
 
       <div class="section-title" style="margin-top: 15px;">Thumbnail / Capa da Publicação</div>
-      <div class="upload-box" onclick="document.getElementById('upThumbFile').click()">
-        <span id="thumbFileName">🖼️ Escolher Imagem (Recomendado 16:9)</span>
+      <div class="upload-box" onclick="document.getElementById('upThumbFile').click()" style="padding: 10px;">
+        <span id="thumbFileName">🖼️ Escolher Imagem (16:9)</span>
         <input type="file" id="upThumbFile" accept="image/*" class="hidden" onchange="handleThumbSelect(event)">
       </div>
 
-      <button onclick="publishPost()" style="margin-top: 20px;">🚀 Publicar na Plataforma</button>
+      <button onclick="publishPost()" style="margin-top: 15px;">🚀 Publicar na Plataforma</button>
     </div>
   </div>
 
   <div id="postModal" class="modal-overlay hidden">
     <div class="modal-content">
       <button class="close-modal" onclick="closeModals()">✕</button>
-      <span id="viewTag" class="badge-creator" style="margin-bottom: 10px; display: inline-block; font-size: 0.8rem;">.mcaddon</span>
-      <h2 id="viewTitle" style="margin-bottom: 15px;">Título</h2>
+      <span id="viewTag" class="badge-creator" style="margin-bottom: 10px; display: inline-block;">.mcaddon</span>
+      <h2 id="viewTitle" style="margin-bottom: 15px; font-size: 1.4rem;">Título</h2>
       
-      <img id="viewImg" src="" style="width: 100%; height: 250px; object-fit: cover; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 15px;">
+      <img id="viewImg" src="" style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 15px;">
       
       <div id="viewSkinBox" class="hidden" style="text-align: center; margin-bottom: 15px; background: var(--bg-dark); padding: 15px; border-radius: 12px;">
         <span class="section-title">Preview da Skin</span><br>
-        <canvas id="viewSkinCanvas" width="64" height="64" style="image-rendering: pixelated; width: 120px; height: 120px; border: 1px solid var(--border); border-radius: 8px; background: #111; margin-top: 10px;"></canvas>
+        <canvas id="viewSkinCanvas" width="64" height="64" style="image-rendering: pixelated; width: 100px; height: 100px; border: 1px solid var(--border); border-radius: 8px; background: #111; margin-top: 5px;"></canvas>
       </div>
 
-      <p id="viewDesc" style="color: var(--text); font-size: 0.95rem; line-height: 1.6; margin-bottom: 25px;"></p>
+      <p id="viewDesc" style="color: var(--text); font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px;"></p>
 
       <div id="viewSingleLinks" class="hidden dynamic-section">
         <a id="btnMainLink" href="#" target="_blank" class="dl-btn"><button>📥 Baixar Arquivo Oficial</button></a>
@@ -336,36 +370,59 @@
         <a id="btnDualAlt" href="#" target="_blank" class="dl-btn hidden"><button class="btn-outline">🔗 Link Alternativo</button></a>
       </div>
       
-      <div style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 15px; font-size: 0.8rem; color: var(--text-muted);">
-        Publicado por: <strong id="viewAuthor" style="color: var(--text);"></strong>
+      <div style="margin-top: 15px; border-top: 1px solid var(--border); padding-top: 12px; font-size: 0.8rem; color: var(--text-muted);">
+        Por: <strong id="viewAuthor" style="color: var(--text);"></strong>
+      </div>
+    </div>
+  </div>
+
+  <div id="conversationsModal" class="modal-overlay hidden">
+    <div class="modal-content" style="max-width: 700px; padding: 20px;">
+      <button class="close-modal" onclick="closeModals()">✕</button>
+      <h2 style="color: var(--primary); margin-bottom: 5px; font-size: 1.3rem;">💬 Conversas</h2>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 15px;">Converse com a comunidade e o suporte.</p>
+      
+      <div class="discord-chat-layout">
+        <div class="discord-channels" id="discordChannelList">
+          <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; font-weight: bold; margin-bottom: 5px;">Canais</div>
+          <div class="discord-channel-item active"># suporte-geral</div>
+        </div>
+        <div class="discord-chat-main">
+          <div class="discord-chat-header" id="activeChatTitle"># suporte-geral</div>
+          <div class="discord-messages" id="discordMsgContainer"></div>
+          <div class="discord-input-area">
+            <button style="width: auto; padding: 10px; margin:0; border-radius: 8px;" class="btn-outline" onclick="document.getElementById('chatImageFile').click()">📷</button>
+            <input type="file" id="chatImageFile" accept="image/*" class="hidden" onchange="handleChatImage(event)">
+            <input type="text" id="discordInputText" placeholder="Mensagem..." autocomplete="off">
+            <button style="width: auto; padding: 10px 16px; margin:0; border-radius: 8px;" onclick="sendDiscordMessage()">Enviar</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <div id="profileModal" class="modal-overlay hidden">
-    <div class="modal-content" style="max-width: 400px; text-align: center;">
+    <div class="modal-content" style="max-width: 380px; text-align: center;">
       <button class="close-modal" onclick="closeModals()">✕</button>
       <h2 style="color: var(--primary); margin-bottom: 20px;">⚙️ Editar Perfil</h2>
       
-      <img id="editProfilePreview" src="https://via.placeholder.com/150" style="width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; margin-bottom: 15px;">
+      <img id="editProfilePreview" src="https://via.placeholder.com/150" style="width: 90px; height: 90px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; margin-bottom: 15px;">
       
       <div class="upload-box" onclick="document.getElementById('editPhotoFile').click()" style="padding: 10px;">
-        <span id="editPhotoName" style="font-size: 0.85rem;">📸 Mudar Foto de Perfil</span>
+        <span id="editPhotoName" style="font-size: 0.8rem;">📸 Mudar Foto</span>
         <input type="file" id="editPhotoFile" accept="image/*" class="hidden" onchange="handleProfilePhoto(event)">
       </div>
 
-      <input type="text" id="editDisplayName" placeholder="Seu Nome de Exibição">
+      <input type="text" id="editDisplayName" placeholder="Nome de Exibição">
       <button onclick="saveProfile()" style="margin-top: 15px;">Salvar Alterações</button>
     </div>
   </div>
 
   <script type="module">
-    // IMPORTAÇÕES FIREBASE V10
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-    // CHAVE OFICIAL RESTAURADA SEM PROBLEMAS!
     const firebaseConfig = {
       apiKey: "AIzaSyCGD9DZDFp0w9baW8jiqgGGfkasAvqreY0",
       authDomain: "site-ec6fd.firebaseapp.com",
@@ -376,11 +433,12 @@
       appId: "1:338689686380:web:509aebb8d64694a0e1d149"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+    let app, auth, db;
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
 
-    // UTILITÁRIOS
+    // FUNÇÕES DE UI BÁSICAS
     window.showToast = (msg, isError = false) => {
       const c = document.getElementById('toastContainer');
       const t = document.createElement('div');
@@ -397,11 +455,22 @@
       document.getElementById('tabRegBtn').classList.toggle('active', tab !== 'login');
     };
 
+    window.toggleSidebar = () => {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('active');
+    };
+    window.closeSidebar = () => {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('active');
+    };
+
     window.closeModals = () => {
       document.querySelectorAll('.modal-overlay').forEach(m => m.classList.add('hidden'));
-      document.getElementById('sidebar').classList.remove('open');
+      closeSidebar();
     };
+
     window.openUploadModal = () => { document.getElementById('uploadModal').classList.remove('hidden'); closeSidebar(); };
+    window.openConversationsModal = () => { document.getElementById('conversationsModal').classList.remove('hidden'); closeSidebar(); initChatSystem(); };
     window.openProfileModal = () => { 
       document.getElementById('profileModal').classList.remove('hidden'); 
       if(userData) {
@@ -410,9 +479,8 @@
       }
       closeSidebar(); 
     };
-    const closeSidebar = () => document.getElementById('sidebar').classList.remove('open');
 
-    // SISTEMA DE FORMULÁRIO DINÂMICO ESTRITO
+    // FORMULÁRIO DINÂMICO
     window.handleFormatChange = () => {
       const format = document.getElementById('upFormat').value;
       const sLink = document.getElementById('boxSingleLink');
@@ -421,24 +489,16 @@
       
       sLink.classList.add('hidden'); dLink.classList.add('hidden'); skBox.classList.add('hidden');
 
-      if (format === '.mcpack') {
-        dLink.classList.remove('hidden'); // Exige Behavior e Resource
-      } else if (format === 'Skin') {
-        skBox.classList.remove('hidden'); // Upload de arquivo .png
-      } else if (format) {
-        sLink.classList.remove('hidden'); // Outros (.mcaddon, .mcworld, .mctemplate, Textura)
-      }
+      if (format === '.mcpack') { dLink.classList.remove('hidden'); } 
+      else if (format === 'Skin') { skBox.classList.remove('hidden'); } 
+      else if (format) { sLink.classList.remove('hidden'); }
     };
 
-    // PROCESSAMENTO DE IMAGEM CLIENT-SIDE (BASE64)
-    let tempThumbBase64 = null;
-    let tempSkinBase64 = null;
-    let tempProfileBase64 = null;
-
+    // CONVERSÃO DE IMAGENS
     const fileToBase64 = (file, isSkin = false) => new Promise((resolve) => {
       const reader = new FileReader();
       reader.onload = (e) => {
-        if(isSkin) { resolve(e.target.result); return; } // Skin preserva pixel art
+        if(isSkin) { resolve(e.target.result); return; }
         const img = new Image();
         img.onload = () => {
           const canvas = document.createElement('canvas');
@@ -453,6 +513,8 @@
       };
       reader.readAsDataURL(file);
     });
+
+    let tempThumbBase64 = null, tempSkinBase64 = null, tempProfileBase64 = null, tempChatImageBase64 = null;
 
     window.handleThumbSelect = async (e) => {
       const file = e.target.files[0];
@@ -474,45 +536,48 @@
       if(!file) return;
       document.getElementById('skinFileName').textContent = "✅ " + file.name;
       tempSkinBase64 = await fileToBase64(file, true);
-      
       const img = new Image();
       img.onload = () => {
         const ctx = document.getElementById('skinCanvas').getContext('2d');
         ctx.clearRect(0,0,64,64); ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(img, 8, 8, 8, 8, 16, 16, 32, 32); // Rosto do Steve
+        ctx.drawImage(img, 8, 8, 8, 8, 16, 16, 32, 32);
       };
       img.src = tempSkinBase64;
     };
 
-    // FIREBASE AUTH & DB
+    window.handleChatImage = async (e) => {
+      const file = e.target.files[0];
+      if(!file) return;
+      tempChatImageBase64 = await fileToBase64(file);
+      showToast("Imagem anexada ao chat!");
+    };
+
+    // AUTENTICAÇÃO E PERFIL
     let userData = null;
     let allPosts = [];
     let currentFilter = 'all';
 
-    if(auth) {
-      onAuthStateChanged(auth, async (user) => {
-        if(user) {
-          document.getElementById('authScreen').classList.add('hidden');
-          document.getElementById('mainApp').classList.remove('hidden');
-          
-          const userRef = doc(db, "usuarios", user.uid);
-          const snap = await getDoc(userRef);
-          if(snap.exists()) {
-            userData = snap.data();
-          } else {
-            // CORREÇÃO: setDoc com merge:true evita erro de "No document to update"
-            userData = { displayName: "Novo Criador", photoUrl: "https://via.placeholder.com/150" };
-            await setDoc(userRef, userData, { merge: true });
-          }
-          document.getElementById('userName').textContent = userData.displayName;
-          document.getElementById('userAvatar').src = userData.photoUrl;
-          loadPosts();
+    onAuthStateChanged(auth, async (user) => {
+      if(user) {
+        document.getElementById('authScreen').classList.add('hidden');
+        document.getElementById('mainApp').classList.remove('hidden');
+        
+        const userRef = doc(db, "usuarios", user.uid);
+        const snap = await getDoc(userRef);
+        if(snap.exists()) {
+          userData = snap.data();
         } else {
-          document.getElementById('authScreen').classList.remove('hidden');
-          document.getElementById('mainApp').classList.add('hidden');
+          userData = { displayName: "Novo Criador", photoUrl: "https://via.placeholder.com/150" };
+          await setDoc(userRef, userData, { merge: true });
         }
-      });
-    }
+        document.getElementById('userName').textContent = userData.displayName;
+        document.getElementById('userAvatar').src = userData.photoUrl;
+        loadPosts();
+      } else {
+        document.getElementById('authScreen').classList.remove('hidden');
+        document.getElementById('mainApp').classList.add('hidden');
+      }
+    });
 
     window.handleRegister = async () => {
       const e = document.getElementById('regEmail').value, p = document.getElementById('regPassword').value, n = document.getElementById('regName').value;
@@ -521,6 +586,7 @@
         const cred = await createUserWithEmailAndPassword(auth, e, p);
         await setDoc(doc(db, "usuarios", cred.user.uid), { displayName: n, photoUrl: "https://via.placeholder.com/150" });
         showToast("Conta criada! Bem-vindo.");
+        document.getElementById('regEmail').value = ''; document.getElementById('regPassword').value = ''; document.getElementById('regName').value = '';
       } catch(err) { showToast(err.message, true); }
     };
 
@@ -530,31 +596,21 @@
       } catch(err) { showToast(err.message, true); }
     };
 
-    // NOVO SISTEMA DE LOGOUT: LIMPEZA TOTAL DOS CAMPOS DE LOGIN
+    // LOGOUT FORÇANDO A LIMPEZA DOS CAMPOS
     window.handleLogout = async () => {
       try {
-        await signOut(auth); // Desconecta
-        
-        // Limpa os campos visuais da tela de login/registro
+        await signOut(auth);
         document.getElementById('loginEmail').value = '';
         document.getElementById('loginPassword').value = '';
-        document.getElementById('regName').value = '';
-        document.getElementById('regEmail').value = '';
-        document.getElementById('regPassword').value = '';
-        
-        showToast("Sessão encerrada com sucesso!");
-      } catch(err) { 
-        showToast(err.message, true); 
-      }
+        showToast("Sessão encerrada com segurança!");
+      } catch(err) { showToast(err.message, true); }
     };
 
     window.saveProfile = async () => {
       const newName = document.getElementById('editDisplayName').value.trim();
-      if(!newName) return showToast("Nome não pode ficar vazio.", true);
-      
+      if(!newName) return showToast("Nome vazio.", true);
       const payload = { displayName: newName };
       if(tempProfileBase64) payload.photoUrl = tempProfileBase64;
-      
       try {
         await setDoc(doc(db, "usuarios", auth.currentUser.uid), payload, { merge: true });
         showToast("Perfil atualizado com sucesso!");
@@ -562,20 +618,16 @@
       } catch(err) { showToast(err.message, true); }
     };
 
+    // SISTEMA DE PUBLICAÇÃO
     window.publishPost = async () => {
       const format = document.getElementById('upFormat').value;
       const title = document.getElementById('upTitle').value;
       const desc = document.getElementById('upDesc').value;
       
       if(!format || !title || !desc) return showToast("Preencha título, descrição e formato!", true);
-      if(!tempThumbBase64 && format !== 'Skin') return showToast("A imagem de capa é obrigatória!", true);
+      if(!tempThumbBase64 && format !== 'Skin') return showToast("Imagem de capa obrigatória!", true);
 
-      const postData = {
-        title, desc, format,
-        thumb: tempThumbBase64 || tempSkinBase64,
-        authorName: userData.displayName,
-        createdAt: serverTimestamp()
-      };
+      const postData = { title, desc, format, thumb: tempThumbBase64 || tempSkinBase64, authorName: userData.displayName, createdAt: serverTimestamp() };
 
       if(format === '.mcpack') {
         postData.linkBehavior = document.getElementById('upBehavior').value;
@@ -591,7 +643,7 @@
 
       try {
         await addDoc(collection(db, "posts"), postData);
-        showToast("Conteúdo publicado mundialmente! 🌍");
+        showToast("Publicado com sucesso!");
         closeModals();
       } catch(err) { showToast(err.message, true); }
     };
@@ -616,12 +668,12 @@
       grid.innerHTML = '';
 
       const filtered = allPosts.filter(p => {
-        const matchF = currentFilter === 'all' || p.format === currentFilter;
+        const matchF = currentFilter === 'all' || p.format === currentFilter || (currentFilter==='Textura'&&p.format==='Textura') || (currentFilter==='Skin'&&p.format==='Skin');
         const matchS = p.title.toLowerCase().includes(search) || p.format.toLowerCase().includes(search);
         return matchF && matchS;
       });
 
-      if(filtered.length === 0) { grid.innerHTML = '<p style="color:#a1a1aa;">Nenhum conteúdo encontrado.</p>'; return; }
+      if(filtered.length === 0) { grid.innerHTML = '<p style="color:var(--text-muted);">Nenhum conteúdo encontrado.</p>'; return; }
 
       filtered.forEach(p => {
         grid.innerHTML += `
@@ -646,18 +698,15 @@
       document.getElementById('viewImg').src = post.thumb;
       document.getElementById('viewAuthor').textContent = post.authorName || 'Desconhecido';
 
-      const boxSingle = document.getElementById('viewSingleLinks');
-      const boxDual = document.getElementById('viewDualLinks');
-      const boxSkin = document.getElementById('viewSkinBox');
-      
+      const boxSingle = document.getElementById('viewSingleLinks'), boxDual = document.getElementById('viewDualLinks'), boxSkin = document.getElementById('viewSkinBox');
       boxSingle.classList.add('hidden'); boxDual.classList.add('hidden'); boxSkin.classList.add('hidden');
 
       if(post.format === '.mcpack') {
         boxDual.classList.remove('hidden');
         document.getElementById('btnBehavior').href = post.linkBehavior || '#';
         document.getElementById('btnResource').href = post.linkResource || '#';
-        const alt = document.getElementById('btnDualAlt');
-        if(post.linkAlt) { alt.href = post.linkAlt; alt.classList.remove('hidden'); } else { alt.classList.add('hidden'); }
+        if(post.linkAlt) { document.getElementById('btnDualAlt').href = post.linkAlt; document.getElementById('btnDualAlt').classList.remove('hidden'); } 
+        else { document.getElementById('btnDualAlt').classList.add('hidden'); }
       } else if (post.format === 'Skin') {
         boxSkin.classList.remove('hidden');
         const img = new Image();
@@ -667,8 +716,6 @@
           ctx.drawImage(img, 8, 8, 8, 8, 16, 16, 32, 32);
         };
         img.src = post.skinData;
-        
-        // Link mágico para baixar a skin renderizada
         boxSingle.classList.remove('hidden');
         document.getElementById('btnMainLink').href = post.skinData;
         document.getElementById('btnMainLink').download = post.title + ".png";
@@ -676,11 +723,51 @@
       } else {
         boxSingle.classList.remove('hidden');
         document.getElementById('btnMainLink').href = post.linkMain || '#';
-        const alt = document.getElementById('btnAltLink');
-        if(post.linkAlt) { alt.href = post.linkAlt; alt.classList.remove('hidden'); } else { alt.classList.add('hidden'); }
+        if(post.linkAlt) { document.getElementById('btnAltLink').href = post.linkAlt; document.getElementById('btnAltLink').classList.remove('hidden'); } 
+        else { document.getElementById('btnAltLink').classList.add('hidden'); }
       }
-
       document.getElementById('postModal').classList.remove('hidden');
+    };
+
+    // SISTEMA DE CHAT
+    let chatUnsub = null;
+    function initChatSystem() {
+      if(!auth.currentUser) return;
+      const c = document.getElementById('discordMsgContainer');
+      if(chatUnsub) chatUnsub();
+      chatUnsub = onSnapshot(query(collection(db, "globalChat"), orderBy("timestamp", "asc")), (snap) => {
+        c.innerHTML = '';
+        if(snap.empty) { c.innerHTML = '<div style="text-align:center; color:gray; padding:20px;">Nenhuma mensagem ainda.</div>'; return; }
+        snap.forEach(doc => {
+          const msg = doc.data();
+          let t = "Agora"; if(msg.timestamp) t = msg.timestamp.toDate().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+          c.innerHTML += `
+            <div class="chat-msg-group">
+              <img class="chat-msg-avatar" src="${msg.avatar}">
+              <div class="chat-msg-content">
+                <div class="chat-msg-header"><span class="chat-msg-author">${msg.name}</span><span class="chat-msg-time">${t}</span></div>
+                <div class="chat-msg-text">${msg.text}</div>
+                ${msg.img ? `<img src="${msg.img}" class="chat-msg-image">` : ''}
+              </div>
+            </div>`;
+        });
+        c.scrollTop = c.scrollHeight;
+      });
+    }
+
+    window.sendDiscordMessage = async () => {
+      const inp = document.getElementById('discordInputText');
+      const text = inp.value.trim();
+      if(!text && !tempChatImageBase64) return;
+      try {
+        const payload = {
+          senderId: auth.currentUser.uid, name: userData.displayName, avatar: userData.photoUrl,
+          text: text, timestamp: serverTimestamp()
+        };
+        if(tempChatImageBase64) { payload.img = tempChatImageBase64; tempChatImageBase64 = null; }
+        await addDoc(collection(db, "globalChat"), payload);
+        inp.value = '';
+      } catch(err) { showToast("Erro no chat: " + err.message, true); }
     };
   </script>
 </body>
