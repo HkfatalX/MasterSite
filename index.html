@@ -3,36 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Comunidade Fatal - Loja Oficial Roblox</title>
+  <title>MasterAddon (MSTRADN) - Mods, Addons e Mapas para Minecraft</title>
   <style>
     :root {
-      --bg-base: #070708;
-      --bg-surface: #111214;
-      --bg-card: #18191c;
-      --bg-input: #202225;
-      --accent: #f59e0b;
-      --accent-glow: rgba(245, 158, 11, 0.25);
-      --accent-hover: #d97706;
-      --danger: #ed4245;
-      --success: #3ba55d;
-      --text: #dcddde;
-      --text-muted: #8e9297;
-      --border: #2f3136;
+      --bg-base: #0f172a;
+      --bg-surface: #1e293b;
+      --bg-card: #334155;
+      --bg-input: #0f172a;
+      --accent: #10b981;
+      --accent-glow: rgba(16, 185, 129, 0.25);
+      --accent-hover: #059669;
+      --danger: #ef4444;
+      --success: #10b981;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #475569;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', 'Segoe UI', sans-serif; }
     body { background-color: var(--bg-base); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
 
-    /* Utilitários */
     .hidden { display: none !important; }
     input, button, select, textarea { width: 100%; padding: 12px 16px; margin: 6px 0; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-input); color: var(--text); font-size: 0.95rem; outline: none; transition: all 0.2s ease; }
     input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
     button { background: linear-gradient(135deg, var(--accent), var(--accent-hover)); color: #000; font-weight: 700; cursor: pointer; border: none; box-shadow: 0 4px 12px var(--accent-glow); transition: transform 0.15s, filter 0.15s; }
     button:hover { filter: brightness(1.1); transform: translateY(-1px); }
     button:active { transform: translateY(0); }
-    .btn-danger { background: var(--danger); color: white; box-shadow: 0 4px 12px rgba(237, 66, 69, 0.3); }
-    .btn-secondary { background: #2f3136; color: var(--text); box-shadow: none; border: 1px solid #4f545c; }
-    .btn-secondary:hover { background: #34373c; border-color: var(--text-muted); }
-    .btn-success { background: var(--success); color: white; box-shadow: 0 4px 12px rgba(59, 165, 93, 0.3); }
+    .btn-danger { background: var(--danger); color: white; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
+    .btn-secondary { background: var(--bg-card); color: var(--text); box-shadow: none; border: 1px solid var(--border); }
+    .btn-secondary:hover { background: #475569; border-color: var(--text-muted); }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(6px); }
@@ -40,15 +38,14 @@
     }
     .animate-fade { animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-    /* Sistema de Toasts */
     #toastContainer { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
     .toast { background: var(--bg-card); border: 1px solid var(--border); color: var(--text); padding: 14px 20px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); font-size: 0.9rem; pointer-events: auto; display: flex; align-items: center; gap: 10px; animation: fadeIn 0.3s ease; }
     .toast.success { border-left: 4px solid var(--success); }
     .toast.error { border-left: 4px solid var(--danger); }
 
-    /* --- TELA DE AUTENTICAÇÃO --- */
+    /* AUTH SCREEN */
     #authScreen {
-      position: fixed; inset: 0; background: radial-gradient(circle at center, #1c1507 0%, var(--bg-base) 100%); z-index: 3000;
+      position: fixed; inset: 0; background: radial-gradient(circle at center, #064e3b 0%, var(--bg-base) 100%); z-index: 3000;
       display: flex; justify-content: center; align-items: center; padding: 20px;
     }
     .auth-card {
@@ -60,7 +57,7 @@
     .tab-btn { flex: 1; padding: 8px; background: transparent; border: none; border-radius: 6px; color: var(--text-muted); cursor: pointer; font-weight: 600; box-shadow: none; }
     .tab-btn.active { background: var(--accent); color: #000; box-shadow: 0 2px 8px var(--accent-glow); }
 
-    /* --- LAYOUT PRINCIPAL --- */
+    /* LAYOUT PRINCIPAL */
     #mainApp { display: flex; flex: 1; min-height: 100vh; position: relative; }
 
     #sidebarOverlay {
@@ -77,14 +74,14 @@
     sidebar.open { transform: translateX(0); }
 
     .sidebar-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .brand { font-size: 1.2rem; font-weight: 800; color: var(--accent); display: flex; align-items: center; gap: 8px; }
+    .brand { font-size: 1.1rem; font-weight: 800; color: var(--accent); display: flex; align-items: center; gap: 8px; letter-spacing: 0.5px; }
     .sidebar-close-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--text); width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: none; padding: 0; font-weight: bold; }
     .sidebar-close-btn:hover { border-color: var(--accent); color: var(--accent); }
 
     .sidebar-block { margin-bottom: 16px; }
     .sidebar-block h4 { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
     .sidebar-menu-btn { width: 100%; text-align: left; background: var(--bg-card); color: var(--text); border: 1px solid var(--border); padding: 10px 14px; border-radius: 8px; margin-bottom: 6px; font-weight: 600; box-shadow: none; display: flex; align-items: center; gap: 10px; cursor: pointer; }
-    .sidebar-menu-btn:hover { background: #2f3136; border-color: var(--text-muted); transform: none; }
+    .sidebar-menu-btn:hover { background: #475569; border-color: var(--text-muted); transform: none; }
 
     content-area { flex: 1; padding: 25px; max-width: 1400px; width: 100%; margin-left: 0; }
     @media (max-width: 900px) { content-area { padding: 15px; } }
@@ -103,49 +100,39 @@
     .search-container { flex: 1; position: relative; max-width: 450px; }
     .search-container input { margin: 0; padding-left: 38px; background: var(--bg-input); }
     .search-icon { position: absolute; left: 12px; top: 13px; color: var(--text-muted); }
-    
-    .status-badge { padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-    .status-open { background: rgba(59, 165, 93, 0.15); color: var(--success); border: 1px solid rgba(59, 165, 93, 0.3); }
-    .status-closed { background: rgba(237, 66, 69, 0.15); color: var(--danger); border: 1px solid rgba(237, 66, 69, 0.3); }
 
-    .alert-box { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 10px; padding: 14px; margin-bottom: 20px; font-size: 0.85rem; line-height: 1.4; color: #fbbf24; }
-    .alert-box a { color: var(--text); text-decoration: underline; font-weight: 700; }
+    /* FILTROS DE CATEGORIA */
+    .categories-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 20px; }
+    .cat-pill { background: var(--bg-surface); border: 1px solid var(--border); padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap; color: var(--text-muted); transition: 0.2s; }
+    .cat-pill:hover, .cat-pill.active { background: var(--accent); color: #000; border-color: var(--accent); }
 
-    /* Grid e Cards */
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
-    .card { background-color: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: transform 0.2s, border-color 0.2s; }
-    .card:hover { transform: translateY(-2px); border-color: rgba(245, 158, 11, 0.4); }
-    .card h3 { font-size: 1.05rem; margin-bottom: 6px; font-weight: 700; }
-    .price-tag { color: var(--accent); font-weight: 800; font-size: 1.15rem; margin-bottom: 10px; }
+    /* GRID DE POSTS */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+    .post-card { background-color: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: transform 0.2s, border-color 0.2s; cursor: pointer; }
+    .post-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+    .post-thumb { width: 100%; height: 160px; object-fit: cover; border-bottom: 1px solid var(--border); }
+    .post-content { padding: 14px; display: flex; flex-direction: column; flex: 1; justify-content: space-between; }
+    .post-tag { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--accent); background: rgba(16, 185, 129, 0.1); padding: 3px 8px; border-radius: 4px; display: inline-block; width: fit-content; margin-bottom: 6px; }
+    .post-card h3 { font-size: 1.05rem; margin-bottom: 6px; font-weight: 700; line-height: 1.3; }
+    .post-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 0.75rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 10px; }
 
-    /* FAQ */
-    .section-title-custom { font-size: 1.1rem; font-weight: 700; color: var(--accent); margin: 25px 0 12px 0; display: flex; align-items: center; gap: 8px; }
-    .faq-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 25px; }
-    .faq-item { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; cursor: pointer; }
-    .faq-question { font-weight: 600; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center; }
-    .faq-answer { font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; display: none; line-height: 1.4; }
-    .faq-item.active .faq-answer { display: block; }
-
-    /* Modais */
+    /* MODAIS */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); z-index: 4000; display: flex; justify-content: center; align-items: center; padding: 12px; }
-    .modal-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; width: 100%; max-width: 600px; box-shadow: 0 20px 40px rgba(0,0,0,0.8); max-height: 94vh; overflow-y: auto; }
+    .modal-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; width: 100%; max-width: 620px; box-shadow: 0 20px 40px rgba(0,0,0,0.8); max-height: 94vh; overflow-y: auto; }
     
     .file-upload-box { border: 2px dashed var(--border); border-radius: 8px; padding: 12px; text-align: center; cursor: pointer; background: var(--bg-input); margin: 6px 0; transition: 0.2s; }
     .file-upload-box:hover { border-color: var(--accent); }
     .profile-preview { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); margin-bottom: 6px; display: inline-block; }
 
-    .back-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-card); border: 1px solid var(--border); padding: 6px 12px; border-radius: 8px; color: var(--text); font-weight: 600; cursor: pointer; margin-bottom: 15px; }
-    .back-btn:hover { border-color: var(--accent); }
-
-    /* --- CHAT OTIMIZADO PARA PC E CELULAR --- */
-    .discord-chat-layout { display: flex; height: 460px; max-height: 70vh; background: var(--bg-input); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 8px; }
-    .discord-channels { width: 160px; background: #18191c; border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 8px; gap: 4px; overflow-y: auto; flex-shrink: 0; }
-    .discord-channel-item { padding: 8px; border-radius: 6px; font-size: 0.8rem; color: var(--text-muted); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .discord-channel-item:hover { background: #2f3136; color: var(--text); }
-    .discord-channel-item.active { background: #393c43; color: white; }
+    /* CHAT DE SUPORTE */
+    .discord-chat-layout { display: flex; height: 440px; max-height: 70vh; background: var(--bg-input); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 8px; }
+    .discord-channels { width: 150px; background: #111827; border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 8px; gap: 4px; overflow-y: auto; flex-shrink: 0; }
+    .discord-channel-item { padding: 8px; border-radius: 6px; font-size: 0.8rem; color: var(--text-muted); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+    .discord-channel-item:hover { background: #1e293b; color: var(--text); }
+    .discord-channel-item.active { background: #334155; color: white; }
 
     .discord-chat-main { flex: 1; display: flex; flex-direction: column; background: var(--bg-input); min-width: 0; }
-    .discord-chat-header { padding: 10px 14px; background: var(--bg-surface); border-bottom: 1px solid var(--border); font-size: 0.85rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .discord-chat-header { padding: 10px 14px; background: var(--bg-surface); border-bottom: 1px solid var(--border); font-size: 0.85rem; font-weight: 700; }
     .discord-messages { flex: 1; padding: 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
     
     .chat-message-group { display: flex; gap: 10px; align-items: flex-start; }
@@ -155,17 +142,9 @@
     .chat-msg-author { font-weight: 700; font-size: 0.85rem; color: #fff; }
     .chat-msg-time { font-size: 0.65rem; color: var(--text-muted); }
     .chat-msg-text { font-size: 0.85rem; color: var(--text); word-break: break-word; line-height: 1.4; }
-    .chat-msg-image { max-width: 200px; border-radius: 6px; margin-top: 6px; border: 1px solid var(--border); cursor: pointer; display: block; }
     
     .discord-input-area { padding: 10px; background: var(--bg-surface); border-top: 1px solid var(--border); display: flex; gap: 6px; align-items: center; }
     .discord-input-area input { margin: 0; padding: 10px 12px; font-size: 0.85rem; }
-    .chat-img-preview-bar { padding: 6px 12px; background: rgba(0,0,0,0.3); font-size: 0.75rem; color: var(--accent); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-
-    @media (max-width: 600px) {
-      .discord-chat-layout { height: 60vh; }
-      .discord-channels { width: 110px; padding: 6px; }
-      .discord-channel-item { font-size: 0.75rem; padding: 6px; }
-    }
   </style>
 </head>
 <body>
@@ -174,7 +153,7 @@
 
   <div id="authScreen">
     <div class="auth-card animate-fade">
-      <h2>⚡ Comunidade Fatal</h2>
+      <h2>🚀 MasterAddon</h2>
       
       <div class="tab-switch">
         <button type="button" id="tabLoginBtn" class="tab-btn active" onclick="switchAuthTab('login')">Entrar</button>
@@ -184,23 +163,13 @@
       <div id="loginForm">
         <input type="email" id="loginEmail" placeholder="Seu e-mail" autocomplete="off">
         <input type="password" id="loginPassword" placeholder="Sua senha" autocomplete="new-password">
-        <button id="btnLogin" style="margin-top: 10px;">Acessar Loja</button>
-        <div style="text-align: right; margin-top: 8px;">
-          <a href="#" id="linkForgotPass" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: none;">Esqueci a senha?</a>
-        </div>
-      </div>
-
-      <div id="forgotForm" class="hidden animate-fade">
-        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 10px; text-align: center;">Insira seu e-mail para redefinir a senha.</p>
-        <input type="email" id="forgotEmail" placeholder="Digite seu e-mail" autocomplete="off">
-        <button id="btnSendReset" style="margin-top: 8px;">Enviar E-mail</button>
-        <button type="button" class="btn-secondary" onclick="switchAuthTab('login')" style="margin-top: 6px;">Voltar ao Login</button>
+        <button id="btnLogin" style="margin-top: 10px;">Acessar MSTRADN</button>
       </div>
 
       <div id="registerForm" class="hidden animate-fade">
         <input type="email" id="regEmail" placeholder="Seu e-mail" autocomplete="off">
         <input type="password" id="regPassword" placeholder="Sua senha (mín. 6 dígitos)" autocomplete="new-password">
-        <input type="text" id="regDisplayName" placeholder="Nome de Exibição" autocomplete="off">
+        <input type="text" id="regDisplayName" placeholder="Seu Nome / Criador" autocomplete="off">
         <button id="btnRegister" style="margin-top: 12px;">Criar Conta</button>
       </div>
     </div>
@@ -212,7 +181,7 @@
 
     <sidebar id="sidebarDrawer">
       <div class="sidebar-header-row">
-        <div class="brand">⚡ Comunidade Fatal</div>
+        <div class="brand">🚀 MasterAddon <span style="font-size:0.65rem; background: var(--accent); color:#000; padding:1px 4px; border-radius:4px; font-weight:900;">MSTRADN</span></div>
         <button class="sidebar-close-btn" onclick="toggleSidebar()" title="Fechar Menu">✕</button>
       </div>
 
@@ -221,23 +190,16 @@
           <img id="userAvatar" src="" alt="Avatar" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
           <div style="overflow: hidden;">
             <strong id="userDisplayName" style="display: block; font-size: 0.9rem; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;"></strong>
-            <span id="adminBadge" class="hidden" style="background: var(--accent); color: black; font-size: 0.65rem; font-weight: 800; padding: 1px 5px; border-radius: 4px;">ADMIN</span>
+            <span style="background: var(--accent); color: black; font-size: 0.65rem; font-weight: 800; padding: 1px 5px; border-radius: 4px;">MEMBRO</span>
           </div>
         </div>
         <button class="sidebar-menu-btn" onclick="openProfileModal()">⚙️ Meu Perfil</button>
       </div>
 
       <div class="sidebar-block">
-        <h4>Menu</h4>
-        <button class="sidebar-menu-btn" onclick="openConversationsModal()">💬 Conversas / Suporte</button>
-        <button id="menuBtnAdmin" class="sidebar-menu-btn hidden" onclick="openAdminModal()">🛡️ Painel Admin</button>
-      </div>
-
-      <div class="sidebar-block" style="flex: 1;">
-        <h4>📦 Meus Pedidos</h4>
-        <div id="myOrdersList" style="font-size: 0.8rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 6px; max-height: 180px; overflow-y: auto;">
-          Carregando...
-        </div>
+        <h4>Publicar para Todos</h4>
+        <button class="sidebar-menu-btn" onclick="openUploadModal()">➕ Publicar Addon / Mapa</button>
+        <button class="sidebar-menu-btn" onclick="openConversationsModal()">💬 Suporte & Comunidade</button>
       </div>
 
       <button id="btnLogout" class="btn-danger" style="margin-top: auto; padding: 8px; font-size: 0.85rem;">Sair da Conta</button>
@@ -253,186 +215,98 @@
         </button>
         <div class="search-container">
           <span class="search-icon">🔍</span>
-          <input type="text" id="searchInput" placeholder="Pesquisar..." autocomplete="off">
-        </div>
-        <div id="storeStatusDisplay" class="status-badge status-open">
-          <span>●</span> Aberta
+          <input type="text" id="searchInput" placeholder="Pesquisar mods, addons, mapas..." autocomplete="off">
         </div>
       </header>
 
-      <div class="alert-box animate-fade">
-        ⚠️ <strong>Regra de Entrega (Robux via Grupo):</strong> O cliente precisa estar no mínimo <strong>14 dias no grupo</strong> para receber Robux. Participe: <a href="https://www.roblox.com/pt/communities/35595836/Comunidade-Fatal#!/about" target="_blank">Comunidade Fatal - Roblox</a>.
+      <div class="categories-bar">
+        <div class="cat-pill active" onclick="filterCategory('all', this)">🔥 Todos</div>
+        <div class="cat-pill" onclick="filterCategory('Addons', this)">🧩 Addons / Mods</div>
+        <div class="cat-pill" onclick="filterCategory('Maps', this)">🗺️ Mapas</div>
+        <div class="cat-pill" onclick="filterCategory('Textures', this)">🎨 Texturas</div>
+        <div class="cat-pill" onclick="filterCategory('Skins', this)">👤 Skins</div>
       </div>
 
-      <div id="viewContainer">
-        <div id="robuxCalculatorCard" class="card animate-fade" style="margin-bottom: 25px; border-left: 4px solid var(--accent); background: linear-gradient(135deg, var(--bg-surface), var(--bg-card));">
-          <h3>💎 Calculadora de Robux (Mínimo 40)</h3>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 2px; margin-bottom: 12px;">Insira a quantidade desejada de Robux para calcular o PIX.</p>
-          
-          <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
-            <div style="flex: 1; min-width: 180px;">
-              <label style="font-size: 0.75rem; color: var(--text-muted);">Quantidade (Mín. 40)</label>
-              <input type="number" id="robuxQtyInput" value="40" min="40" style="margin-top: 4px;">
-            </div>
-            <div style="flex: 1; min-width: 180px;">
-              <label style="font-size: 0.75rem; color: var(--text-muted);">Total PIX</label>
-              <div id="robuxTotalDisplay" style="font-size: 1.6rem; font-weight: 800; color: var(--accent); padding: 4px 0;">R$ 2,00</div>
-            </div>
-            <div style="flex: 1; min-width: 150px;">
-              <button id="btnBuyRobuxCustom" style="height: 44px; margin-top: 16px;">Comprar Robux</button>
-            </div>
-          </div>
-          <div id="stockWarningBanner" class="hidden" style="margin-top: 12px; background: rgba(237,66,69,0.15); color: var(--danger); border: 1px solid rgba(237,66,69,0.3); padding: 10px; border-radius: 8px; text-align: center; font-weight: bold; font-size: 0.85rem;">
-            ⚠️ LOJA SEM ESTOQUE: Compras temporariamente desativadas.
-          </div>
-        </div>
-
-        <h2 id="sectionTitle" style="margin-bottom: 14px; font-size: 1.2rem; font-weight: 700;">Mapas do Roblox</h2>
-        <div id="dynamicGrid" class="grid"></div>
-
-        <div class="section-title-custom">❓ Perguntas Frequentes (FAQ)</div>
-        <div class="faq-container">
-          <div class="faq-item" onclick="toggleFaq(this)">
-            <div class="faq-question">Como funciona a entrega de Robux? <span>▼</span></div>
-            <div class="faq-answer">A entrega é feita via fundos de grupo do Roblox. Você entra no nosso grupo oficial, aguarda o prazo de segurança de 14 dias exigido pelo Roblox e o pagamento é liberado diretamente na sua conta.</div>
-          </div>
-          <div class="faq-item" onclick="toggleFaq(this)">
-            <div class="faq-question">Quanto tempo demora para aprovar o PIX? <span>▼</span></div>
-            <div class="faq-answer">Assim que você fizer o PIX para a chave informada e enviar o comprovante na nossa Central de Conversas, nossa equipe verifica e aprova o pedido rapidamente!</div>
-          </div>
-        </div>
-      </div>
+      <h2 id="sectionTitle" style="margin-bottom: 14px; font-size: 1.2rem; font-weight: 700;">Publicações Recentes</h2>
+      <div id="postsGrid" class="grid"></div>
     </content-area>
   </div>
 
-  <div id="checkoutModal" class="modal-overlay hidden">
-    <div class="modal-card animate-fade" style="border: 1px solid var(--accent); max-width: 480px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-        <h3 style="color: var(--accent);">🛒 Pagamento PIX</h3>
-        <button class="btn-secondary" style="width: auto; padding: 4px 10px; margin:0;" onclick="closeCheckoutModal()">✕</button>
+  <div id="postDetailModal" class="modal-overlay hidden">
+    <div class="modal-card animate-fade">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3 id="modalPostTitle" style="color: var(--accent);">Título do Addon</h3>
+        <button class="btn-secondary" style="width: auto; padding: 4px 10px; margin:0;" onclick="closePostModal()">✕</button>
       </div>
-
-      <div style="background: var(--bg-input); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--border);">
-        <p style="font-size: 0.8rem; color: var(--text-muted);">Produto:</p>
-        <strong id="checkoutItemName" style="font-size: 1rem; color: var(--text);">Item</strong>
-        <div style="margin-top: 4px; font-size: 1.1rem; font-weight: 800; color: var(--accent);" id="checkoutItemPrice">R$ 0,00</div>
+      <img id="modalPostImage" src="" alt="Thumbnail" style="width: 100%; height: 210px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--border);">
+      <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">Por criador: <strong id="modalPostAuthor" style="color: var(--text);"></strong></div>
+      <p id="modalPostDesc" style="font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px; color: var(--text);"></p>
+      
+      <div style="background: var(--bg-input); padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 12px;">
+        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">Link Externo (MediaFire / Google Drive):</div>
+        <a id="modalPostDownloadLinkText" href="#" target="_blank" style="color: var(--accent); font-size: 0.85rem; word-break: break-all; display: block; margin-bottom: 10px;">Link</a>
+        <a id="modalPostDownloadBtn" href="#" target="_blank" style="text-decoration: none; display: block;">
+          <button style="font-size: 0.95rem; padding: 10px; margin:0;">📥 Baixar via Link Externo</button>
+        </a>
       </div>
+    </div>
+  </div>
 
-      <label style="font-size: 0.8rem; color: var(--text-muted);">Cupom de Desconto (Opcional):</label>
-      <div style="display: flex; gap: 6px; margin-bottom: 12px;">
-        <input type="text" id="couponInput" placeholder="Ex: FATAL10" style="margin:0; text-transform: uppercase;">
-        <button class="btn-secondary" style="width: 100px; margin:0;" onclick="applyCoupon()">Aplicar</button>
+  <div id="uploadModal" class="modal-overlay hidden">
+    <div class="modal-card animate-fade">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3 style="color: var(--accent);">➕ Publicar no MSTRADN</h3>
+        <button class="btn-secondary" style="width: auto; padding: 4px 10px; margin:0;" onclick="closeUploadModal()">✕</button>
       </div>
-
-      <label style="font-size: 0.8rem; color: var(--text-muted);">Seu Nome de Usuário Exato no Roblox:</label>
-      <input type="text" id="checkoutRobloxUsername" placeholder="Ex: MeuNickRoblox" required style="margin-bottom: 12px;" autocomplete="off">
-
-      <div style="background: rgba(245, 158, 11, 0.06); border: 1px dashed var(--accent); padding: 12px; border-radius: 8px; margin-bottom: 12px; text-align: center;">
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 2px;">Chave PIX:</p>
-        <code style="font-size: 0.9rem; color: var(--accent); font-weight: bold; word-break: break-all;">88936d30-0079-436a-a3a8-1dfc0874fd0e</code>
-        <button class="btn-secondary" style="padding: 4px 8px; font-size: 0.75rem; margin-top: 6px;" onclick="copyPixKey()">Copiar Chave PIX</button>
-      </div>
-
-      <button id="btnConfirmCheckout" class="btn-success">Gerar Pedido e Abrir Chat com Suporte</button>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">Envie o link de download direto (MediaFire, Google Drive, etc.). Nenhum arquivo pesado é armazenado no servidor.</p>
+      
+      <form id="uploadForm">
+        <input type="text" id="upTitle" placeholder="Título do Addon / Mapa / Textura" required autocomplete="off">
+        <select id="upCategory" required>
+          <option value="Addons">Addons / Mods</option>
+          <option value="Maps">Mapas</option>
+          <option value="Textures">Texturas</option>
+          <option value="Skins">Skins</option>
+        </select>
+        <textarea id="upDesc" placeholder="Descrição explicando as funcionalidades..." rows="3" required></textarea>
+        
+        <input type="url" id="upDownloadLink" placeholder="Link de Download (Ex: https://www.mediafire.com/...)" required autocomplete="off">
+        
+        <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 6px;">Imagem de Capa (Thumbnail):</label>
+        <div class="file-upload-box" onclick="document.getElementById('upImageFile').click()">
+          <div id="upImageText" style="font-size: 0.8rem; color: var(--text-muted);">📁 Escolher Imagem de Capa</div>
+          <input type="file" id="upImageFile" accept="image/*" class="hidden" required>
+        </div>
+        <button type="submit" style="margin-top: 12px;">Publicar para Todos</button>
+      </form>
     </div>
   </div>
 
   <div id="conversationsModal" class="modal-overlay hidden">
-    <div class="modal-card animate-fade" style="max-width: 720px; padding: 18px;">
+    <div class="modal-card animate-fade" style="max-width: 700px; padding: 18px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-        <h3 style="color: var(--accent); font-size: 1.1rem;">💬 Central de Conversas & Comprovantes</h3>
+        <h3 style="color: var(--accent); font-size: 1.1rem;">💬 Comunidade MasterAddon</h3>
         <button class="btn-secondary" style="width: auto; padding: 4px 10px; margin:0;" onclick="closeConversationsModal()">✕</button>
       </div>
-      <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px;">Converse com o suporte, envie foto do comprovante e acompanhe a aprovação.</p>
+      <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px;">Converse com outros criadores e membros.</p>
 
       <div class="discord-chat-layout">
         <div id="discordChannelList" class="discord-channels">
-          <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; font-weight: bold; padding: 4px 2px;">Conversas</div>
+          <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; font-weight: bold; padding: 4px 2px;">Canais</div>
+          <div class="discord-channel-item active"># geral</div>
         </div>
 
         <div class="discord-chat-main">
           <div class="discord-chat-header">
-            <span id="activeChatTitle" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Suporte Comunidade Fatal</span>
-            <button class="btn-danger" style="width: auto; padding: 3px 6px; font-size: 0.7rem; margin:0; flex-shrink: 0;" onclick="closeChatThread()">Fechar</button>
+            <span># geral - MasterAddon</span>
           </div>
           
-          <div id="discordMsgContainer" class="discord-messages">
-            <div style="text-align: center; color: var(--text-muted); margin-top: 30px; font-size: 0.85rem;">Selecione ou inicie uma conversa.</div>
-          </div>
-
-          <div id="chatPreviewBar" class="hidden chat-img-preview-bar">
-            <span>📷 Foto anexada pronta para envio</span>
-            <span style="cursor: pointer; font-weight: bold;" onclick="clearChatImage()">✕</span>
-          </div>
+          <div id="discordMsgContainer" class="discord-messages"></div>
 
           <div class="discord-input-area">
-            <input type="text" id="discordInputText" placeholder="Escreva uma mensagem..." autocomplete="off">
-            <input type="file" id="discordImageFile" accept="image/*" class="hidden">
-            <button class="btn-secondary" style="width: auto; padding: 8px 10px; margin:0; flex-shrink: 0;" onclick="document.getElementById('discordImageFile').click()" title="Anexar Comprovante">📷</button>
+            <input type="text" id="discordInputText" placeholder="Escreva sua mensagem..." autocomplete="off">
             <button style="width: auto; padding: 8px 14px; margin:0; flex-shrink: 0;" onclick="sendDiscordMessage()">Enviar</button>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="adminModal" class="modal-overlay hidden">
-    <div class="modal-card animate-fade" style="border: 1px dashed var(--accent);">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h3 style="color: var(--accent);">🛡️ Painel do Administrador</h3>
-        <button class="btn-secondary" style="width: auto; padding: 4px 10px; margin:0;" onclick="closeAdminModal()">✕</button>
-      </div>
-
-      <div style="margin-bottom: 15px;">
-        <button id="btnToggleStock" class="btn-danger" style="margin: 0; padding: 8px;">Alternar Estoque Global (Ligar/Desligar)</button>
-      </div>
-
-      <div style="margin-bottom: 15px;">
-        <h4 style="color: var(--accent); margin-bottom: 6px; font-size: 0.85rem;">Preço por 1 Robux (R$)</h4>
-        <div style="display: flex; gap: 6px;">
-          <input type="number" step="0.001" id="robuxUnitPriceInput" placeholder="Ex: 0.05" style="margin:0;">
-          <button id="btnSaveRobuxPrice" style="width: 100px; margin:0;">Salvar</button>
-        </div>
-      </div>
-
-      <div class="tab-switch" style="margin-bottom: 12px;">
-        <button type="button" id="adminTabMapBtn" class="tab-btn active" onclick="switchAdminTab('map')">Criar Mapa</button>
-        <button type="button" id="adminTabGpBtn" class="tab-btn" onclick="switchAdminTab('gp')">Criar Gamepass</button>
-        <button type="button" id="adminTabOrdersBtn" class="tab-btn" onclick="switchAdminTab('orders')">Ver Pedidos</button>
-      </div>
-
-      <div id="adminMapFormSection">
-        <form id="mapForm">
-          <input type="text" id="mapName" placeholder="Nome do Mapa" required style="margin: 4px 0 6px 0;" autocomplete="off">
-          <label style="font-size: 0.8rem; color: var(--text-muted);">Foto do Mapa:</label>
-          <div class="file-upload-box" onclick="document.getElementById('mapImageFile').click()">
-            <div id="mapUploadText" style="font-size: 0.8rem; color: var(--text-muted);">📁 Escolher Imagem</div>
-            <input type="file" id="mapImageFile" accept="image/*" class="hidden" required>
-          </div>
-          <button type="submit" style="margin-top: 8px;">Cadastrar Mapa</button>
-        </form>
-      </div>
-
-      <div id="adminGpFormSection" class="hidden">
-        <form id="gamepassForm">
-          <label style="font-size: 0.8rem; color: var(--text-muted);">Mapa:</label>
-          <select id="gpMapSelect" required style="margin: 4px 0 6px 0;"></select>
-          <input type="text" id="gpName" placeholder="Nome da Gamepass" required style="margin: 4px 0 6px 0;" autocomplete="off">
-          <input type="number" id="gpRobuxPrice" placeholder="Preço em Robux" required style="margin: 4px 0 6px 0;" autocomplete="off">
-          <input type="text" id="gpBRLPrice" placeholder="Preço em R$" readonly style="margin: 4px 0 6px 0; background: #121212; color: var(--accent); font-weight: bold;" autocomplete="off">
-          <label style="font-size: 0.8rem; color: var(--text-muted);">Foto da Gamepass:</label>
-          <div class="file-upload-box" onclick="document.getElementById('gpImageFile').click()">
-            <div id="gpUploadText" style="font-size: 0.8rem; color: var(--text-muted);">📁 Escolher Imagem</div>
-            <input type="file" id="gpImageFile" accept="image/*" class="hidden" required>
-          </div>
-          <button type="submit" style="margin-top: 8px;">Cadastrar Gamepass</button>
-        </form>
-      </div>
-
-      <div id="adminOrdersSection" class="hidden">
-        <h4 style="color: var(--accent); margin-bottom: 8px; font-size: 0.9rem;">Pedidos Pendentes / Entregas</h4>
-        <div id="adminOrdersList" style="display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto;">
-          Carregando...
         </div>
       </div>
     </div>
@@ -454,14 +328,14 @@
       </div>
       <label style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; display: block;">Nome de Exibição:</label>
       <input type="text" id="editDisplayName" placeholder="Seu nome" autocomplete="off">
-      <button id="btnSaveProfile" style="margin-top: 12px;">Salvar</button>
+      <button id="btnSaveProfile" style="margin-top: 12px;">Salvar Alterações</button>
     </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, getDoc, setDoc, updateDoc, deleteDoc, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, getDoc, setDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCGD9DZDFp0w9baW8jiqgGGfkasAvqreY0",
@@ -470,16 +344,12 @@
       projectId: "site-ec6fd",
       storageBucket: "site-ec6fd.firebasestorage.app",
       messagingSenderId: "338689686380",
-      appId: "1:338689686380:web:509aebb8d64694a0e1d149",
-      measurementId: "G-17MWLV6N26"
+      appId: "1:338689686380:web:509aebb8d64694a0e1d149"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-
-    const ADMIN_EMAIL = "raiyuri.freefire@gmail.com";
-    const PIX_KEY = "88936d30-0079-436a-a3a8-1dfc0874fd0e";
 
     window.showToast = function(message, type = 'success') {
       const container = document.getElementById('toastContainer');
@@ -494,21 +364,30 @@
     };
 
     window.toggleSidebar = function() {
-      const sidebar = document.getElementById('sidebarDrawer');
-      const overlay = document.getElementById('sidebarOverlay');
-      sidebar.classList.toggle('open');
-      overlay.classList.toggle('active');
+      document.getElementById('sidebarDrawer').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('active');
     };
 
-    window.toggleFaq = function(el) {
-      el.classList.toggle('active');
+    window.switchAuthTab = function(tab) {
+      document.getElementById('loginForm').classList.add('hidden');
+      document.getElementById('registerForm').classList.add('hidden');
+      document.getElementById('tabLoginBtn').classList.remove('active');
+      document.getElementById('tabRegBtn').classList.remove('active');
+
+      if (tab === 'login') {
+        document.getElementById('loginForm').classList.remove('hidden');
+        document.getElementById('tabLoginBtn').classList.add('active');
+      } else {
+        document.getElementById('registerForm').classList.remove('hidden');
+        document.getElementById('tabRegBtn').classList.add('active');
+      }
     };
 
-    window.openAdminModal = function() {
-      document.getElementById('adminModal').classList.remove('hidden');
-      toggleSidebar();
-    };
-    window.closeAdminModal = function() { document.getElementById('adminModal').classList.add('hidden'); };
+    window.openUploadModal = function() { document.getElementById('uploadModal').classList.remove('hidden'); toggleSidebar(); };
+    window.closeUploadModal = function() { document.getElementById('uploadModal').classList.add('hidden'); };
+
+    window.openConversationsModal = function() { document.getElementById('conversationsModal').classList.remove('hidden'); toggleSidebar(); initChatSystem(); };
+    window.closeConversationsModal = function() { document.getElementById('conversationsModal').classList.add('hidden'); };
 
     window.openProfileModal = function() {
       if (currentUserData) {
@@ -520,80 +399,26 @@
     };
     window.closeProfileModal = function() { document.getElementById('profileModal').classList.add('hidden'); };
 
-    window.openConversationsModal = function() {
-      document.getElementById('conversationsModal').classList.remove('hidden');
-      toggleSidebar();
-      initChatSystem();
-    };
-    window.closeConversationsModal = function() { document.getElementById('conversationsModal').classList.add('hidden'); };
-
-    window.copyPixKey = function() {
-      navigator.clipboard.writeText(PIX_KEY);
-      showToast("Chave PIX copiada!");
-    };
-
-    window.switchAuthTab = function(tab) {
-      document.getElementById('loginForm').classList.add('hidden');
-      document.getElementById('registerForm').classList.add('hidden');
-      document.getElementById('forgotForm').classList.add('hidden');
-      document.getElementById('tabLoginBtn').classList.remove('active');
-      document.getElementById('tabRegBtn').classList.remove('active');
-
-      if (tab === 'login') {
-        document.getElementById('loginForm').classList.remove('hidden');
-        document.getElementById('tabLoginBtn').classList.add('active');
-      } else if (tab === 'register') {
-        document.getElementById('registerForm').classList.remove('hidden');
-        document.getElementById('tabRegBtn').classList.add('active');
-      } else if (tab === 'forgot') {
-        document.getElementById('forgotForm').classList.remove('hidden');
-      }
-    };
-
-    document.getElementById('linkForgotPass').addEventListener('click', (e) => {
-      e.preventDefault();
-      switchAuthTab('forgot');
-    });
-
-    document.getElementById('btnSendReset').addEventListener('click', async () => {
-      const email = document.getElementById('forgotEmail').value.trim();
-      if (!email) { showToast("Insira seu e-mail!", "error"); return; }
-      try {
-        await sendPasswordResetEmail(auth, email);
-        showToast("E-mail de recuperação enviado!");
-        switchAuthTab('login');
-      } catch (err) {
-        showToast("Erro ao enviar e-mail.", "error");
-      }
-    });
-
     function processImageFile(fileInputId, previewImgId = null, textLabelId = null) {
       return new Promise((resolve) => {
         const fileInput = document.getElementById(fileInputId);
         const file = fileInput.files[0];
         if (!file) { resolve(null); return; }
-
         const reader = new FileReader();
         reader.onload = function(event) {
           const img = new Image();
           img.onload = function() {
             const canvas = document.createElement('canvas');
-            const maxDim = 450;
-            let width = img.width;
-            let height = img.height;
-            if (width > height) {
-              if (width > maxDim) { height *= maxDim / width; width = maxDim; }
-            } else {
-              if (height > maxDim) { width *= maxDim / height; height = maxDim; }
-            }
-            canvas.width = width;
-            canvas.height = height;
+            const maxDim = 500;
+            let width = img.width, height = img.height;
+            if (width > height) { if (width > maxDim) { height *= maxDim / width; width = maxDim; } }
+            else { if (height > maxDim) { width *= maxDim / height; height = maxDim; } }
+            canvas.width = width; canvas.height = height;
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
             const base64 = canvas.toDataURL('image/jpeg', 0.8);
-
             if (previewImgId) document.getElementById(previewImgId).src = base64;
-            if (textLabelId) document.getElementById(textLabelId).textContent = "Carregado ✅";
+            if (textLabelId) document.getElementById(textLabelId).textContent = "Imagem carregada ✅";
             resolve(base64);
           };
           img.src = event.target.result;
@@ -603,32 +428,14 @@
     }
 
     let newProfilePhotoBase64 = null;
-    let newMapPhotoBase64 = null;
-    let newGpPhotoBase64 = null;
-    let chatImageBase64 = null;
+    let newPostPhotoBase64 = null;
 
     document.getElementById('editPhotoFile').addEventListener('change', async () => {
       newProfilePhotoBase64 = await processImageFile('editPhotoFile', 'modalProfilePreview', 'uploadBoxText');
     });
-    document.getElementById('mapImageFile').addEventListener('change', async () => {
-      newMapPhotoBase64 = await processImageFile('mapImageFile', null, 'mapUploadText');
+    document.getElementById('upImageFile').addEventListener('change', async () => {
+      newPostPhotoBase64 = await processImageFile('upImageFile', null, 'upImageText');
     });
-    document.getElementById('gpImageFile').addEventListener('change', async () => {
-      newGpPhotoBase64 = await processImageFile('gpImageFile', null, 'gpUploadText');
-    });
-    document.getElementById('discordImageFile').addEventListener('change', async () => {
-      chatImageBase64 = await processImageFile('discordImageFile');
-      if (chatImageBase64) {
-        document.getElementById('chatPreviewBar').classList.remove('hidden');
-        showToast("Comprovante anexado!");
-      }
-    });
-
-    window.clearChatImage = function() {
-      chatImageBase64 = null;
-      document.getElementById('chatPreviewBar').classList.add('hidden');
-      document.getElementById('discordImageFile').value = '';
-    };
 
     document.getElementById('btnSaveProfile').addEventListener('click', async () => {
       if (!auth.currentUser) return;
@@ -641,9 +448,7 @@
         showToast("Perfil atualizado!");
         closeProfileModal();
         window.location.reload();
-      } catch (err) {
-        showToast("Erro: " + err.message, "error");
-      }
+      } catch (err) { showToast("Erro: " + err.message, "error"); }
     });
 
     document.getElementById('btnRegister').addEventListener('click', async () => {
@@ -655,43 +460,30 @@
       try {
         const cred = await createUserWithEmailAndPassword(auth, email, pass);
         await setDoc(doc(db, "usuarios", cred.user.uid), {
-          uid: cred.user.uid,
-          email: email,
-          displayName: displayName,
-          photoUrl: "https://via.placeholder.com/150"
+          uid: cred.user.uid, email, displayName, photoUrl: "https://via.placeholder.com/150"
         }, { merge: true });
         showToast("Conta criada com sucesso!");
         switchAuthTab('login');
-      } catch (err) {
-        showToast("Erro: " + err.message, "error");
-      }
+      } catch (err) { showToast("Erro: " + err.message, "error"); }
     });
 
     document.getElementById('btnLogin').addEventListener('click', async () => {
       const email = document.getElementById('loginEmail').value.trim();
       const pass = document.getElementById('loginPassword').value;
-      try {
-        await signInWithEmailAndPassword(auth, email, pass);
-      } catch (err) {
-        showToast("Erro ao entrar: " + err.message, "error");
-      }
+      try { await signInWithEmailAndPassword(auth, email, pass); }
+      catch (err) { showToast("Erro ao entrar: " + err.message, "error"); }
     });
 
     document.getElementById('btnLogout').addEventListener('click', () => signOut(auth));
 
     let currentUserData = null;
-    let storeConfig = { stockActive: true, robuxPrice: 0.05 };
-
     onAuthStateChanged(auth, async (user) => {
       const authScreen = document.getElementById('authScreen');
       const mainApp = document.getElementById('mainApp');
-      const menuBtnAdmin = document.getElementById('menuBtnAdmin');
-      const adminBadge = document.getElementById('adminBadge');
 
       if (user) {
         authScreen.classList.add('hidden');
         mainApp.classList.remove('hidden');
-
         const userDocRef = doc(db, "usuarios", user.uid);
         const userDoc = await getDoc(userDocRef);
         if (userDoc.exists()) {
@@ -704,16 +496,6 @@
           document.getElementById('userDisplayName').textContent = currentUserData.displayName;
           document.getElementById('userAvatar').src = currentUserData.photoUrl;
         }
-
-        if (user.email === ADMIN_EMAIL) {
-          adminBadge.classList.remove('hidden');
-          menuBtnAdmin.classList.remove('hidden');
-        } else {
-          adminBadge.classList.add('hidden');
-          menuBtnAdmin.classList.add('hidden');
-        }
-
-        loadUserOrders(user.uid);
       } else {
         authScreen.classList.remove('hidden');
         mainApp.classList.add('hidden');
@@ -721,243 +503,130 @@
       }
     });
 
-    const storeConfigRef = doc(db, "config", "lojaConfig");
-    onSnapshot(storeConfigRef, (docSnap) => {
-      if (docSnap.exists()) {
-        storeConfig = docSnap.data();
-      } else {
-        setDoc(storeConfigRef, { stockActive: true, robuxPrice: 0.05 }, { merge: true });
-      }
-      refreshStoreStateUI();
-    });
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('upTitle').value.trim();
+      const category = document.getElementById('upCategory').value;
+      const desc = document.getElementById('upDesc').value.trim();
+      const downloadLink = document.getElementById('upDownloadLink').value.trim();
 
-    function refreshStoreStateUI() {
-      const statusDisplay = document.getElementById('storeStatusDisplay');
-      const warningBanner = document.getElementById('stockWarningBanner');
-      const robuxUnitPriceInput = document.getElementById('robuxUnitPriceInput');
-
-      if (robuxUnitPriceInput && document.activeElement !== robuxUnitPriceInput) {
-        robuxUnitPriceInput.value = storeConfig.robuxPrice;
-      }
-
-      if (storeConfig.stockActive) {
-        statusDisplay.className = "status-badge status-open";
-        statusDisplay.innerHTML = "<span>●</span> Aberta";
-        warningBanner.classList.add('hidden');
-      } else {
-        statusDisplay.className = "status-badge status-closed";
-        statusDisplay.innerHTML = "<span>●</span> Sem Estoque";
-        warningBanner.classList.remove('hidden');
-      }
-      calcRobuxCost();
-      updateGpBrlPreview();
-    }
-
-    const robuxQtyInput = document.getElementById('robuxQtyInput');
-    const robuxTotalDisplay = document.getElementById('robuxTotalDisplay');
-
-    function calcRobuxCost() {
-      let rawVal = robuxQtyInput.value;
-      let qty = parseInt(rawVal);
-      if (isNaN(qty) || qty < 40) {
-        qty = 40;
-      }
-      const total = qty * (storeConfig.robuxPrice || 0.05);
-      robuxTotalDisplay.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
-    }
-    robuxQtyInput.addEventListener('input', calcRobuxCost);
-
-    let pendingCheckoutItem = null;
-    let appliedDiscount = 0;
-
-    document.getElementById('btnBuyRobuxCustom').addEventListener('click', () => {
-      if (!storeConfig.stockActive) { showToast("Loja sem estoque!", "error"); return; }
-      let qty = parseInt(robuxQtyInput.value) || 40;
-      if (qty < 40) qty = 40;
-      const total = (qty * storeConfig.robuxPrice).toFixed(2);
-      
-      pendingCheckoutItem = {
-        name: `${qty} Robux (Via Grupo)`,
-        price: total,
-        rawPrice: parseFloat(total)
-      };
-      appliedDiscount = 0;
-      document.getElementById('couponInput').value = '';
-      openCheckoutModal(pendingCheckoutItem);
-    });
-
-    function openCheckoutModal(item) {
-      document.getElementById('checkoutItemName').textContent = item.name;
-      document.getElementById('checkoutItemPrice').textContent = `R$ ${item.price.replace('.', ',')}`;
-      document.getElementById('checkoutRobloxUsername').value = '';
-      document.getElementById('checkoutModal').classList.remove('hidden');
-    }
-
-    window.closeCheckoutModal = function() {
-      document.getElementById('checkoutModal').classList.add('hidden');
-    };
-
-    window.applyCoupon = function() {
-      const code = document.getElementById('couponInput').value.trim().toUpperCase();
-      if (!pendingCheckoutItem) return;
-
-      if (code === "FATAL10") {
-        appliedDiscount = 0.10;
-        const discounted = (pendingCheckoutItem.rawPrice * (1 - appliedDiscount)).toFixed(2);
-        document.getElementById('checkoutItemPrice').textContent = `R$ ${discounted.replace('.', ',')} (Com 10% Desconto)`;
-        showToast("Cupom aplicado com sucesso!");
-      } else {
-        showToast("Cupom inválido!", "error");
-      }
-    };
-
-    document.getElementById('btnConfirmCheckout').addEventListener('click', async () => {
-      const robloxNick = document.getElementById('checkoutRobloxUsername').value.trim();
-      if (!robloxNick) { showToast("Digite seu nome de usuário do Roblox!", "error"); return; }
-      if (!pendingCheckoutItem) return;
-
-      let finalPrice = pendingCheckoutItem.rawPrice;
-      if (appliedDiscount > 0) {
-        finalPrice = (finalPrice * (1 - appliedDiscount)).toFixed(2);
-      } else {
-        finalPrice = finalPrice.toFixed(2);
-      }
+      if (!newPostPhotoBase64) { showToast("Envie a imagem de capa!", "error"); return; }
 
       try {
-        await addDoc(collection(db, "pedidos"), {
-          userId: auth.currentUser.uid,
-          comprador: currentUserData ? currentUserData.displayName : "Cliente",
-          robloxNick: robloxNick,
-          item: pendingCheckoutItem.name,
-          valor: finalPrice,
-          data: serverTimestamp(),
-          status: "Pendente (Aguardando Comprovante)"
+        await addDoc(collection(db, "posts"), {
+          title, category, desc, downloadLink,
+          image: newPostPhotoBase64,
+          author: currentUserData ? currentUserData.displayName : "Criador",
+          createdAt: serverTimestamp()
         });
-
-        const chatDocRef = doc(db, "chats", auth.currentUser.uid);
-        await setDoc(chatDocRef, {
-          userId: auth.currentUser.uid,
-          clientName: currentUserData ? currentUserData.displayName : "Cliente",
-          clientAvatar: currentUserData ? currentUserData.photoUrl : "https://via.placeholder.com/150",
-          robloxNick: robloxNick,
-          lastMessage: `Pedido de ${pendingCheckoutItem.name} gerado.`,
-          updatedAt: serverTimestamp(),
-          closedByClient: false
-        }, { merge: true });
-
-        await addDoc(collection(db, "chats", auth.currentUser.uid, "messages"), {
-          senderId: auth.currentUser.uid,
-          senderRole: "client",
-          senderName: currentUserData ? currentUserData.displayName : "Cliente",
-          senderAvatar: currentUserData ? currentUserData.photoUrl : "https://via.placeholder.com/150",
-          text: `Olá! Fiz o pedido de ${pendingCheckoutItem.name} no valor de R$ ${finalPrice}. Meu nick do Roblox é: ${robloxNick}.`,
-          timestamp: serverTimestamp()
-        });
-
-        showToast("Pedido gerado com sucesso! Abrindo chat.");
-        closeCheckoutModal();
-        openConversationsModal();
-        selectedChatUserId = auth.currentUser.uid;
-      } catch (err) {
-        showToast("Erro: " + err.message, "error");
-      }
+        document.getElementById('uploadForm').reset();
+        newPostPhotoBase64 = null;
+        document.getElementById('upImageText').textContent = "📁 Escolher Imagem de Capa";
+        showToast("Publicado com sucesso!");
+        closeUploadModal();
+      } catch (err) { showToast("Erro: " + err.message, "error"); }
     });
 
-    let selectedChatUserId = null;
-    let messagesUnsubscribe = null;
-    let chatsListUnsubscribe = null;
+    let allPostsData = [];
+    let currentCategoryFilter = 'all';
 
-    function initChatSystem() {
-      if (!auth.currentUser) return;
-      const isAdmin = auth.currentUser.email === ADMIN_EMAIL;
-      
-      if (isAdmin) {
-        loadAdminChatsList();
-      } else {
-        selectedChatUserId = auth.currentUser.uid;
-        document.getElementById('discordChannelList').innerHTML = `
-          <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; font-weight: bold; padding: 4px 2px;">Conversas</div>
-          <div class="discord-channel-item active"># suporte-fatal</div>
-        `;
-        document.getElementById('activeChatTitle').textContent = "Suporte Oficial - Comunidade Fatal";
-        listenToMessages(auth.currentUser.uid);
+    onSnapshot(query(collection(db, "posts"), orderBy("createdAt", "desc")), (snapshot) => {
+      allPostsData = [];
+      snapshot.forEach(docSnap => allPostsData.push({ id: docSnap.id, ...docSnap.data() }));
+      renderPosts();
+    });
+
+    window.filterCategory = function(cat, el) {
+      currentCategoryFilter = cat;
+      document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      renderPosts();
+    };
+
+    document.getElementById('searchInput').addEventListener('input', renderPosts);
+
+    function renderPosts() {
+      const grid = document.getElementById('postsGrid');
+      const searchVal = document.getElementById('searchInput').value.toLowerCase();
+      grid.innerHTML = '';
+
+      let filtered = allPostsData.filter(p => {
+        const matchCat = currentCategoryFilter === 'all' || p.category === currentCategoryFilter;
+        const matchSearch = p.title.toLowerCase().includes(searchVal) || p.desc.toLowerCase().includes(searchVal);
+        return matchCat && matchSearch;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1;">Nenhuma publicação encontrada.</p>';
+        return;
       }
-    }
 
-    function loadAdminChatsList() {
-      const channelListEl = document.getElementById('discordChannelList');
-      const q = query(collection(db, "chats"), orderBy("updatedAt", "desc"));
-      
-      if (chatsListUnsubscribe) chatsListUnsubscribe();
-
-      chatsListUnsubscribe = onSnapshot(q, (snapshot) => {
-        channelListEl.innerHTML = '<div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; font-weight: bold; padding: 4px 2px;">Clientes</div>';
-        
-        if (snapshot.empty) {
-          channelListEl.innerHTML += '<div style="font-size: 0.75rem; color: var(--text-muted); padding: 6px;">Nenhum chat.</div>';
-          return;
-        }
-
-        let first = true;
-        snapshot.forEach(docSnap => {
-          const chat = docSnap.data();
-          const div = document.createElement('div');
-          div.className = `discord-channel-item ${selectedChatUserId === chat.userId ? 'active' : ''}`;
-          div.innerHTML = `💬 ${chat.clientName || 'Cliente'}`;
-          div.onclick = () => {
-            selectedChatUserId = chat.userId;
-            document.getElementById('activeChatTitle').textContent = `${chat.clientName} (${chat.robloxNick || 'N/A'})`;
-            document.querySelectorAll('.discord-channel-item').forEach(el => el.classList.remove('active'));
-            div.classList.add('active');
-            listenToMessages(chat.userId);
-          };
-          channelListEl.appendChild(div);
-
-          if (first && !selectedChatUserId) {
-            selectedChatUserId = chat.userId;
-            document.getElementById('activeChatTitle').textContent = `${chat.clientName} (${chat.robloxNick || 'N/A'})`;
-            div.classList.add('active');
-            listenToMessages(chat.userId);
-            first = false;
-          }
-        });
+      filtered.forEach(post => {
+        const card = document.createElement('div');
+        card.className = 'post-card';
+        card.innerHTML = `
+          <div>
+            <img class="post-thumb" src="${post.image}" alt="Thumbnail">
+            <div class="post-content">
+              <span class="post-tag">${post.category}</span>
+              <h3>${post.title}</h3>
+            </div>
+          </div>
+          <div class="post-footer">
+            <span>Por: ${post.author}</span>
+            <span style="color: var(--accent); font-weight: bold;">Ver mais &rarr;</span>
+          </div>
+        `;
+        card.onclick = () => openPostModal(post);
+        grid.appendChild(card);
       });
     }
 
-    function listenToMessages(userId) {
-      const msgContainer = document.getElementById('discordMsgContainer');
-      msgContainer.innerHTML = '<div style="text-align: center; color: var(--text-muted); margin-top: 30px; font-size: 0.85rem;">Carregando mensagens...</div>';
+    window.openPostModal = function(post) {
+      document.getElementById('modalPostTitle').textContent = post.title;
+      document.getElementById('modalPostImage').src = post.image;
+      document.getElementById('modalPostAuthor').textContent = post.author;
+      document.getElementById('modalPostDesc').textContent = post.desc;
+      document.getElementById('modalPostDownloadLinkText').textContent = post.downloadLink;
+      document.getElementById('modalPostDownloadLinkText').href = post.downloadLink;
+      document.getElementById('modalPostDownloadBtn').href = post.downloadLink;
+      document.getElementById('postDetailModal').classList.remove('hidden');
+    };
 
-      const q = query(collection(db, "chats", userId, "messages"), orderBy("timestamp", "asc"));
+    window.closePostModal = function() {
+      document.getElementById('postDetailModal').classList.add('hidden');
+    };
+
+    let messagesUnsubscribe = null;
+    function initChatSystem() {
+      if (!auth.currentUser) return;
+      const msgContainer = document.getElementById('discordMsgContainer');
+      const q = query(collection(db, "suporteChat"), orderBy("timestamp", "asc"));
       
       if (messagesUnsubscribe) messagesUnsubscribe();
 
       messagesUnsubscribe = onSnapshot(q, (snapshot) => {
         msgContainer.innerHTML = '';
         if (snapshot.empty) {
-          msgContainer.innerHTML = '<div style="text-align: center; color: var(--text-muted); margin-top: 30px; font-size: 0.85rem;">Nenhuma mensagem.</div>';
+          msgContainer.innerHTML = '<div style="text-align: center; color: var(--text-muted); margin-top: 30px; font-size: 0.85rem;">Nenhuma mensagem na comunidade. Digite algo!</div>';
           return;
         }
-
         snapshot.forEach(docSnap => {
           const msg = docSnap.data();
           const div = document.createElement('div');
           div.className = 'chat-message-group';
-
           let timeStr = "Agora";
           if (msg.timestamp && msg.timestamp.toDate) {
             timeStr = msg.timestamp.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
           }
-
           div.innerHTML = `
             <img class="chat-msg-avatar" src="${msg.senderAvatar || 'https://via.placeholder.com/150'}" alt="Avatar">
             <div class="chat-msg-content">
               <div class="chat-msg-header">
-                <span class="chat-msg-author" style="color: ${msg.senderRole === 'admin' ? 'var(--accent)' : '#fff'};">${msg.senderName || 'Usuário'}</span>
+                <span class="chat-msg-author">${msg.senderName || 'Usuário'}</span>
                 <span class="chat-msg-time">${timeStr}</span>
               </div>
               <div class="chat-msg-text">${msg.text || ''}</div>
-              ${msg.image ? `<img class="chat-msg-image" src="${msg.image}" alt="Comprovante" onclick="window.open('${msg.image}')">` : ''}
             </div>
           `;
           msgContainer.appendChild(div);
@@ -967,364 +636,20 @@
     }
 
     window.sendDiscordMessage = async function() {
-      if (!selectedChatUserId) { showToast("Nenhum chat selecionado!", "error"); return; }
       const textInput = document.getElementById('discordInputText');
       const text = textInput.value.trim();
-
-      if (!text && !chatImageBase64) return;
-
-      const isAdmin = auth.currentUser.email === ADMIN_EMAIL;
-      const senderRole = isAdmin ? "admin" : "client";
-      const senderName = isAdmin ? "Suporte Fatal" : (currentUserData ? currentUserData.displayName : "Cliente");
-      const senderAvatar = isAdmin ? "https://via.placeholder.com/150" : (currentUserData ? currentUserData.photoUrl : "https://via.placeholder.com/150");
+      if (!text) return;
 
       try {
-        const msgData = {
+        await addDoc(collection(db, "suporteChat"), {
           senderId: auth.currentUser.uid,
-          senderRole: senderRole,
-          senderName: senderName,
-          senderAvatar: senderAvatar,
-          text: text || "Envio de Comprovante",
+          senderName: currentUserData ? currentUserData.displayName : "Membro",
+          senderAvatar: currentUserData ? currentUserData.photoUrl : "https://via.placeholder.com/150",
+          text: text,
           timestamp: serverTimestamp()
-        };
-
-        if (chatImageBase64) {
-          msgData.image = chatImageBase64;
-          clearChatImage();
-        }
-
-        await addDoc(collection(db, "chats", selectedChatUserId, "messages"), msgData);
-        
-        await updateDoc(doc(db, "chats", selectedChatUserId), {
-          lastMessage: text || "[attachment_0](attachment)",
-          updatedAt: serverTimestamp(),
-          closedByClient: false
         });
-
         textInput.value = '';
-      } catch (err) {
-        showToast("Erro ao enviar: " + err.message, "error");
-      }
-    };
-
-    window.closeChatThread = async function() {
-      if (!selectedChatUserId) return;
-      const isAdmin = auth.currentUser.email === ADMIN_EMAIL;
-
-      if (!confirm("Deseja fechar esta conversa?")) return;
-
-      try {
-        if (isAdmin) {
-          await deleteDoc(doc(db, "chats", selectedChatUserId));
-          showToast("Chat excluído.");
-          selectedChatUserId = null;
-          loadAdminChatsList();
-          document.getElementById('discordMsgContainer').innerHTML = '<div style="text-align: center; color: var(--text-muted); margin-top: 30px; font-size: 0.85rem;">Chat excluído.</div>';
-        } else {
-          await updateDoc(doc(db, "chats", auth.currentUser.uid), {
-            closedByClient: true,
-            updatedAt: serverTimestamp()
-          });
-          document.getElementById('discordMsgContainer').innerHTML = '<div style="text-align: center; color: var(--text-muted); margin-top: 30px; font-size: 0.85rem;">Conversa fechada.</div>';
-          showToast("Conversa fechada!");
-        }
-      } catch (err) {
-        showToast("Erro: " + err.message, "error");
-      }
-    };
-
-    window.switchAdminTab = function(tab) {
-      document.getElementById('adminMapFormSection').classList.add('hidden');
-      document.getElementById('adminGpFormSection').classList.add('hidden');
-      document.getElementById('adminOrdersSection').classList.add('hidden');
-      document.getElementById('adminTabMapBtn').classList.remove('active');
-      document.getElementById('adminTabGpBtn').classList.remove('active');
-      document.getElementById('adminTabOrdersBtn').classList.remove('active');
-
-      if (tab === 'map') {
-        document.getElementById('adminMapFormSection').classList.remove('hidden');
-        document.getElementById('adminTabMapBtn').classList.add('active');
-      } else if (tab === 'gp') {
-        document.getElementById('adminGpFormSection').classList.remove('hidden');
-        document.getElementById('adminTabGpBtn').classList.add('active');
-        populateMapSelect();
-      } else if (tab === 'orders') {
-        document.getElementById('adminOrdersSection').classList.remove('hidden');
-        document.getElementById('adminTabOrdersBtn').classList.add('active');
-        loadAllAdminOrders();
-      }
-    };
-
-    document.getElementById('mapForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const nome = document.getElementById('mapName').value.trim();
-      if (!newMapPhotoBase64) { showToast("Envie a foto do mapa!", "error"); return; }
-
-      try {
-        await addDoc(collection(db, "mapas"), {
-          nome: nome,
-          imagem: newMapPhotoBase64,
-          criadoEm: serverTimestamp()
-        });
-        document.getElementById('mapForm').reset();
-        newMapPhotoBase64 = null;
-        document.getElementById('mapUploadText').textContent = "📁 Escolher Imagem";
-        showToast("Mapa cadastrado!");
-        switchAdminTab('gp');
-      } catch (err) {
-        showToast("Erro: " + err.message, "error");
-      }
-    });
-
-    async function populateMapSelect() {
-      const select = document.getElementById('gpMapSelect');
-      onSnapshot(query(collection(db, "mapas"), orderBy("criadoEm", "desc")), (snapshot) => {
-        select.innerHTML = '<option value="">Selecione o Mapa</option>';
-        snapshot.forEach(docSnap => {
-          const map = { id: docSnap.id, ...docSnap.data() };
-          const opt = document.createElement('option');
-          opt.value = map.id;
-          opt.textContent = map.nome;
-          select.appendChild(opt);
-        });
-      });
-    }
-
-    const gpRobuxPriceInput = document.getElementById('gpRobuxPrice');
-    const gpBRLPriceInput = document.getElementById('gpBRLPrice');
-
-    function updateGpBrlPreview() {
-      const robux = parseFloat(gpRobuxPriceInput.value) || 0;
-      const brl = robux * (storeConfig.robuxPrice || 0.05);
-      gpBRLPriceInput.value = `R$ ${brl.toFixed(2).replace('.', ',')} (Automático)`;
-    }
-    gpRobuxPriceInput.addEventListener('input', updateGpBrlPreview);
-
-    document.getElementById('gamepassForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const mapaId = document.getElementById('gpMapSelect').value;
-      const nome = document.getElementById('gpName').value.trim();
-      const robuxPrice = parseInt(document.getElementById('gpRobuxPrice').value);
-      
-      if (!mapaId) { showToast("Selecione o mapa!", "error"); return; }
-      if (!newGpPhotoBase64) { showToast("Envie a foto da gamepass!", "error"); return; }
-
-      const brlValue = (robuxPrice * storeConfig.robuxPrice).toFixed(2);
-
-      try {
-        await addDoc(collection(db, "gamepasses"), {
-          mapaId: mapaId,
-          nome: nome,
-          precoRobux: robuxPrice,
-          precoBRL: brlValue,
-          imagem: newGpPhotoBase64,
-          criadoEm: serverTimestamp()
-        });
-        document.getElementById('gamepassForm').reset();
-        newGpPhotoBase64 = null;
-        document.getElementById('gpUploadText').textContent = "📁 Escolher Imagem";
-        showToast("Gamepass cadastrada!");
-        closeAdminModal();
-      } catch (err) {
-        showToast("Erro: " + err.message, "error");
-      }
-    });
-
-    document.getElementById('btnToggleStock').addEventListener('click', async () => {
-      const newStatus = !storeConfig.stockActive;
-      await updateDoc(storeConfigRef, { stockActive: newStatus });
-      showToast(newStatus ? "Estoque ativado!" : "Estoque desativado!");
-    });
-
-    document.getElementById('btnSaveRobuxPrice').addEventListener('click', async () => {
-      const val = parseFloat(document.getElementById('robuxUnitPriceInput').value);
-      if (isNaN(val) || val <= 0) { showToast("Valor inválido!", "error"); return; }
-      await updateDoc(storeConfigRef, { robuxPrice: val });
-      showToast("Preço atualizado!");
-    });
-
-    let currentSelectedMapId = null;
-    let allMapsData = [];
-    let allGamepassesData = [];
-
-    onSnapshot(query(collection(db, "mapas"), orderBy("criadoEm", "desc")), (snapshot) => {
-      allMapsData = [];
-      snapshot.forEach(docSnap => allMapsData.push({ id: docSnap.id, ...docSnap.data() }));
-      if (!currentSelectedMapId) renderMaps(allMapsData);
-    });
-
-    onSnapshot(query(collection(db, "gamepasses"), orderBy("criadoEm", "desc")), (snapshot) => {
-      allGamepassesData = [];
-      snapshot.forEach(docSnap => allGamepassesData.push({ id: docSnap.id, ...docSnap.data() }));
-      if (currentSelectedMapId) renderGamepassesForMap(currentSelectedMapId);
-    });
-
-    function renderMaps(maps) {
-      document.getElementById('robuxCalculatorCard').classList.remove('hidden');
-      document.getElementById('sectionTitle').textContent = "Mapas do Roblox Disponíveis";
-      const grid = document.getElementById('dynamicGrid');
-      grid.innerHTML = '';
-
-      if (maps.length === 0) {
-        grid.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1;">Nenhum mapa cadastrado.</p>';
-        return;
-      }
-
-      maps.forEach(map => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <div>
-            <img src="${map.imagem}" alt="Mapa" style="width: 100%; height: 130px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;">
-            <h3>🗺️ ${map.nome}</h3>
-          </div>
-          <button style="margin-top: 10px;" onclick="selectMap('${map.id}')">Ver Gamepasses</button>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    window.selectMap = function(mapId) {
-      currentSelectedMapId = mapId;
-      document.getElementById('robuxCalculatorCard').classList.add('hidden');
-      renderGamepassesForMap(mapId);
-    };
-
-    window.backToMaps = function() {
-      currentSelectedMapId = null;
-      renderMaps(allMapsData);
-    };
-
-    function renderGamepassesForMap(mapId) {
-      const mapObj = allMapsData.find(m => m.id === mapId);
-      if (!mapObj) { backToMaps(); return; }
-
-      document.getElementById('sectionTitle').innerHTML = `
-        <button class="back-btn" onclick="backToMaps()">← Voltar</button> Gamepasses: <span style="color: var(--accent);">${mapObj.nome}</span>
-      `;
-
-      const grid = document.getElementById('dynamicGrid');
-      grid.innerHTML = '';
-
-      const filteredGps = allGamepassesData.filter(gp => gp.mapaId === mapId);
-      if (filteredGps.length === 0) {
-        grid.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1;">Nenhuma gamepass neste mapa.</p>';
-        return;
-      }
-
-      filteredGps.forEach(gp => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <div>
-            <img src="${gp.imagem}" alt="Gamepass" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;">
-            <h3>${gp.nome}</h3>
-            <div style="font-size: 0.85rem; color: var(--text-muted);">Robux: <strong style="color: var(--accent);">${gp.precoRobux}</strong></div>
-            <div class="price-tag">R$ ${parseFloat(gp.precoBRL).toFixed(2).replace('.', ',')}</div>
-          </div>
-          <button class="btn-buy-gp" data-name="${gp.nome}" data-price="${gp.precoBRL}" data-robux="${gp.precoRobux}">Comprar</button>
-        `;
-        grid.appendChild(card);
-      });
-
-      document.querySelectorAll('.btn-buy-gp').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          if (!storeConfig.stockActive) { showToast("Loja sem estoque!", "error"); return; }
-          const name = e.target.getAttribute('data-name');
-          const price = e.target.getAttribute('data-price');
-          const robux = e.target.getAttribute('data-robux');
-
-          pendingCheckoutItem = {
-            name: `${name} (${robux} Robux)`,
-            price: price,
-            rawPrice: parseFloat(price)
-          };
-          appliedDiscount = 0;
-          document.getElementById('couponInput').value = '';
-          openCheckoutModal(pendingCheckoutItem);
-        });
-      });
-    }
-
-    function loadUserOrders(uid) {
-      const q = query(collection(db, "pedidos"), where("userId", "==", uid), orderBy("data", "desc"));
-      onSnapshot(q, (snapshot) => {
-        const listEl = document.getElementById('myOrdersList');
-        listEl.innerHTML = '';
-        if (snapshot.empty) {
-          listEl.innerHTML = '<span style="color: var(--text-muted);">Nenhum pedido.</span>';
-          return;
-        }
-        snapshot.forEach(docSnap => {
-          const ord = docSnap.data();
-          const box = document.createElement('div');
-          box.style.background = 'var(--bg-input)';
-          box.style.padding = '8px';
-          box.style.borderRadius = '6px';
-          box.style.border = '1px solid var(--border)';
-          box.innerHTML = `
-            <strong style="color: var(--text);">📦 ${ord.item}</strong><br>
-            <span style="font-size: 0.75rem; color: var(--text-muted);">Nick Roblox: <b>${ord.robloxNick || 'N/A'}</b></span><br>
-            <span style="color: var(--accent); font-weight: 600;">R$ ${ord.valor}</span> | <span style="color: var(--accent); font-size: 0.7rem;">${ord.status}</span>
-          `;
-          listEl.appendChild(box);
-        });
-      });
-    }
-
-    function loadAllAdminOrders() {
-      const q = query(collection(db, "pedidos"), orderBy("data", "desc"));
-      onSnapshot(q, (snapshot) => {
-        const listEl = document.getElementById('adminOrdersList');
-        listEl.innerHTML = '';
-        if (snapshot.empty) {
-          listEl.innerHTML = '<span style="color: var(--text-muted);">Nenhum pedido.</span>';
-          return;
-        }
-        snapshot.forEach(docSnap => {
-          const ordId = docSnap.id;
-          const ord = docSnap.data();
-          const box = document.createElement('div');
-          box.style.background = 'var(--bg-input)';
-          box.style.padding = '10px';
-          box.style.borderRadius = '8px';
-          box.style.border = '1px solid var(--border)';
-          box.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-              <strong style="color: var(--accent);">👤 ${ord.comprador}</strong>
-              <span style="font-size: 0.75rem; color: var(--text-muted);"><b>${ord.status}</b></span>
-            </div>
-            <div style="font-size: 0.85rem; margin-bottom: 4px;">🎮 Roblox Nick: <b style="color: var(--accent);">${ord.robloxNick || 'N/A'}</b></div>
-            <div style="font-size: 0.85rem; margin-bottom: 8px;">📦 ${ord.item} - R$ ${ord.valor}</div>
-            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-              <button class="btn-success" style="padding: 4px 8px; font-size: 0.75rem; margin:0; flex:1;" onclick="updateOrderStatus('${ordId}', 'Pagamento Confirmado')">Confirmar Pagamento</button>
-              <button class="btn-success" style="padding: 4px 8px; font-size: 0.75rem; margin:0; flex:1; background: #0284c7;" onclick="updateOrderStatus('${ordId}', 'Entregue com Sucesso')">Entregar</button>
-              <button class="btn-danger" style="padding: 4px 8px; font-size: 0.75rem; margin:0;" onclick="deleteOrder('${ordId}')">Apagar</button>
-            </div>
-          `;
-          listEl.appendChild(box);
-        });
-      });
-    }
-
-    window.updateOrderStatus = async function(orderId, status) {
-      try {
-        await updateDoc(doc(db, "pedidos", orderId), { status: status });
-        showToast("Status atualizado!");
-      } catch (err) {
-        showToast("Erro: " + err.message, "error");
-      }
-    };
-
-    window.deleteOrder = async function(orderId) {
-      if (confirm("Apagar este pedido?")) {
-        try {
-          await deleteDoc(doc(db, "pedidos", orderId));
-          showToast("Pedido apagado!");
-        } catch (err) {
-          showToast("Erro: " + err.message, "error");
-        }
-      }
+      } catch (err) { showToast("Erro ao enviar mensagem", "error"); }
     };
   </script>
 </body>
