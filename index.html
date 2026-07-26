@@ -118,7 +118,7 @@
     .card h3 { font-size: 1.05rem; margin-bottom: 6px; font-weight: 700; }
     .price-tag { color: var(--accent); font-weight: 800; font-size: 1.15rem; margin-bottom: 10px; }
 
-    /* FAQ e Novas Seções Úteis */
+    /* FAQ */
     .section-title-custom { font-size: 1.1rem; font-weight: 700; color: var(--accent); margin: 25px 0 12px 0; display: flex; align-items: center; gap: 8px; }
     .faq-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 25px; }
     .faq-item { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; cursor: pointer; }
@@ -127,8 +127,8 @@
     .faq-item.active .faq-answer { display: block; }
 
     /* Modais */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); z-index: 4000; display: flex; justify-content: center; align-items: center; padding: 15px; }
-    .modal-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 14px; padding: 25px; width: 100%; max-width: 550px; box-shadow: 0 20px 40px rgba(0,0,0,0.8); max-height: 90vh; overflow-y: auto; }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); z-index: 4000; display: flex; justify-content: center; align-items: center; padding: 12px; }
+    .modal-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; width: 100%; max-width: 600px; box-shadow: 0 20px 40px rgba(0,0,0,0.8); max-height: 94vh; overflow-y: auto; }
     
     .file-upload-box { border: 2px dashed var(--border); border-radius: 8px; padding: 12px; text-align: center; cursor: pointer; background: var(--bg-input); margin: 6px 0; transition: 0.2s; }
     .file-upload-box:hover { border-color: var(--accent); }
@@ -137,29 +137,35 @@
     .back-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-card); border: 1px solid var(--border); padding: 6px 12px; border-radius: 8px; color: var(--text); font-weight: 600; cursor: pointer; margin-bottom: 15px; }
     .back-btn:hover { border-color: var(--accent); }
 
-    /* Chat Estilo Discord */
-    .discord-chat-layout { display: flex; height: 500px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-top: 10px; }
-    .discord-channels { width: 180px; background: #18191c; border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 10px; gap: 4px; overflow-y: auto; }
-    .discord-channel-item { padding: 8px 10px; border-radius: 6px; font-size: 0.85rem; color: var(--text-muted); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+    /* --- CHAT OTIMIZADO PARA PC E CELULAR --- */
+    .discord-chat-layout { display: flex; height: 460px; max-height: 70vh; background: var(--bg-input); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 8px; }
+    .discord-channels { width: 160px; background: #18191c; border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 8px; gap: 4px; overflow-y: auto; flex-shrink: 0; }
+    .discord-channel-item { padding: 8px; border-radius: 6px; font-size: 0.8rem; color: var(--text-muted); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .discord-channel-item:hover { background: #2f3136; color: var(--text); }
     .discord-channel-item.active { background: #393c43; color: white; }
 
-    .discord-chat-main { flex: 1; display: flex; flex-direction: column; background: var(--bg-input); }
-    .discord-chat-header { padding: 12px 16px; background: var(--bg-surface); border-bottom: 1px solid var(--border); font-size: 0.9rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
-    .discord-messages { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
+    .discord-chat-main { flex: 1; display: flex; flex-direction: column; background: var(--bg-input); min-width: 0; }
+    .discord-chat-header { padding: 10px 14px; background: var(--bg-surface); border-bottom: 1px solid var(--border); font-size: 0.85rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .discord-messages { flex: 1; padding: 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
     
-    .chat-message-group { display: flex; gap: 12px; align-items: flex-start; }
-    .chat-msg-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1px solid var(--border); }
-    .chat-msg-content { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+    .chat-message-group { display: flex; gap: 10px; align-items: flex-start; }
+    .chat-msg-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1px solid var(--border); }
+    .chat-msg-content { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
     .chat-msg-header { display: flex; align-items: baseline; gap: 8px; }
-    .chat-msg-author { font-weight: 700; font-size: 0.9rem; color: #fff; }
-    .chat-msg-time { font-size: 0.7rem; color: var(--text-muted); }
-    .chat-msg-text { font-size: 0.9rem; color: var(--text); word-break: break-word; line-height: 1.4; }
-    .chat-msg-image { max-width: 240px; border-radius: 8px; margin-top: 6px; border: 1px solid var(--border); cursor: pointer; display: block; }
+    .chat-msg-author { font-weight: 700; font-size: 0.85rem; color: #fff; }
+    .chat-msg-time { font-size: 0.65rem; color: var(--text-muted); }
+    .chat-msg-text { font-size: 0.85rem; color: var(--text); word-break: break-word; line-height: 1.4; }
+    .chat-msg-image { max-width: 200px; border-radius: 6px; margin-top: 6px; border: 1px solid var(--border); cursor: pointer; display: block; }
     
-    .discord-input-area { padding: 12px; background: var(--bg-surface); border-top: 1px solid var(--border); display: flex; gap: 8px; align-items: center; }
-    .discord-input-area input { margin: 0; background: var(--bg-input); border-radius: 8px; }
-    .chat-img-preview-bar { padding: 6px 12px; background: rgba(0,0,0,0.3); font-size: 0.8rem; color: var(--accent); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+    .discord-input-area { padding: 10px; background: var(--bg-surface); border-top: 1px solid var(--border); display: flex; gap: 6px; align-items: center; }
+    .discord-input-area input { margin: 0; padding: 10px 12px; font-size: 0.85rem; }
+    .chat-img-preview-bar { padding: 6px 12px; background: rgba(0,0,0,0.3); font-size: 0.75rem; color: var(--accent); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+
+    @media (max-width: 600px) {
+      .discord-chat-layout { height: 60vh; }
+      .discord-channels { width: 110px; padding: 6px; }
+      .discord-channel-item { font-size: 0.75rem; padding: 6px; }
+    }
   </style>
 </head>
 <body>
@@ -292,7 +298,7 @@
           </div>
           <div class="faq-item" onclick="toggleFaq(this)">
             <div class="faq-question">Quanto tempo demora para aprovar o PIX? <span>▼</span></div>
-            <div class="faq-answer">Assim que você fizer o PIX para a chave informada e enviar o comprovante na nossa Central de Conversas, nossa equipe verifica e aprova o pedido em poucos minutos!</div>
+            <div class="faq-answer">Assim que você fizer o PIX para a chave informada e enviar o comprovante na nossa Central de Conversas, nossa equipe verifica e aprova o pedido rapidamente!</div>
           </div>
         </div>
       </div>
@@ -332,22 +338,22 @@
   </div>
 
   <div id="conversationsModal" class="modal-overlay hidden">
-    <div class="modal-card animate-fade" style="max-width: 720px; padding: 20px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <h3 style="color: var(--accent);">💬 Central de Conversas & Comprovantes</h3>
+    <div class="modal-card animate-fade" style="max-width: 720px; padding: 18px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <h3 style="color: var(--accent); font-size: 1.1rem;">💬 Central de Conversas & Comprovantes</h3>
         <button class="btn-secondary" style="width: auto; padding: 4px 10px; margin:0;" onclick="closeConversationsModal()">✕</button>
       </div>
-      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">Converse com o suporte, envie foto do comprovante e acompanhe a aprovação em tempo real.</p>
+      <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px;">Converse com o suporte, envie foto do comprovante e acompanhe a aprovação.</p>
 
       <div class="discord-chat-layout">
         <div id="discordChannelList" class="discord-channels">
-          <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: bold; padding: 4px 6px;">Conversas</div>
+          <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; font-weight: bold; padding: 4px 2px;">Conversas</div>
         </div>
 
         <div class="discord-chat-main">
           <div class="discord-chat-header">
-            <span id="activeChatTitle">Suporte Comunidade Fatal</span>
-            <button class="btn-danger" style="width: auto; padding: 4px 8px; font-size: 0.75rem; margin:0;" onclick="closeChatThread()">Fechar Conversa</button>
+            <span id="activeChatTitle" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Suporte Comunidade Fatal</span>
+            <button class="btn-danger" style="width: auto; padding: 3px 6px; font-size: 0.7rem; margin:0; flex-shrink: 0;" onclick="closeChatThread()">Fechar</button>
           </div>
           
           <div id="discordMsgContainer" class="discord-messages">
@@ -355,15 +361,15 @@
           </div>
 
           <div id="chatPreviewBar" class="hidden chat-img-preview-bar">
-            <span>📷 Foto anexada pronta para enviar</span>
+            <span>📷 Foto anexada pronta para envio</span>
             <span style="cursor: pointer; font-weight: bold;" onclick="clearChatImage()">✕</span>
           </div>
 
           <div class="discord-input-area">
             <input type="text" id="discordInputText" placeholder="Escreva uma mensagem..." autocomplete="off">
             <input type="file" id="discordImageFile" accept="image/*" class="hidden">
-            <button class="btn-secondary" style="width: auto; padding: 8px 12px; margin:0;" onclick="document.getElementById('discordImageFile').click()" title="Anexar Comprovante">📷</button>
-            <button style="width: auto; padding: 8px 16px; margin:0;" onclick="sendDiscordMessage()">Enviar</button>
+            <button class="btn-secondary" style="width: auto; padding: 8px 10px; margin:0; flex-shrink: 0;" onclick="document.getElementById('discordImageFile').click()" title="Anexar Comprovante">📷</button>
+            <button style="width: auto; padding: 8px 14px; margin:0; flex-shrink: 0;" onclick="sendDiscordMessage()">Enviar</button>
           </div>
         </div>
       </div>
@@ -653,7 +659,7 @@
           email: email,
           displayName: displayName,
           photoUrl: "https://via.placeholder.com/150"
-        });
+        }, { merge: true });
         showToast("Conta criada com sucesso!");
         switchAuthTab('login');
       } catch (err) {
@@ -720,7 +726,7 @@
       if (docSnap.exists()) {
         storeConfig = docSnap.data();
       } else {
-        setDoc(storeConfigRef, { stockActive: true, robuxPrice: 0.05 });
+        setDoc(storeConfigRef, { stockActive: true, robuxPrice: 0.05 }, { merge: true });
       }
       refreshStoreStateUI();
     });
@@ -796,9 +802,9 @@
       if (!pendingCheckoutItem) return;
 
       if (code === "FATAL10") {
-        appliedDiscount = 0.10; // 10% off
+        appliedDiscount = 0.10;
         const discounted = (pendingCheckoutItem.rawPrice * (1 - appliedDiscount)).toFixed(2);
-        document.getElementById('checkoutItemPrice').textContent = `R$ ${discounted.replace('.', ',')} (Com 10% de Desconto)`;
+        document.getElementById('checkoutItemPrice').textContent = `R$ ${discounted.replace('.', ',')} (Com 10% Desconto)`;
         showToast("Cupom aplicado com sucesso!");
       } else {
         showToast("Cupom inválido!", "error");
@@ -870,6 +876,7 @@
       } else {
         selectedChatUserId = auth.currentUser.uid;
         document.getElementById('discordChannelList').innerHTML = `
+          <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; font-weight: bold; padding: 4px 2px;">Conversas</div>
           <div class="discord-channel-item active"># suporte-fatal</div>
         `;
         document.getElementById('activeChatTitle').textContent = "Suporte Oficial - Comunidade Fatal";
@@ -884,10 +891,10 @@
       if (chatsListUnsubscribe) chatsListUnsubscribe();
 
       chatsListUnsubscribe = onSnapshot(q, (snapshot) => {
-        channelListEl.innerHTML = '<div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: bold; padding: 4px 6px;">Canais de Clientes</div>';
+        channelListEl.innerHTML = '<div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; font-weight: bold; padding: 4px 2px;">Clientes</div>';
         
         if (snapshot.empty) {
-          channelListEl.innerHTML += '<div style="font-size: 0.8rem; color: var(--text-muted); padding: 8px;">Nenhum chat ativo.</div>';
+          channelListEl.innerHTML += '<div style="font-size: 0.75rem; color: var(--text-muted); padding: 6px;">Nenhum chat.</div>';
           return;
         }
 
@@ -899,7 +906,7 @@
           div.innerHTML = `💬 ${chat.clientName || 'Cliente'}`;
           div.onclick = () => {
             selectedChatUserId = chat.userId;
-            document.getElementById('activeChatTitle').textContent = `Chat: ${chat.clientName} (Roblox: ${chat.robloxNick || 'N/A'})`;
+            document.getElementById('activeChatTitle').textContent = `${chat.clientName} (${chat.robloxNick || 'N/A'})`;
             document.querySelectorAll('.discord-channel-item').forEach(el => el.classList.remove('active'));
             div.classList.add('active');
             listenToMessages(chat.userId);
@@ -908,7 +915,7 @@
 
           if (first && !selectedChatUserId) {
             selectedChatUserId = chat.userId;
-            document.getElementById('activeChatTitle').textContent = `Chat: ${chat.clientName} (Roblox: ${chat.robloxNick || 'N/A'})`;
+            document.getElementById('activeChatTitle').textContent = `${chat.clientName} (${chat.robloxNick || 'N/A'})`;
             div.classList.add('active');
             listenToMessages(chat.userId);
             first = false;
@@ -919,7 +926,7 @@
 
     function listenToMessages(userId) {
       const msgContainer = document.getElementById('discordMsgContainer');
-      msgContainer.innerHTML = '<div style="text-align: center; color: var(--text-muted); margin-top: 30px;">Carregando mensagens...</div>';
+      msgContainer.innerHTML = '<div style="text-align: center; color: var(--text-muted); margin-top: 30px; font-size: 0.85rem;">Carregando mensagens...</div>';
 
       const q = query(collection(db, "chats", userId, "messages"), orderBy("timestamp", "asc"));
       
@@ -928,7 +935,7 @@
       messagesUnsubscribe = onSnapshot(q, (snapshot) => {
         msgContainer.innerHTML = '';
         if (snapshot.empty) {
-          msgContainer.innerHTML = '<div style="text-align: center; color: var(--text-muted); margin-top: 30px;">Nenhuma mensagem neste chat.</div>';
+          msgContainer.innerHTML = '<div style="text-align: center; color: var(--text-muted); margin-top: 30px; font-size: 0.85rem;">Nenhuma mensagem.</div>';
           return;
         }
 
@@ -968,7 +975,7 @@
 
       const isAdmin = auth.currentUser.email === ADMIN_EMAIL;
       const senderRole = isAdmin ? "admin" : "client";
-      const senderName = isAdmin ? "Dono / Suporte" : (currentUserData ? currentUserData.displayName : "Cliente");
+      const senderName = isAdmin ? "Suporte Fatal" : (currentUserData ? currentUserData.displayName : "Cliente");
       const senderAvatar = isAdmin ? "https://via.placeholder.com/150" : (currentUserData ? currentUserData.photoUrl : "https://via.placeholder.com/150");
 
       try {
@@ -1009,16 +1016,16 @@
       try {
         if (isAdmin) {
           await deleteDoc(doc(db, "chats", selectedChatUserId));
-          showToast("Chat excluído com sucesso.");
+          showToast("Chat excluído.");
           selectedChatUserId = null;
           loadAdminChatsList();
-          document.getElementById('discordMsgContainer').innerHTML = '<div style="text-align: center; color: var(--text-muted); margin-top: 30px;">Chat excluído.</div>';
+          document.getElementById('discordMsgContainer').innerHTML = '<div style="text-align: center; color: var(--text-muted); margin-top: 30px; font-size: 0.85rem;">Chat excluído.</div>';
         } else {
           await updateDoc(doc(db, "chats", auth.currentUser.uid), {
             closedByClient: true,
             updatedAt: serverTimestamp()
           });
-          document.getElementById('discordMsgContainer').innerHTML = '<div style="text-align: center; color: var(--text-muted); margin-top: 30px;">Conversa fechada.</div>';
+          document.getElementById('discordMsgContainer').innerHTML = '<div style="text-align: center; color: var(--text-muted); margin-top: 30px; font-size: 0.85rem;">Conversa fechada.</div>';
           showToast("Conversa fechada!");
         }
       } catch (err) {
@@ -1290,7 +1297,7 @@
             <div style="font-size: 0.85rem; margin-bottom: 4px;">🎮 Roblox Nick: <b style="color: var(--accent);">${ord.robloxNick || 'N/A'}</b></div>
             <div style="font-size: 0.85rem; margin-bottom: 8px;">📦 ${ord.item} - R$ ${ord.valor}</div>
             <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-              <button class="btn-success" style="padding: 4px 8px; font-size: 0.75rem; margin:0; flex:1;" onclick="updateOrderStatus('${ordId}', 'Pagamento Confirmado (Entrega Pendente)')">Confirmar Pagamento</button>
+              <button class="btn-success" style="padding: 4px 8px; font-size: 0.75rem; margin:0; flex:1;" onclick="updateOrderStatus('${ordId}', 'Pagamento Confirmado')">Confirmar Pagamento</button>
               <button class="btn-success" style="padding: 4px 8px; font-size: 0.75rem; margin:0; flex:1; background: #0284c7;" onclick="updateOrderStatus('${ordId}', 'Entregue com Sucesso')">Entregar</button>
               <button class="btn-danger" style="padding: 4px 8px; font-size: 0.75rem; margin:0;" onclick="deleteOrder('${ordId}')">Apagar</button>
             </div>
