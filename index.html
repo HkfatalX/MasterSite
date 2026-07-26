@@ -365,26 +365,20 @@
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-    // 🔴🔴🔴 ATENÇÃO 🔴🔴🔴
-    // O erro "api-key-not-valid" que você mandou na print significa que você copiou 
-    // um código com chaves falsas. VOCÊ DEVE SUBSTITUIR O BLOCO ABAIXO PELAS SUAS CHAVES DO FIREBASE!
+    // CHAVE OFICIAL RESTAURADA SEM PROBLEMAS!
     const firebaseConfig = {
-      apiKey: "SUA_API_KEY_AQUI", 
-      authDomain: "seu-projeto.firebaseapp.com",
-      projectId: "seu-projeto",
-      storageBucket: "seu-projeto.appspot.com",
-      messagingSenderId: "123456789",
-      appId: "1:123456789:web:abcdef123456"
+      apiKey: "AIzaSyCGD9DZDFp0w9baW8jiqgGGfkasAvqreY0",
+      authDomain: "site-ec6fd.firebaseapp.com",
+      databaseURL: "https://site-ec6fd-default-rtdb.firebaseio.com",
+      projectId: "site-ec6fd",
+      storageBucket: "site-ec6fd.firebasestorage.app",
+      messagingSenderId: "338689686380",
+      appId: "1:338689686380:web:509aebb8d64694a0e1d149"
     };
 
-    let app, auth, db;
-    try {
-      app = initializeApp(firebaseConfig);
-      auth = getAuth(app);
-      db = getFirestore(app);
-    } catch(e) {
-      console.warn("Configure seu Firebase nas linhas acima para funcionar perfeitamente!");
-    }
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
     // UTILITÁRIOS
     window.showToast = (msg, isError = false) => {
@@ -506,7 +500,7 @@
           if(snap.exists()) {
             userData = snap.data();
           } else {
-            // CORREÇÃO DO ERRO DA PRINT: setDoc com merge:true evita erro de "No document to update"
+            // CORREÇÃO: setDoc com merge:true evita erro de "No document to update"
             userData = { displayName: "Novo Criador", photoUrl: "https://via.placeholder.com/150" };
             await setDoc(userRef, userData, { merge: true });
           }
@@ -536,9 +530,24 @@
       } catch(err) { showToast(err.message, true); }
     };
 
-    window.handleLogout = () => signOut(auth);
+    // NOVO SISTEMA DE LOGOUT: LIMPEZA TOTAL DOS CAMPOS DE LOGIN
+    window.handleLogout = async () => {
+      try {
+        await signOut(auth); // Desconecta
+        
+        // Limpa os campos visuais da tela de login/registro
+        document.getElementById('loginEmail').value = '';
+        document.getElementById('loginPassword').value = '';
+        document.getElementById('regName').value = '';
+        document.getElementById('regEmail').value = '';
+        document.getElementById('regPassword').value = '';
+        
+        showToast("Sessão encerrada com sucesso!");
+      } catch(err) { 
+        showToast(err.message, true); 
+      }
+    };
 
-    // CORREÇÃO DO ERRO DE EDIÇÃO DE PERFIL
     window.saveProfile = async () => {
       const newName = document.getElementById('editDisplayName').value.trim();
       if(!newName) return showToast("Nome não pode ficar vazio.", true);
@@ -547,7 +556,6 @@
       if(tempProfileBase64) payload.photoUrl = tempProfileBase64;
       
       try {
-        // Usar setDoc com merge: true resolve o erro "No document to update"
         await setDoc(doc(db, "usuarios", auth.currentUser.uid), payload, { merge: true });
         showToast("Perfil atualizado com sucesso!");
         setTimeout(() => window.location.reload(), 1000);
