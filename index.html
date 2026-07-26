@@ -3,152 +3,177 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MasterAddon (MSTRADN) - Addons, Mapas e Skins para Minecraft</title>
+  <title>MasterAddon - Premium Experience</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+
   <style>
+    /* VARIÁVEIS DE TEMA PREMIUM */
     :root {
-      --bg-base: #0f172a;
-      --bg-surface: #1e293b;
-      --bg-card: #334155;
-      --bg-input: #0f172a;
-      --accent: #10b981;
-      --accent-glow: rgba(16, 185, 129, 0.25);
-      --accent-hover: #059669;
-      --danger: #ef4444;
-      --success: #10b981;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-      --border: #475569;
+      --bg-dark: #09090b;
+      --bg-panel: rgba(24, 24, 27, 0.7);
+      --bg-input: #18181b;
+      --primary: #10b981; /* Verde Esmeralda Minecraft */
+      --primary-glow: rgba(16, 185, 129, 0.3);
+      --primary-hover: #059669;
+      --secondary: #3b82f6; /* Azul Diamante */
+      --text: #fafafa;
+      --text-muted: #a1a1aa;
+      --border: rgba(255, 255, 255, 0.1);
+      --radius: 16px;
+      --glass: backdrop-filter: blur(12px);
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', 'Segoe UI', sans-serif; }
-    body { background-color: var(--bg-base); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+    
+    body { 
+      background-color: var(--bg-dark); color: var(--text); min-height: 100vh;
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(16, 185, 129, 0.08), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(59, 130, 246, 0.08), transparent 25%);
+      background-attachment: fixed; overflow-x: hidden;
+    }
+
+    /* SCROLLBAR CUSTOMIZADA */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
 
     .hidden { display: none !important; }
-    input, button, select, textarea { width: 100%; padding: 12px 16px; margin: 6px 0; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-input); color: var(--text); font-size: 0.95rem; outline: none; transition: all 0.2s ease; }
-    input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
-    button { background: linear-gradient(135deg, var(--accent), var(--accent-hover)); color: #000; font-weight: 700; cursor: pointer; border: none; box-shadow: 0 4px 12px var(--accent-glow); transition: transform 0.15s, filter 0.15s; }
-    button:hover { filter: brightness(1.1); transform: translateY(-1px); }
-    button:active { transform: translateY(0); }
-    .btn-danger { background: var(--danger); color: white; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
-    .btn-secondary { background: var(--bg-card); color: var(--text); box-shadow: none; border: 1px solid var(--border); }
-    .btn-secondary:hover { background: #475569; border-color: var(--text-muted); }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* COMPONENTES DE UI */
+    input, select, textarea {
+      width: 100%; padding: 14px 18px; margin: 8px 0; border-radius: 12px;
+      border: 1px solid var(--border); background: var(--bg-input); color: var(--text);
+      font-size: 0.95rem; outline: none; transition: 0.3s;
     }
-    .animate-fade { animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
+    
+    button {
+      width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 700; font-size: 1rem;
+      cursor: pointer; transition: 0.3s; background: linear-gradient(135deg, var(--primary), #047857);
+      color: white; box-shadow: 0 4px 15px var(--primary-glow); text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px var(--primary-glow); filter: brightness(1.1); }
+    button:active { transform: translateY(0); }
+    
+    .btn-outline {
+      background: transparent; border: 1px solid var(--border); color: var(--text); box-shadow: none;
+    }
+    .btn-outline:hover { background: rgba(255,255,255,0.05); border-color: var(--text-muted); }
+    
+    .btn-danger { background: linear-gradient(135deg, #ef4444, #b91c1c); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2); }
 
-    #toastContainer { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
-    .toast { background: var(--bg-card); border: 1px solid var(--border); color: var(--text); padding: 14px 20px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); font-size: 0.9rem; pointer-events: auto; display: flex; align-items: center; gap: 10px; animation: fadeIn 0.3s ease; }
-    .toast.success { border-left: 4px solid var(--success); }
-    .toast.error { border-left: 4px solid var(--danger); }
+    /* TOASTS */
+    #toastContainer { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+    .toast {
+      background: var(--bg-panel); backdrop-filter: blur(10px); border-radius: 12px; padding: 16px 24px;
+      border-left: 4px solid var(--primary); color: var(--text); font-weight: 500;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 12px;
+      animation: slideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    .toast.error { border-left-color: #ef4444; }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-    /* AUTH SCREEN */
+    /* AUTENTICAÇÃO TELA */
     #authScreen {
-      position: fixed; inset: 0; background: radial-gradient(circle at center, #064e3b 0%, var(--bg-base) 100%); z-index: 3000;
-      display: flex; justify-content: center; align-items: center; padding: 20px;
+      position: fixed; inset: 0; z-index: 3000; display: flex; justify-content: center; align-items: center; padding: 20px;
+      background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
     }
     .auth-card {
-      background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px;
-      padding: 30px; width: 100%; max-width: 420px; box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+      background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 40px; width: 100%; max-width: 450px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); text-align: center;
     }
-    .auth-card h2 { text-align: center; margin-bottom: 20px; color: var(--accent); font-size: 1.8rem; font-weight: 800; }
-    .tab-switch { display: flex; gap: 6px; margin-bottom: 20px; background: var(--bg-input); padding: 4px; border-radius: 8px; border: 1px solid var(--border); }
-    .tab-btn { flex: 1; padding: 8px; background: transparent; border: none; border-radius: 6px; color: var(--text-muted); cursor: pointer; font-weight: 600; box-shadow: none; }
-    .tab-btn.active { background: var(--accent); color: #000; box-shadow: 0 2px 8px var(--accent-glow); }
+    .auth-card h1 { font-size: 2rem; color: var(--primary); margin-bottom: 5px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .tab-switch { display: flex; gap: 8px; margin: 25px 0; background: var(--bg-input); padding: 6px; border-radius: 14px; }
+    .tab-btn { flex: 1; background: transparent; color: var(--text-muted); box-shadow: none; border-radius: 10px; padding: 10px; font-size: 0.9rem; }
+    .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 10px var(--primary-glow); }
 
     /* LAYOUT PRINCIPAL */
-    #mainApp { display: flex; flex: 1; min-height: 100vh; position: relative; }
+    #mainApp { display: flex; min-height: 100vh; position: relative; }
 
-    #sidebarOverlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 99; backdrop-filter: blur(2px);
-      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
-    }
-    #sidebarOverlay.active { opacity: 1; pointer-events: auto; }
-
+    /* SIDEBAR MODERNA */
     sidebar {
-      width: 280px; background-color: var(--bg-surface); border-right: 1px solid var(--border);
-      display: flex; flex-direction: column; padding: 20px; position: fixed; top: 0; bottom: 0; left: 0;
-      height: 100vh; overflow-y: auto; z-index: 100; transform: translateX(-100%); transition: transform 0.3s ease;
+      width: 280px; background: var(--bg-panel); border-right: 1px solid var(--border);
+      backdrop-filter: blur(20px); padding: 24px; display: flex; flex-direction: column;
+      position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
-    sidebar.open { transform: translateX(0); }
-
-    .sidebar-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .brand { font-size: 1.1rem; font-weight: 800; color: var(--accent); display: flex; align-items: center; gap: 8px; letter-spacing: 0.5px; }
-    .sidebar-close-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--text); width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: none; padding: 0; font-weight: bold; }
-    .sidebar-close-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-    .sidebar-block { margin-bottom: 16px; }
-    .sidebar-block h4 { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-    .sidebar-menu-btn { width: 100%; text-align: left; background: var(--bg-card); color: var(--text); border: 1px solid var(--border); padding: 10px 14px; border-radius: 8px; margin-bottom: 6px; font-weight: 600; box-shadow: none; display: flex; align-items: center; gap: 10px; cursor: pointer; }
-    .sidebar-menu-btn:hover { background: #475569; border-color: var(--text-muted); transform: none; }
-
-    content-area { flex: 1; padding: 25px; max-width: 1400px; width: 100%; margin-left: 0; }
-    @media (max-width: 900px) { content-area { padding: 15px; } }
-
-    header {
-      display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; gap: 15px;
-      background-color: var(--bg-surface); padding: 14px 20px; border-radius: 12px; border: 1px solid var(--border);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    @media (max-width: 900px) {
+      sidebar { transform: translateX(-100%); width: 300px; }
+      sidebar.open { transform: translateX(0); }
     }
-    .hamburger-btn {
-      background: var(--bg-card); border: 1px solid var(--border); color: var(--text); width: 40px; height: 40px;
-      border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; box-shadow: none; flex-shrink: 0;
+    .profile-widget { background: var(--bg-input); padding: 16px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
+    .profile-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
+    .profile-info { overflow: hidden; text-align: left; }
+    .profile-info h4 { font-size: 0.95rem; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; margin-bottom: 2px; }
+    .badge-creator { background: var(--primary-glow); color: var(--primary); font-size: 0.65rem; padding: 3px 8px; border-radius: 6px; border: 1px solid var(--primary); font-weight: 800; }
+    
+    .nav-btn { background: transparent; color: var(--text-muted); text-align: left; padding: 14px 18px; box-shadow: none; border-radius: 10px; margin-bottom: 8px; text-transform: none; font-weight: 600; display: flex; align-items: center; gap: 12px; }
+    .nav-btn:hover { background: rgba(255,255,255,0.05); color: var(--text); transform: translateX(5px); }
+    .nav-btn.publish { background: rgba(16, 185, 129, 0.1); color: var(--primary); border: 1px dashed var(--primary); }
+
+    /* CONTEÚDO CENTRAL */
+    content-area { flex: 1; margin-left: 280px; padding: 30px; max-width: 1400px; }
+    @media (max-width: 900px) { content-area { margin-left: 0; padding: 20px; } }
+
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; gap: 20px; }
+    .search-box { flex: 1; max-width: 500px; position: relative; }
+    .search-box input { padding-left: 45px; background: rgba(24, 24, 27, 0.5); border: 1px solid var(--border); backdrop-filter: blur(10px); }
+    .search-icon { position: absolute; left: 16px; top: 22px; color: var(--text-muted); }
+    
+    .hamburger { display: none; background: var(--bg-panel); border: 1px solid var(--border); border-radius: 12px; width: 50px; height: 50px; font-size: 1.5rem; color: var(--text); cursor: pointer; box-shadow: none; }
+    @media (max-width: 900px) { .hamburger { display: block; padding: 0; } }
+
+    /* PÍLULAS DE FILTRO ESPECÍFICAS */
+    .filter-track { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 30px; }
+    .filter-track::-webkit-scrollbar { height: 4px; }
+    .filter-pill {
+      background: var(--bg-panel); border: 1px solid var(--border); padding: 10px 20px; border-radius: 30px;
+      white-space: nowrap; cursor: pointer; font-weight: 600; font-size: 0.9rem; color: var(--text-muted); transition: 0.3s;
     }
-    .hamburger-line { width: 18px; height: 2px; background: var(--accent); border-radius: 2px; }
+    .filter-pill:hover { border-color: var(--text); color: var(--text); }
+    .filter-pill.active { background: var(--primary); color: #000; border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
 
-    .search-container { flex: 1; position: relative; max-width: 450px; }
-    .search-container input { margin: 0; padding-left: 38px; background: var(--bg-input); }
-    .search-icon { position: absolute; left: 12px; top: 13px; color: var(--text-muted); }
+    /* GRID PREMIUM */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+    .card {
+      background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+      display: flex; flex-direction: column; transition: 0.3s; cursor: pointer; backdrop-filter: blur(10px);
+    }
+    .card:hover { transform: translateY(-8px); border-color: var(--primary); box-shadow: 0 15px 30px rgba(0,0,0,0.4); }
+    .card-img-wrapper { position: relative; width: 100%; height: 180px; }
+    .card-img { width: 100%; height: 100%; object-fit: cover; }
+    .card-tag { position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); border: 1px solid var(--border); color: var(--primary); font-size: 0.7rem; font-weight: 800; padding: 4px 10px; border-radius: 8px; text-transform: uppercase; }
+    .card-body { padding: 20px; display: flex; flex-direction: column; flex: 1; }
+    .card-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }
+    .card-author { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; margin-top: auto; padding-top: 15px; border-top: 1px solid var(--border); }
 
-    /* FILTROS DE CATEGORIA */
-    .categories-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 20px; }
-    .cat-pill { background: var(--bg-surface); border: 1px solid var(--border); padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap; color: var(--text-muted); transition: 0.2s; }
-    .cat-pill:hover, .cat-pill.active { background: var(--accent); color: #000; border-color: var(--accent); }
+    /* MODAIS COM GLASSMORPHISM */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+      z-index: 4000; display: flex; justify-content: center; align-items: center; padding: 20px;
+    }
+    .modal-content {
+      background: var(--bg-input); border: 1px solid var(--border); border-radius: 20px; padding: 30px;
+      width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; position: relative;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+    }
+    .close-modal { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; color: white; transition: 0.2s; box-shadow: none; padding:0; }
+    .close-modal:hover { background: #ef4444; transform: rotate(90deg); }
 
-    /* GRID DE POSTS */
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
-    .post-card { background-color: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: transform 0.2s, border-color 0.2s; cursor: pointer; }
-    .post-card:hover { transform: translateY(-3px); border-color: var(--accent); }
-    .post-thumb { width: 100%; height: 160px; object-fit: cover; border-bottom: 1px solid var(--border); }
-    .post-content { padding: 14px; display: flex; flex-direction: column; flex: 1; justify-content: space-between; }
-    .post-tag { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--accent); background: rgba(16, 185, 129, 0.1); padding: 3px 8px; border-radius: 4px; display: inline-block; width: fit-content; margin-bottom: 6px; }
-    .post-card h3 { font-size: 1.05rem; margin-bottom: 6px; font-weight: 700; line-height: 1.3; }
-    .post-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 0.75rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 10px; }
-
-    /* MODAIS */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); z-index: 4000; display: flex; justify-content: center; align-items: center; padding: 12px; }
-    .modal-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; width: 100%; max-width: 650px; box-shadow: 0 20px 40px rgba(0,0,0,0.8); max-height: 94vh; overflow-y: auto; }
+    /* UPLOAD BOX ESTILIZADO */
+    .upload-box {
+      border: 2px dashed var(--border); border-radius: 14px; padding: 20px; text-align: center;
+      cursor: pointer; background: rgba(255,255,255,0.02); transition: 0.3s; margin: 10px 0;
+    }
+    .upload-box:hover { border-color: var(--primary); background: rgba(16, 185, 129, 0.05); }
     
-    .file-upload-box { border: 2px dashed var(--border); border-radius: 8px; padding: 12px; text-align: center; cursor: pointer; background: var(--bg-input); margin: 6px 0; transition: 0.2s; }
-    .file-upload-box:hover { border-color: var(--accent); }
-    .profile-preview { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); margin-bottom: 6px; display: inline-block; }
+    .dynamic-section { background: var(--bg-dark); padding: 15px; border-radius: 12px; border: 1px solid var(--border); margin: 15px 0; }
+    .section-title { font-size: 0.8rem; color: var(--primary); text-transform: uppercase; font-weight: 800; margin-bottom: 10px; letter-spacing: 1px; }
 
-    /* PREVIEW DE SKIN 3D/2D NO CANVASS */
-    .skin-preview-container { display: flex; flex-direction: column; align-items: center; background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-top: 10px; }
-    .skin-canvas { image-rendering: pixelated; width: 120px; height: 160px; background: #111827; border-radius: 6px; border: 1px solid var(--border); }
-
-    /* CHAT DE COMUNIDADE */
-    .discord-chat-layout { display: flex; height: 440px; max-height: 70vh; background: var(--bg-input); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 8px; }
-    .discord-channels { width: 150px; background: #111827; border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 8px; gap: 4px; overflow-y: auto; flex-shrink: 0; }
-    .discord-channel-item { padding: 8px; border-radius: 6px; font-size: 0.8rem; color: var(--text-muted); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px; }
-    .discord-channel-item:hover { background: #1e293b; color: var(--text); }
-    .discord-channel-item.active { background: #334155; color: white; }
-
-    .discord-chat-main { flex: 1; display: flex; flex-direction: column; background: var(--bg-input); min-width: 0; }
-    .discord-chat-header { padding: 10px 14px; background: var(--bg-surface); border-bottom: 1px solid var(--border); font-size: 0.85rem; font-weight: 700; }
-    .discord-messages { flex: 1; padding: 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-    
-    .chat-message-group { display: flex; gap: 10px; align-items: flex-start; }
-    .chat-msg-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1px solid var(--border); }
-    .chat-msg-content { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-    .chat-msg-header { display: flex; align-items: baseline; gap: 8px; }
-    .chat-msg-author { font-weight: 700; font-size: 0.85rem; color: #fff; }
-    .chat-msg-time { font-size: 0.65rem; color: var(--text-muted); }
-    .chat-msg-text { font-size: 0.85rem; color: var(--text); word-break: break-word; line-height: 1.4; }
-    
-    .discord-input-area { padding: 10px; background: var(--bg-surface); border-top: 1px solid var(--border); display: flex; gap: 6px; align-items: center; }
-    .discord-input-area input { margin: 0; padding: 10px 12px; font-size: 0.85rem; }
+    /* Detalhes do Post no Modal */
+    .dl-btn { text-decoration: none; display: block; margin-top: 8px; }
   </style>
 </head>
 <body>
@@ -156,640 +181,498 @@
   <div id="toastContainer"></div>
 
   <div id="authScreen">
-    <div class="auth-card animate-fade">
-      <h2>🚀 MasterAddon</h2>
+    <div class="auth-card">
+      <h1>🚀 MasterAddon</h1>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">A plataforma definitiva para criadores.</p>
       
       <div class="tab-switch">
-        <button type="button" id="tabLoginBtn" class="tab-btn active" onclick="switchAuthTab('login')">Entrar</button>
-        <button type="button" id="tabRegBtn" class="tab-btn" onclick="switchAuthTab('register')">Criar Conta</button>
+        <button id="tabLoginBtn" class="tab-btn active" onclick="switchAuthTab('login')">Entrar</button>
+        <button id="tabRegBtn" class="tab-btn" onclick="switchAuthTab('register')">Criar Conta</button>
       </div>
 
       <div id="loginForm">
-        <input type="email" id="loginEmail" placeholder="Seu e-mail" autocomplete="off">
-        <input type="password" id="loginPassword" placeholder="Sua senha" autocomplete="new-password">
-        <button id="btnLogin" style="margin-top: 10px;">Acessar MSTRADN</button>
+        <input type="email" id="loginEmail" placeholder="Seu E-mail" autocomplete="email">
+        <input type="password" id="loginPassword" placeholder="Sua Senha">
+        <button onclick="handleLogin()" style="margin-top: 15px;">Acessar Plataforma</button>
       </div>
 
-      <div id="registerForm" class="hidden animate-fade">
-        <input type="email" id="regEmail" placeholder="Seu e-mail" autocomplete="off">
-        <input type="password" id="regPassword" placeholder="Sua senha (mín. 6 dígitos)" autocomplete="new-password">
-        <input type="text" id="regDisplayName" placeholder="Seu Nome / Criador" autocomplete="off">
-        <button id="btnRegister" style="margin-top: 12px;">Criar Conta</button>
+      <div id="registerForm" class="hidden">
+        <input type="text" id="regName" placeholder="Nome de Exibição (Ex: MikeCraft)">
+        <input type="email" id="regEmail" placeholder="Seu E-mail">
+        <input type="password" id="regPassword" placeholder="Crie uma Senha (mín. 6 char)">
+        <button onclick="handleRegister()" style="margin-top: 15px;">Criar Conta</button>
       </div>
     </div>
   </div>
 
   <div id="mainApp" class="hidden">
     
-    <div id="sidebarOverlay" onclick="toggleSidebar()"></div>
-
-    <sidebar id="sidebarDrawer">
-      <div class="sidebar-header-row">
-        <div class="brand">🚀 MasterAddon <span style="font-size:0.65rem; background: var(--accent); color:#000; padding:1px 4px; border-radius:4px; font-weight:900;">MSTRADN</span></div>
-        <button class="sidebar-close-btn" onclick="toggleSidebar()" title="Fechar Menu">✕</button>
-      </div>
-
-      <div class="sidebar-block" style="background: var(--bg-card); padding: 12px; border-radius: 10px; border: 1px solid var(--border);">
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-          <img id="userAvatar" src="" alt="Avatar" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
-          <div style="overflow: hidden;">
-            <strong id="userDisplayName" style="display: block; font-size: 0.9rem; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;"></strong>
-            <span style="background: var(--accent); color: black; font-size: 0.65rem; font-weight: 800; padding: 1px 5px; border-radius: 4px;">CRIADOR</span>
-          </div>
+    <sidebar id="sidebar">
+      <h2 style="color: var(--primary); margin-bottom: 25px; display: flex; align-items: center; gap: 10px;">🚀 MasterAddon</h2>
+      
+      <div class="profile-widget">
+        <img id="userAvatar" src="https://via.placeholder.com/150" class="profile-img">
+        <div class="profile-info">
+          <h4 id="userName">Carregando...</h4>
+          <span class="badge-creator">CRIADOR</span>
         </div>
-        <button class="sidebar-menu-btn" onclick="openProfileModal()">⚙️ Meu Perfil</button>
       </div>
 
-      <div class="sidebar-block">
-        <h4>Publicar para Todos</h4>
-        <button class="sidebar-menu-btn" onclick="openUploadModal()">➕ Publicar Addon / Mapa / Skin</button>
-        <button class="sidebar-menu-btn" onclick="openConversationsModal()">💬 Comunidade & Suporte</button>
-      </div>
-
-      <button id="btnLogout" class="btn-danger" style="margin-top: auto; padding: 8px; font-size: 0.85rem;">Sair da Conta</button>
+      <button class="nav-btn" onclick="openProfileModal()">⚙️ Editar Meu Perfil</button>
+      <div style="height: 1px; background: var(--border); margin: 15px 0;"></div>
+      <button class="nav-btn publish" onclick="openUploadModal()">➕ Publicar Conteúdo</button>
+      <button class="nav-btn" onclick="alert('Sistema de chat em manutenção para melhorias de UI!')">💬 Suporte & Chat</button>
+      
+      <button class="btn-outline btn-danger" style="margin-top: auto;" onclick="handleLogout()">Sair da Conta</button>
     </sidebar>
 
     <content-area>
-      
       <header>
-        <button class="hamburger-btn" onclick="toggleSidebar()" title="Menu">
-          <div class="hamburger-line"></div>
-          <div class="hamburger-line"></div>
-          <div class="hamburger-line"></div>
-        </button>
-        <div class="search-container">
+        <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+        <div class="search-box">
           <span class="search-icon">🔍</span>
-          <input type="text" id="searchInput" placeholder="Pesquisar mods, addons, .mcaddon, mapas..." autocomplete="off">
+          <input type="text" id="searchInput" placeholder="Pesquisar addons, mapas, criadores..." oninput="renderPosts()">
         </div>
       </header>
 
-      <div class="categories-bar">
-        <div class="cat-pill active" onclick="filterCategory('all', this)">🔥 Todos</div>
-        <div class="cat-pill" onclick="filterCategory('Addons', this)">🧩 Addons (.mcaddon/.mcpack)</div>
-        <div class="cat-pill" onclick="filterCategory('Maps', this)">🗺️ Mapas (.mcworld/.mctemplate)</div>
-        <div class="cat-pill" onclick="filterCategory('Textures', this)">🎨 Texturas</div>
-        <div class="cat-pill" onclick="filterCategory('Skins', this)">👤 Skins (.png)</div>
+      <div class="filter-track">
+        <div class="filter-pill active" onclick="setFilter('all', this)">🔥 Todos</div>
+        <div class="filter-pill" onclick="setFilter('.mcaddon', this)">📦 Addon (.mcaddon)</div>
+        <div class="filter-pill" onclick="setFilter('.mcpack', this)">🧩 Addon (.mcpack)</div>
+        <div class="filter-pill" onclick="setFilter('.mcworld', this)">🌍 Mapa (.mcworld)</div>
+        <div class="filter-pill" onclick="setFilter('.mctemplate', this)">🗺️ Mapa (.mctemplate)</div>
+        <div class="filter-pill" onclick="setFilter('Textura', this)">🎨 Texturas</div>
+        <div class="filter-pill" onclick="setFilter('Skin', this)">👤 Skins</div>
       </div>
 
-      <h2 id="sectionTitle" style="margin-bottom: 14px; font-size: 1.2rem; font-weight: 700;">Publicações Recentes</h2>
-      <div id="postsGrid" class="grid"></div>
+      <h2 style="margin-bottom: 20px; font-weight: 700;">Explorar Banco de Dados</h2>
+      <div id="postsGrid" class="grid">
+        </div>
     </content-area>
   </div>
 
-  <div id="postDetailModal" class="modal-overlay hidden">
-    <div class="modal-card animate-fade">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h3 id="modalPostTitle" style="color: var(--accent);">Título</h3>
-        <button class="btn-secondary" style="width: auto; padding: 4px 10px; margin:0;" onclick="closePostModal()">✕</button>
-      </div>
-
-      <div id="modalSkinPreviewContainer" class="hidden skin-preview-container" style="margin-bottom: 15px;">
-        <div style="font-size: 0.8rem; color: var(--accent); font-weight: bold; margin-bottom: 6px;">👤 Preview da Skin em Tempo Real:</div>
-        <canvas id="modalSkinCanvas" class="skin-canvas" width="64" height="64"></canvas>
-      </div>
-
-      <img id="modalPostImage" src="" alt="Thumbnail" style="width: 100%; height: 210px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--border);">
-      <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">Por: <strong id="modalPostAuthor" style="color: var(--text);"></strong> | Formato: <span id="modalPostExtTag" style="color: var(--accent); font-weight: bold;"></span></div>
-      <p id="modalPostDesc" style="font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px; color: var(--text);"></p>
-      
-      <div id="singleDownloadSection" class="hidden" style="background: var(--bg-input); padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 12px;">
-        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">Link de Download Externo (MediaFire / Drive):</div>
-        <a id="modalSingleLink" href="#" target="_blank" style="color: var(--accent); font-size: 0.85rem; word-break: break-all; display: block; margin-bottom: 10px;">Link</a>
-        <a id="modalSingleBtn" href="#" target="_blank" style="text-decoration: none; display: block;">
-          <button style="font-size: 0.95rem; padding: 10px; margin:0;">📥 Baixar Arquivo</button>
-        </a>
-      </div>
-
-      <div id="dualDownloadSection" class="hidden" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px;">
-        <div style="background: var(--bg-input); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
-          <div style="font-size: 0.75rem; color: var(--accent); font-weight: bold; margin-bottom: 4px;">🧩 Behavior Pack (.mcpack):</div>
-          <a id="modalBehaviorLink" href="#" target="_blank" style="color: var(--text-muted); font-size: 0.8rem; word-break: break-all; display: block; margin-bottom: 8px;">Link</a>
-          <a id="modalBehaviorBtn" href="#" target="_blank" style="text-decoration: none;"><button style="font-size: 0.85rem; padding: 8px; margin:0;">Baixar Behavior</button></a>
-        </div>
-        <div style="background: var(--bg-input); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
-          <div style="font-size: 0.75rem; color: var(--accent); font-weight: bold; margin-bottom: 4px;">🎨 Resource Pack (.mcpack):</div>
-          <a id="modalResourceLink" href="#" target="_blank" style="color: var(--text-muted); font-size: 0.8rem; word-break: break-all; display: block; margin-bottom: 8px;">Link</a>
-          <a id="modalResourceBtn" href="#" target="_blank" style="text-decoration: none;"><button style="font-size: 0.85rem; padding: 8px; margin:0;">Baixar Resource</button></a>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div id="uploadModal" class="modal-overlay hidden">
-    <div class="modal-card animate-fade">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h3 style="color: var(--accent);">➕ Publicar no MasterAddon</h3>
-        <button class="btn-secondary" style="width: auto; padding: 4px 10px; margin:0;" onclick="closeUploadModal()">✕</button>
-      </div>
-      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">Publique seu addon, mapa, textura ou skin usando links externos (MediaFire, Google Drive, etc.).</p>
+    <div class="modal-content">
+      <button class="close-modal" onclick="closeModals()">✕</button>
+      <h2 style="color: var(--primary); margin-bottom: 5px;">➕ Nova Publicação</h2>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Selecione o formato exato do seu projeto.</p>
       
-      <form id="uploadForm">
-        <input type="text" id="upTitle" placeholder="Título (Ex: MikeCraft.addon ou SuperMap.mcworld)" required autocomplete="off">
+      <input type="text" id="upTitle" placeholder="Título (Ex: Mega Furniture Mod)">
+      <textarea id="upDesc" placeholder="Descrição completa detalhando o projeto..." rows="3"></textarea>
+
+      <label style="font-size: 0.85rem; color: var(--text-muted); margin-left: 5px;">Formato do Arquivo:</label>
+      <select id="upFormat" onchange="handleFormatChange()">
+        <option value="" disabled selected>-- Selecione o Formato --</option>
+        <option value=".mcaddon">📦 Addon Único (.mcaddon)</option>
+        <option value=".mcpack">🧩 Addon Separado (.mcpack Behavior/Resource)</option>
+        <option value=".mcworld">🌍 Mapa de Mundo (.mcworld)</option>
+        <option value=".mctemplate">🗺️ Modelo de Mapa (.mctemplate)</option>
+        <option value="Textura">🎨 Pacote de Textura</option>
+        <option value="Skin">👤 Arquivo de Skin (.png)</option>
+      </select>
+
+      <div id="boxSingleLink" class="dynamic-section hidden">
+        <div class="section-title">Link de Download Oficial</div>
+        <input type="url" id="upLinkMain" placeholder="Ex: https://mediafire.com/file/...">
         
-        <select id="upCategory" required onchange="handleCategoryChange()">
-          <option value="Addons">Addons (.mcaddon / .mcpack)</option>
-          <option value="Maps">Mapas (.mcworld / .mctemplate)</option>
-          <option value="Textures">Texturas (.zip / .mcpack)</option>
-          <option value="Skins">Skins (.png)</option>
-        </select>
+        <div class="section-title" style="margin-top: 15px;">Link Alternativo (Opcional)</div>
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px;">Ideal para Linkvertise, vídeo tutorial ou site do criador.</p>
+        <input type="url" id="upLinkAlt" placeholder="Link extra ou encurtador...">
+      </div>
 
-        <textarea id="upDesc" placeholder="Descrição explicando como o mod/mapa funciona..." rows="3" required></textarea>
-        
-        <div id="singleLinkGroup">
-          <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 6px;">Link de Download:</label>
-          <input type="url" id="upDownloadLink" placeholder="https://www.mediafire.com/file/..." autocomplete="off">
-        </div>
+      <div id="boxDualLink" class="dynamic-section hidden">
+        <div class="section-title">Configuração de Pacotes (.mcpack)</div>
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px;">Adicione os links separados para Comportamento e Textura.</p>
+        <input type="url" id="upBehavior" placeholder="Link do Behavior Pack (Obrigatório)">
+        <input type="url" id="upResource" placeholder="Link do Resource Pack (Obrigatório)">
+        <input type="url" id="upDualAlt" placeholder="Link Alternativo / Vídeo (Opcional)" style="margin-top: 10px; border-color: var(--secondary);">
+      </div>
 
-        <div id="dualLinkGroup" class="hidden" style="background: var(--bg-input); padding: 10px; border-radius: 8px; border: 1px solid var(--border); margin-top: 6px;">
-          <div style="font-size: 0.75rem; color: var(--accent); font-weight: bold; margin-bottom: 4px;">Configuração de Pacote Duplo (.mcpack):</div>
-          <input type="url" id="upBehaviorLink" placeholder="Link do Behavior Pack (.mcpack)" autocomplete="off">
-          <input type="url" id="upResourceLink" placeholder="Link do Resource Pack (.mcpack)" autocomplete="off" style="margin-bottom:0;">
+      <div id="boxSkinUpload" class="dynamic-section hidden">
+        <div class="section-title">Upload Direto da Skin</div>
+        <p style="font-size: 0.75rem; color: var(--text-muted);">Skins são leves, então o upload do arquivo é direto para gerar a preview.</p>
+        <div class="upload-box" onclick="document.getElementById('upSkinFile').click()">
+          <span id="skinFileName">📁 Selecionar Arquivo (.png)</span>
+          <input type="file" id="upSkinFile" accept="image/png" class="hidden" onchange="handleSkinPreview(event)">
         </div>
-        
-        <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 8px;">Imagem de Capa (Thumbnail):</label>
-        <div class="file-upload-box" onclick="document.getElementById('upImageFile').click()">
-          <div id="upImageText" style="font-size: 0.8rem; color: var(--text-muted);">📁 Escolher Imagem de Capa</div>
-          <input type="file" id="upImageFile" accept="image/*" class="hidden" required>
+        <div style="text-align: center; margin-top: 10px;">
+          <canvas id="skinCanvas" width="64" height="64" style="image-rendering: pixelated; width: 100px; height: 100px; border-radius: 8px; border: 1px solid var(--primary); background: #000;"></canvas>
         </div>
+      </div>
 
-        <div id="skinUploadSection" class="hidden" style="margin-top: 8px;">
-          <label style="font-size: 0.8rem; color: var(--accent); display: block; margin-bottom: 4px;">Arquivo da Skin (.png para testar preview):</label>
-          <div class="file-upload-box" onclick="document.getElementById('upSkinFile').click()">
-            <div id="upSkinText" style="font-size: 0.8rem; color: var(--text-muted);">📁 Selecionar Arquivo .png da Skin</div>
-            <input type="file" id="upSkinFile" accept="image/png" class="hidden">
-          </div>
-          <div class="skin-preview-container" style="margin-top: 6px;">
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">Preview do Boneco/Cabeça:</div>
-            <canvas id="uploadSkinCanvas" class="skin-canvas" width="64" height="64"></canvas>
-          </div>
-        </div>
+      <div class="section-title" style="margin-top: 15px;">Thumbnail / Capa da Publicação</div>
+      <div class="upload-box" onclick="document.getElementById('upThumbFile').click()">
+        <span id="thumbFileName">🖼️ Escolher Imagem (Recomendado 16:9)</span>
+        <input type="file" id="upThumbFile" accept="image/*" class="hidden" onchange="handleThumbSelect(event)">
+      </div>
 
-        <button type="submit" style="margin-top: 14px;">Publicar para Todos</button>
-      </form>
+      <button onclick="publishPost()" style="margin-top: 20px;">🚀 Publicar na Plataforma</button>
     </div>
   </div>
 
-  <div id="conversationsModal" class="modal-overlay hidden">
-    <div class="modal-card animate-fade" style="max-width: 700px; padding: 18px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-        <h3 style="color: var(--accent); font-size: 1.1rem;">💬 Comunidade MasterAddon</h3>
-        <button class="btn-secondary" style="width: auto; padding: 4px 10px; margin:0;" onclick="closeConversationsModal()">✕</button>
+  <div id="postModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <button class="close-modal" onclick="closeModals()">✕</button>
+      <span id="viewTag" class="badge-creator" style="margin-bottom: 10px; display: inline-block; font-size: 0.8rem;">.mcaddon</span>
+      <h2 id="viewTitle" style="margin-bottom: 15px;">Título</h2>
+      
+      <img id="viewImg" src="" style="width: 100%; height: 250px; object-fit: cover; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 15px;">
+      
+      <div id="viewSkinBox" class="hidden" style="text-align: center; margin-bottom: 15px; background: var(--bg-dark); padding: 15px; border-radius: 12px;">
+        <span class="section-title">Preview da Skin</span><br>
+        <canvas id="viewSkinCanvas" width="64" height="64" style="image-rendering: pixelated; width: 120px; height: 120px; border: 1px solid var(--border); border-radius: 8px; background: #111; margin-top: 10px;"></canvas>
       </div>
-      <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px;">Converse com outros criadores sobre addons e mapas.</p>
 
-      <div class="discord-chat-layout">
-        <div id="discordChannelList" class="discord-channels">
-          <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; font-weight: bold; padding: 4px 2px;">Canais</div>
-          <div class="discord-channel-item active"># geral</div>
-        </div>
+      <p id="viewDesc" style="color: var(--text); font-size: 0.95rem; line-height: 1.6; margin-bottom: 25px;"></p>
 
-        <div class="discord-chat-main">
-          <div class="discord-chat-header">
-            <span># geral - MasterAddon</span>
-          </div>
-          
-          <div id="discordMsgContainer" class="discord-messages"></div>
+      <div id="viewSingleLinks" class="hidden dynamic-section">
+        <a id="btnMainLink" href="#" target="_blank" class="dl-btn"><button>📥 Baixar Arquivo Oficial</button></a>
+        <a id="btnAltLink" href="#" target="_blank" class="dl-btn hidden"><button class="btn-outline">🔗 Link Alternativo / Apoio</button></a>
+      </div>
 
-          <div class="discord-input-area">
-            <input type="text" id="discordInputText" placeholder="Escreva sua mensagem..." autocomplete="off">
-            <button style="width: auto; padding: 8px 14px; margin:0; flex-shrink: 0;" onclick="sendDiscordMessage()">Enviar</button>
-          </div>
-        </div>
+      <div id="viewDualLinks" class="hidden dynamic-section">
+        <a id="btnBehavior" href="#" target="_blank" class="dl-btn"><button style="background: linear-gradient(135deg, var(--secondary), #1e3a8a);">🧩 Baixar Behavior Pack</button></a>
+        <a id="btnResource" href="#" target="_blank" class="dl-btn"><button>🎨 Baixar Resource Pack</button></a>
+        <a id="btnDualAlt" href="#" target="_blank" class="dl-btn hidden"><button class="btn-outline">🔗 Link Alternativo</button></a>
+      </div>
+      
+      <div style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 15px; font-size: 0.8rem; color: var(--text-muted);">
+        Publicado por: <strong id="viewAuthor" style="color: var(--text);"></strong>
       </div>
     </div>
   </div>
 
   <div id="profileModal" class="modal-overlay hidden">
-    <div class="modal-card animate-fade" style="max-width: 400px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h3>⚙️ Meu Perfil</h3>
-        <button class="btn-secondary" style="width: auto; padding: 4px 10px; margin:0;" onclick="closeProfileModal()">✕</button>
+    <div class="modal-content" style="max-width: 400px; text-align: center;">
+      <button class="close-modal" onclick="closeModals()">✕</button>
+      <h2 style="color: var(--primary); margin-bottom: 20px;">⚙️ Editar Perfil</h2>
+      
+      <img id="editProfilePreview" src="https://via.placeholder.com/150" style="width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; margin-bottom: 15px;">
+      
+      <div class="upload-box" onclick="document.getElementById('editPhotoFile').click()" style="padding: 10px;">
+        <span id="editPhotoName" style="font-size: 0.85rem;">📸 Mudar Foto de Perfil</span>
+        <input type="file" id="editPhotoFile" accept="image/*" class="hidden" onchange="handleProfilePhoto(event)">
       </div>
-      <div style="text-align: center; margin-bottom: 12px;">
-        <img id="modalProfilePreview" class="profile-preview" src="" alt="Avatar">
-      </div>
-      <label style="font-size: 0.8rem; color: var(--text-muted);">Nova Foto:</label>
-      <div class="file-upload-box" onclick="document.getElementById('editPhotoFile').click()">
-        <div id="uploadBoxText" style="font-size: 0.8rem; color: var(--text-muted);">📁 Escolher Foto</div>
-        <input type="file" id="editPhotoFile" accept="image/*" class="hidden">
-      </div>
-      <label style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; display: block;">Nome de Exibição:</label>
-      <input type="text" id="editDisplayName" placeholder="Seu nome" autocomplete="off">
-      <button id="btnSaveProfile" style="margin-top: 12px;">Salvar Alterações</button>
+
+      <input type="text" id="editDisplayName" placeholder="Seu Nome de Exibição">
+      <button onclick="saveProfile()" style="margin-top: 15px;">Salvar Alterações</button>
     </div>
   </div>
 
   <script type="module">
+    // IMPORTAÇÕES FIREBASE V10
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
+    // 🔴🔴🔴 ATENÇÃO 🔴🔴🔴
+    // O erro "api-key-not-valid" que você mandou na print significa que você copiou 
+    // um código com chaves falsas. VOCÊ DEVE SUBSTITUIR O BLOCO ABAIXO PELAS SUAS CHAVES DO FIREBASE!
     const firebaseConfig = {
-      apiKey: "AIzaSyCGD9DZDFp0w9baW8jiqgGGfkasAvqreY0",
-      authDomain: "site-ec6fd.firebaseapp.com",
-      databaseURL: "https://site-ec6fd-default-rtdb.firebaseio.com",
-      projectId: "site-ec6fd",
-      storageBucket: "site-ec6fd.firebasestorage.app",
-      messagingSenderId: "338689686380",
-      appId: "1:338689686380:web:509aebb8d64694a0e1d149"
+      apiKey: "SUA_API_KEY_AQUI", 
+      authDomain: "seu-projeto.firebaseapp.com",
+      projectId: "seu-projeto",
+      storageBucket: "seu-projeto.appspot.com",
+      messagingSenderId: "123456789",
+      appId: "1:123456789:web:abcdef123456"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    window.showToast = function(message, type = 'success') {
-      const container = document.getElementById('toastContainer');
-      const toast = document.createElement('div');
-      toast.className = `toast ${type}`;
-      toast.innerHTML = `<span>${type === 'success' ? '✅' : '⚠️'}</span> <span>${message}</span>`;
-      container.appendChild(toast);
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 300);
-      }, 3500);
-    };
-
-    window.toggleSidebar = function() {
-      document.getElementById('sidebarDrawer').classList.toggle('open');
-      document.getElementById('sidebarOverlay').classList.toggle('active');
-    };
-
-    window.switchAuthTab = function(tab) {
-      document.getElementById('loginForm').classList.add('hidden');
-      document.getElementById('registerForm').classList.add('hidden');
-      document.getElementById('tabLoginBtn').classList.remove('active');
-      document.getElementById('tabRegBtn').classList.remove('active');
-
-      if (tab === 'login') {
-        document.getElementById('loginForm').classList.remove('hidden');
-        document.getElementById('tabLoginBtn').classList.add('active');
-      } else {
-        document.getElementById('registerForm').classList.remove('hidden');
-        document.getElementById('tabRegBtn').classList.add('active');
-      }
-    };
-
-    window.openUploadModal = function() { document.getElementById('uploadModal').classList.remove('hidden'); toggleSidebar(); };
-    window.closeUploadModal = function() { document.getElementById('uploadModal').classList.add('hidden'); };
-
-    window.openConversationsModal = function() { document.getElementById('conversationsModal').classList.remove('hidden'); toggleSidebar(); initChatSystem(); };
-    window.closeConversationsModal = function() { document.getElementById('conversationsModal').classList.add('hidden'); };
-
-    window.openProfileModal = function() {
-      if (currentUserData) {
-        document.getElementById('editDisplayName').value = currentUserData.displayName || '';
-        document.getElementById('modalProfilePreview').src = currentUserData.photoUrl || 'https://via.placeholder.com/150';
-      }
-      document.getElementById('profileModal').classList.remove('hidden');
-      toggleSidebar();
-    };
-    window.closeProfileModal = function() { document.getElementById('profileModal').classList.add('hidden'); };
-
-    window.handleCategoryChange = function() {
-      const cat = document.getElementById('upCategory').value;
-      const skinSec = document.getElementById('skinUploadSection');
-      const dualGroup = document.getElementById('dualLinkGroup');
-      const singleGroup = document.getElementById('singleLinkGroup');
-
-      if (cat === 'Skins') {
-        skinSec.classList.remove('hidden');
-        singleGroup.classList.add('hidden');
-        dualGroup.classList.add('hidden');
-      } else {
-        skinSec.classList.add('hidden');
-        singleGroup.classList.remove('hidden');
-        // Se for addons, permitimos opcionalmente duplo pack (.mcpack)
-        if (cat === 'Addons') {
-          dualGroup.classList.remove('hidden');
-        } else {
-          dualGroup.classList.add('hidden');
-        }
-      }
-    };
-
-    function processImageFile(fileInputId, previewImgId = null, textLabelId = null) {
-      return new Promise((resolve) => {
-        const fileInput = document.getElementById(fileInputId);
-        const file = fileInput.files[0];
-        if (!file) { resolve(null); return; }
-        const reader = new FileReader();
-        reader.onload = function(event) {
-          const img = new Image();
-          img.onload = function() {
-            const canvas = document.createElement('canvas');
-            const maxDim = 500;
-            let width = img.width, height = img.height;
-            if (width > height) { if (width > maxDim) { height *= maxDim / width; width = maxDim; } }
-            else { if (height > maxDim) { width *= maxDim / height; height = maxDim; } }
-            canvas.width = width; canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-            const base64 = canvas.toDataURL('image/jpeg', 0.8);
-            if (previewImgId) document.getElementById(previewImgId).src = base64;
-            if (textLabelId) document.getElementById(textLabelId).textContent = "Carregado ✅";
-            resolve(base64);
-          };
-          img.src = event.target.result;
-        };
-        reader.readAsDataURL(file);
-      });
+    let app, auth, db;
+    try {
+      app = initializeApp(firebaseConfig);
+      auth = getAuth(app);
+      db = getFirestore(app);
+    } catch(e) {
+      console.warn("Configure seu Firebase nas linhas acima para funcionar perfeitamente!");
     }
 
-    let newProfilePhotoBase64 = null;
-    let newPostPhotoBase64 = null;
-    let newSkinFileBase64 = null;
+    // UTILITÁRIOS
+    window.showToast = (msg, isError = false) => {
+      const c = document.getElementById('toastContainer');
+      const t = document.createElement('div');
+      t.className = `toast ${isError ? 'error' : ''}`;
+      t.innerHTML = `${isError ? '⚠️' : '✅'} ${msg}`;
+      c.appendChild(t);
+      setTimeout(() => { t.style.opacity='0'; setTimeout(()=>t.remove(),300); }, 3500);
+    };
 
-    document.getElementById('editPhotoFile').addEventListener('change', async () => {
-      newProfilePhotoBase64 = await processImageFile('editPhotoFile', 'modalProfilePreview', 'uploadBoxText');
-    });
-    document.getElementById('upImageFile').addEventListener('change', async () => {
-      newPostPhotoBase64 = await processImageFile('upImageFile', null, 'upImageText');
-    });
+    window.switchAuthTab = (tab) => {
+      document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
+      document.getElementById('registerForm').classList.toggle('hidden', tab === 'login');
+      document.getElementById('tabLoginBtn').classList.toggle('active', tab === 'login');
+      document.getElementById('tabRegBtn').classList.toggle('active', tab !== 'login');
+    };
 
-    document.getElementById('upSkinFile').addEventListener('change', () => {
-      const file = document.getElementById('upSkinFile').files[0];
-      if (!file) return;
+    window.closeModals = () => {
+      document.querySelectorAll('.modal-overlay').forEach(m => m.classList.add('hidden'));
+      document.getElementById('sidebar').classList.remove('open');
+    };
+    window.openUploadModal = () => { document.getElementById('uploadModal').classList.remove('hidden'); closeSidebar(); };
+    window.openProfileModal = () => { 
+      document.getElementById('profileModal').classList.remove('hidden'); 
+      if(userData) {
+        document.getElementById('editDisplayName').value = userData.displayName || '';
+        document.getElementById('editProfilePreview').src = userData.photoUrl || 'https://via.placeholder.com/150';
+      }
+      closeSidebar(); 
+    };
+    const closeSidebar = () => document.getElementById('sidebar').classList.remove('open');
+
+    // SISTEMA DE FORMULÁRIO DINÂMICO ESTRITO
+    window.handleFormatChange = () => {
+      const format = document.getElementById('upFormat').value;
+      const sLink = document.getElementById('boxSingleLink');
+      const dLink = document.getElementById('boxDualLink');
+      const skBox = document.getElementById('boxSkinUpload');
+      
+      sLink.classList.add('hidden'); dLink.classList.add('hidden'); skBox.classList.add('hidden');
+
+      if (format === '.mcpack') {
+        dLink.classList.remove('hidden'); // Exige Behavior e Resource
+      } else if (format === 'Skin') {
+        skBox.classList.remove('hidden'); // Upload de arquivo .png
+      } else if (format) {
+        sLink.classList.remove('hidden'); // Outros (.mcaddon, .mcworld, .mctemplate, Textura)
+      }
+    };
+
+    // PROCESSAMENTO DE IMAGEM CLIENT-SIDE (BASE64)
+    let tempThumbBase64 = null;
+    let tempSkinBase64 = null;
+    let tempProfileBase64 = null;
+
+    const fileToBase64 = (file, isSkin = false) => new Promise((resolve) => {
       const reader = new FileReader();
-      reader.onload = function(e) {
-        newSkinFileBase64 = e.target.result;
-        document.getElementById('upSkinText').textContent = "Skin .png Carregada ✅";
-        
-        // Desenhar preview na canvas
+      reader.onload = (e) => {
+        if(isSkin) { resolve(e.target.result); return; } // Skin preserva pixel art
         const img = new Image();
-        img.onload = function() {
-          const canvas = document.getElementById('uploadSkinCanvas');
-          const ctx = canvas.getContext('2d');
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.imageSmoothingEnabled = false;
-          // Desenhar cabeça da skin (coordenada típica do minecraft skin 64x64: cabeça em 8,8 tamanho 8x8)
-          ctx.drawImage(img, 8, 8, 8, 8, 16, 16, 32, 32);
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX = 600; let w = img.width, h = img.height;
+          if (w > h && w > MAX) { h *= MAX / w; w = MAX; }
+          else if (h > MAX) { w *= MAX / h; h = MAX; }
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL('image/jpeg', 0.8));
         };
-        img.src = newSkinFileBase64;
+        img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     });
 
-    document.getElementById('btnSaveProfile').addEventListener('click', async () => {
-      if (!auth.currentUser) return;
-      const newName = document.getElementById('editDisplayName').value.trim();
-      if (!newName) { showToast("Nome vazio.", "error"); return; }
-      try {
-        const updateData = { displayName: newName };
-        if (newProfilePhotoBase64) updateData.photoUrl = newProfilePhotoBase64;
-        await setDoc(doc(db, "usuarios", auth.currentUser.uid), updateData, { merge: true });
-        showToast("Perfil atualizado!");
-        closeProfileModal();
-        window.location.reload();
-      } catch (err) { showToast("Erro: " + err.message, "error"); }
-    });
+    window.handleThumbSelect = async (e) => {
+      const file = e.target.files[0];
+      if(!file) return;
+      document.getElementById('thumbFileName').textContent = "✅ " + file.name;
+      tempThumbBase64 = await fileToBase64(file);
+    };
 
-    document.getElementById('btnRegister').addEventListener('click', async () => {
-      const email = document.getElementById('regEmail').value.trim();
-      const pass = document.getElementById('regPassword').value;
-      const displayName = document.getElementById('regDisplayName').value.trim();
-      if (!displayName || !email || !pass) { showToast("Preencha todos os campos!", "error"); return; }
+    window.handleProfilePhoto = async (e) => {
+      const file = e.target.files[0];
+      if(!file) return;
+      tempProfileBase64 = await fileToBase64(file);
+      document.getElementById('editProfilePreview').src = tempProfileBase64;
+      document.getElementById('editPhotoName').textContent = "✅ Foto Carregada";
+    };
 
-      try {
-        const cred = await createUserWithEmailAndPassword(auth, email, pass);
-        await setDoc(doc(db, "usuarios", cred.user.uid), {
-          uid: cred.user.uid, email, displayName, photoUrl: "https://via.placeholder.com/150"
-        }, { merge: true });
-        showToast("Conta criada com sucesso!");
-        switchAuthTab('login');
-      } catch (err) { showToast("Erro: " + err.message, "error"); }
-    });
+    window.handleSkinPreview = async (e) => {
+      const file = e.target.files[0];
+      if(!file) return;
+      document.getElementById('skinFileName').textContent = "✅ " + file.name;
+      tempSkinBase64 = await fileToBase64(file, true);
+      
+      const img = new Image();
+      img.onload = () => {
+        const ctx = document.getElementById('skinCanvas').getContext('2d');
+        ctx.clearRect(0,0,64,64); ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(img, 8, 8, 8, 8, 16, 16, 32, 32); // Rosto do Steve
+      };
+      img.src = tempSkinBase64;
+    };
 
-    document.getElementById('btnLogin').addEventListener('click', async () => {
-      const email = document.getElementById('loginEmail').value.trim();
-      const pass = document.getElementById('loginPassword').value;
-      try { await signInWithEmailAndPassword(auth, email, pass); }
-      catch (err) { showToast("Erro ao entrar: " + err.message, "error"); }
-    });
+    // FIREBASE AUTH & DB
+    let userData = null;
+    let allPosts = [];
+    let currentFilter = 'all';
 
-    document.getElementById('btnLogout').addEventListener('click', () => signOut(auth));
-
-    let currentUserData = null;
-    onAuthStateChanged(auth, async (user) => {
-      const authScreen = document.getElementById('authScreen');
-      const mainApp = document.getElementById('mainApp');
-
-      if (user) {
-        authScreen.classList.add('hidden');
-        mainApp.classList.remove('hidden');
-        const userDocRef = doc(db, "usuarios", user.uid);
-        const userDoc = await getDoc(userDocRef);
-        if (userDoc.exists()) {
-          currentUserData = userDoc.data();
-          document.getElementById('userDisplayName').textContent = currentUserData.displayName;
-          document.getElementById('userAvatar').src = currentUserData.photoUrl || "https://via.placeholder.com/150";
+    if(auth) {
+      onAuthStateChanged(auth, async (user) => {
+        if(user) {
+          document.getElementById('authScreen').classList.add('hidden');
+          document.getElementById('mainApp').classList.remove('hidden');
+          
+          const userRef = doc(db, "usuarios", user.uid);
+          const snap = await getDoc(userRef);
+          if(snap.exists()) {
+            userData = snap.data();
+          } else {
+            // CORREÇÃO DO ERRO DA PRINT: setDoc com merge:true evita erro de "No document to update"
+            userData = { displayName: "Novo Criador", photoUrl: "https://via.placeholder.com/150" };
+            await setDoc(userRef, userData, { merge: true });
+          }
+          document.getElementById('userName').textContent = userData.displayName;
+          document.getElementById('userAvatar').src = userData.photoUrl;
+          loadPosts();
         } else {
-          currentUserData = { displayName: user.email.split('@')[0], photoUrl: "https://via.placeholder.com/150" };
-          await setDoc(userDocRef, currentUserData, { merge: true });
-          document.getElementById('userDisplayName').textContent = currentUserData.displayName;
-          document.getElementById('userAvatar').src = currentUserData.photoUrl;
+          document.getElementById('authScreen').classList.remove('hidden');
+          document.getElementById('mainApp').classList.add('hidden');
         }
+      });
+    }
+
+    window.handleRegister = async () => {
+      const e = document.getElementById('regEmail').value, p = document.getElementById('regPassword').value, n = document.getElementById('regName').value;
+      if(!e || !p || !n) return showToast("Preencha tudo!", true);
+      try {
+        const cred = await createUserWithEmailAndPassword(auth, e, p);
+        await setDoc(doc(db, "usuarios", cred.user.uid), { displayName: n, photoUrl: "https://via.placeholder.com/150" });
+        showToast("Conta criada! Bem-vindo.");
+      } catch(err) { showToast(err.message, true); }
+    };
+
+    window.handleLogin = async () => {
+      try {
+        await signInWithEmailAndPassword(auth, document.getElementById('loginEmail').value, document.getElementById('loginPassword').value);
+      } catch(err) { showToast(err.message, true); }
+    };
+
+    window.handleLogout = () => signOut(auth);
+
+    // CORREÇÃO DO ERRO DE EDIÇÃO DE PERFIL
+    window.saveProfile = async () => {
+      const newName = document.getElementById('editDisplayName').value.trim();
+      if(!newName) return showToast("Nome não pode ficar vazio.", true);
+      
+      const payload = { displayName: newName };
+      if(tempProfileBase64) payload.photoUrl = tempProfileBase64;
+      
+      try {
+        // Usar setDoc com merge: true resolve o erro "No document to update"
+        await setDoc(doc(db, "usuarios", auth.currentUser.uid), payload, { merge: true });
+        showToast("Perfil atualizado com sucesso!");
+        setTimeout(() => window.location.reload(), 1000);
+      } catch(err) { showToast(err.message, true); }
+    };
+
+    window.publishPost = async () => {
+      const format = document.getElementById('upFormat').value;
+      const title = document.getElementById('upTitle').value;
+      const desc = document.getElementById('upDesc').value;
+      
+      if(!format || !title || !desc) return showToast("Preencha título, descrição e formato!", true);
+      if(!tempThumbBase64 && format !== 'Skin') return showToast("A imagem de capa é obrigatória!", true);
+
+      const postData = {
+        title, desc, format,
+        thumb: tempThumbBase64 || tempSkinBase64,
+        authorName: userData.displayName,
+        createdAt: serverTimestamp()
+      };
+
+      if(format === '.mcpack') {
+        postData.linkBehavior = document.getElementById('upBehavior').value;
+        postData.linkResource = document.getElementById('upResource').value;
+        postData.linkAlt = document.getElementById('upDualAlt').value;
+      } else if (format === 'Skin') {
+        if(!tempSkinBase64) return showToast("Faça upload da Skin!", true);
+        postData.skinData = tempSkinBase64;
       } else {
-        authScreen.classList.remove('hidden');
-        mainApp.classList.add('hidden');
-        currentUserData = null;
+        postData.linkMain = document.getElementById('upLinkMain').value;
+        postData.linkAlt = document.getElementById('upLinkAlt').value;
       }
-    });
-
-    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const title = document.getElementById('upTitle').value.trim();
-      const category = document.getElementById('upCategory').value;
-      const desc = document.getElementById('upDesc').value.trim();
-      const downloadLink = document.getElementById('upDownloadLink').value.trim();
-      const behaviorLink = document.getElementById('upBehaviorLink').value.trim();
-      const resourceLink = document.getElementById('upResourceLink').value.trim();
-
-      if (!newPostPhotoBase64) { showToast("Envie a imagem de capa!", "error"); return; }
 
       try {
-        await addDoc(collection(db, "posts"), {
-          title, category, desc, downloadLink, behaviorLink, resourceLink,
-          image: newPostPhotoBase64,
-          skinData: newSkinFileBase64 || null,
-          author: currentUserData ? currentUserData.displayName : "Criador",
-          createdAt: serverTimestamp()
-        });
-        document.getElementById('uploadForm').reset();
-        newPostPhotoBase64 = null;
-        newSkinFileBase64 = null;
-        document.getElementById('upImageText').textContent = "📁 Escolher Imagem de Capa";
-        document.getElementById('upSkinText').textContent = "📁 Selecionar Arquivo .png da Skin";
-        showToast("Publicado com sucesso!");
-        closeUploadModal();
-      } catch (err) { showToast("Erro: " + err.message, "error"); }
-    });
+        await addDoc(collection(db, "posts"), postData);
+        showToast("Conteúdo publicado mundialmente! 🌍");
+        closeModals();
+      } catch(err) { showToast(err.message, true); }
+    };
 
-    let allPostsData = [];
-    let currentCategoryFilter = 'all';
+    function loadPosts() {
+      onSnapshot(query(collection(db, "posts"), orderBy("createdAt", "desc")), (snap) => {
+        allPosts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderPosts();
+      });
+    }
 
-    onSnapshot(query(collection(db, "posts"), orderBy("createdAt", "desc")), (snapshot) => {
-      allPostsData = [];
-      snapshot.forEach(docSnap => allPostsData.push({ id: docSnap.id, ...docSnap.data() }));
-      renderPosts();
-    });
-
-    window.filterCategory = function(cat, el) {
-      currentCategoryFilter = cat;
-      document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+    window.setFilter = (f, el) => {
+      currentFilter = f;
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
       el.classList.add('active');
       renderPosts();
     };
 
-    document.getElementById('searchInput').addEventListener('input', renderPosts);
-
-    function renderPosts() {
+    window.renderPosts = () => {
       const grid = document.getElementById('postsGrid');
-      const searchVal = document.getElementById('searchInput').value.toLowerCase();
+      const search = document.getElementById('searchInput').value.toLowerCase();
       grid.innerHTML = '';
 
-      let filtered = allPostsData.filter(p => {
-        const matchCat = currentCategoryFilter === 'all' || p.category === currentCategoryFilter;
-        const matchSearch = p.title.toLowerCase().includes(searchVal) || p.desc.toLowerCase().includes(searchVal);
-        return matchCat && matchSearch;
+      const filtered = allPosts.filter(p => {
+        const matchF = currentFilter === 'all' || p.format === currentFilter;
+        const matchS = p.title.toLowerCase().includes(search) || p.format.toLowerCase().includes(search);
+        return matchF && matchS;
       });
 
-      if (filtered.length === 0) {
-        grid.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1;">Nenhuma publicação encontrada.</p>';
-        return;
-      }
+      if(filtered.length === 0) { grid.innerHTML = '<p style="color:#a1a1aa;">Nenhum conteúdo encontrado.</p>'; return; }
 
-      filtered.forEach(post => {
-        const card = document.createElement('div');
-        card.className = 'post-card';
-        card.innerHTML = `
-          <div>
-            <img class="post-thumb" src="${post.image}" alt="Thumbnail">
-            <div class="post-content">
-              <span class="post-tag">${post.category}</span>
-              <h3>${post.title}</h3>
+      filtered.forEach(p => {
+        grid.innerHTML += `
+          <div class="card" onclick='openPostView(${JSON.stringify(p).replace(/'/g, "&apos;")})'>
+            <div class="card-img-wrapper">
+              <span class="card-tag">${p.format}</span>
+              <img src="${p.thumb}" class="card-img">
+            </div>
+            <div class="card-body">
+              <div class="card-title">${p.title}</div>
+              <div class="card-author">👤 ${p.authorName}</div>
             </div>
           </div>
-          <div class="post-footer">
-            <span>Por: ${post.author}</span>
-            <span style="color: var(--accent); font-weight: bold;">Ver mais &rarr;</span>
-          </div>
         `;
-        card.onclick = () => openPostModal(post);
-        grid.appendChild(card);
       });
-    }
+    };
 
-    window.openPostModal = function(post) {
-      document.getElementById('modalPostTitle').textContent = post.title;
-      document.getElementById('modalPostImage').src = post.image;
-      document.getElementById('modalPostAuthor').textContent = post.author;
-      document.getElementById('modalPostDesc').textContent = post.desc;
-      document.getElementById('modalPostExtTag').textContent = post.category;
+    window.openPostView = (post) => {
+      document.getElementById('viewTitle').textContent = post.title;
+      document.getElementById('viewDesc').textContent = post.desc;
+      document.getElementById('viewTag').textContent = post.format;
+      document.getElementById('viewImg').src = post.thumb;
+      document.getElementById('viewAuthor').textContent = post.authorName || 'Desconhecido';
 
-      const skinContainer = document.getElementById('modalSkinPreviewContainer');
-      const singleSection = document.getElementById('singleDownloadSection');
-      const dualSection = document.getElementById('dualDownloadSection');
+      const boxSingle = document.getElementById('viewSingleLinks');
+      const boxDual = document.getElementById('viewDualLinks');
+      const boxSkin = document.getElementById('viewSkinBox');
+      
+      boxSingle.classList.add('hidden'); boxDual.classList.add('hidden'); boxSkin.classList.add('hidden');
 
-      if (post.category === 'Skins' && post.skinData) {
-        skinContainer.classList.remove('hidden');
-        const canvas = document.getElementById('modalSkinCanvas');
-        const ctx = canvas.getContext('2d');
+      if(post.format === '.mcpack') {
+        boxDual.classList.remove('hidden');
+        document.getElementById('btnBehavior').href = post.linkBehavior || '#';
+        document.getElementById('btnResource').href = post.linkResource || '#';
+        const alt = document.getElementById('btnDualAlt');
+        if(post.linkAlt) { alt.href = post.linkAlt; alt.classList.remove('hidden'); } else { alt.classList.add('hidden'); }
+      } else if (post.format === 'Skin') {
+        boxSkin.classList.remove('hidden');
         const img = new Image();
-        img.onload = function() {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.imageSmoothingEnabled = false;
+        img.onload = () => {
+          const ctx = document.getElementById('viewSkinCanvas').getContext('2d');
+          ctx.clearRect(0,0,64,64); ctx.imageSmoothingEnabled = false;
           ctx.drawImage(img, 8, 8, 8, 8, 16, 16, 32, 32);
         };
         img.src = post.skinData;
-      } else {
-        skinContainer.classList.add('hidden');
-      }
-
-      // Checar se tem duplo link (.mcpack behavior + resource)
-      if (post.behaviorLink || post.resourceLink) {
-        singleSection.classList.add('hidden');
-        dualSection.classList.remove('hidden');
         
-        const bLink = post.behaviorLink || '#';
-        const rLink = post.resourceLink || '#';
-
-        document.getElementById('modalBehaviorLink').textContent = bLink;
-        document.getElementById('modalBehaviorLink').href = bLink;
-        document.getElementById('modalBehaviorBtn').href = bLink;
-
-        document.getElementById('modalResourceLink').textContent = rLink;
-        document.getElementById('modalResourceLink').href = rLink;
-        document.getElementById('modalResourceBtn').href = rLink;
+        // Link mágico para baixar a skin renderizada
+        boxSingle.classList.remove('hidden');
+        document.getElementById('btnMainLink').href = post.skinData;
+        document.getElementById('btnMainLink').download = post.title + ".png";
+        document.getElementById('btnAltLink').classList.add('hidden');
       } else {
-        dualSection.classList.add('hidden');
-        singleSection.classList.remove('hidden');
-        const link = post.downloadLink || '#';
-        document.getElementById('modalSingleLink').textContent = link;
-        document.getElementById('modalSingleLink').href = link;
-        document.getElementById('modalSingleBtn').href = link;
+        boxSingle.classList.remove('hidden');
+        document.getElementById('btnMainLink').href = post.linkMain || '#';
+        const alt = document.getElementById('btnAltLink');
+        if(post.linkAlt) { alt.href = post.linkAlt; alt.classList.remove('hidden'); } else { alt.classList.add('hidden'); }
       }
 
-      document.getElementById('postDetailModal').classList.remove('hidden');
-    };
-
-    window.closePostModal = function() {
-      document.getElementById('postDetailModal').classList.add('hidden');
-    };
-
-    let messagesUnsubscribe = null;
-    function initChatSystem() {
-      if (!auth.currentUser) return;
-      const msgContainer = document.getElementById('discordMsgContainer');
-      const q = query(collection(db, "suporteChat"), orderBy("timestamp", "asc"));
-      
-      if (messagesUnsubscribe) messagesUnsubscribe();
-
-      messagesUnsubscribe = onSnapshot(q, (snapshot) => {
-        msgContainer.innerHTML = '';
-        if (snapshot.empty) {
-          msgContainer.innerHTML = '<div style="text-align: center; color: var(--text-muted); margin-top: 30px; font-size: 0.85rem;">Nenhuma mensagem na comunidade. Digite algo!</div>';
-          return;
-        }
-        snapshot.forEach(docSnap => {
-          const msg = docSnap.data();
-          const div = document.createElement('div');
-          div.className = 'chat-message-group';
-          let timeStr = "Agora";
-          if (msg.timestamp && msg.timestamp.toDate) {
-            timeStr = msg.timestamp.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          }
-          div.innerHTML = `
-            <img class="chat-msg-avatar" src="${msg.senderAvatar || 'https://via.placeholder.com/150'}" alt="Avatar">
-            <div class="chat-msg-content">
-              <div class="chat-msg-header">
-                <span class="chat-msg-author">${msg.senderName || 'Usuário'}</span>
-                <span class="chat-msg-time">${timeStr}</span>
-              </div>
-              <div class="chat-msg-text">${msg.text || ''}</div>
-            </div>
-          `;
-          msgContainer.appendChild(div);
-        });
-        msgContainer.scrollTop = msgContainer.scrollHeight;
-      });
-    }
-
-    window.sendDiscordMessage = async function() {
-      const textInput = document.getElementById('discordInputText');
-      const text = textInput.value.trim();
-      if (!text) return;
-
-      try {
-        await addDoc(collection(db, "suporteChat"), {
-          senderId: auth.currentUser.uid,
-          senderName: currentUserData ? currentUserData.displayName : "Membro",
-          senderAvatar: currentUserData ? currentUserData.photoUrl : "https://via.placeholder.com/150",
-          text: text,
-          timestamp: serverTimestamp()
-        });
-        textInput.value = '';
-      } catch (err) { showToast("Erro ao enviar mensagem", "error"); }
+      document.getElementById('postModal').classList.remove('hidden');
     };
   </script>
 </body>
